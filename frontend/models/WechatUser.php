@@ -10,6 +10,7 @@ namespace frontend\models;
 
 
 use yii\db\ActiveRecord;
+use frontend\models\wcg\User as WCGUser;
 
 class WechatUser extends ActiveRecord{
 
@@ -26,6 +27,7 @@ class WechatUser extends ActiveRecord{
             if ($user)
             {
                 \Yii::$app->getUser()->login($user);
+                WCGUser::fetch();
                 return true;
             }
         }

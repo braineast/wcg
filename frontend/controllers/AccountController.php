@@ -21,11 +21,13 @@ class AccountController extends Controller{
 
     public function actionDeposit($openid = null)
     {
-        if ($this->isWechat())
+        if ($this->isWechat() || true)
         {
             if (!$openid) \Yii::$app->end();
+            if (!WechatUser::login($openid)) \Yii::$app->end();
             $this->layout = 'wcg';
         }
+
         return $this->render('deposit');
     }
 

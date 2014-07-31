@@ -17,4 +17,5 @@ return [
     'This email address has already been taken.'=>'电子邮件地址已被占用。',
     'Signup'=>'注册',
     '{attribute} "{value}" has already been taken.'=>'{attribute} "{value}"已经被占用。',
+    'Deposit Amount'=>'充值金额',
 ];
