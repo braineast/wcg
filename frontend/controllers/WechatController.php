@@ -77,7 +77,7 @@ class WechatController extends Controller
         $xml->writeCdata('text');
         $xml->endElement();
         $xml->startElement(static::FIELD_CONTENT);
-        $xml->writeCdata('一路精彩，皆因一路有你相伴，感谢您对易贷发持续的有力支持，我们会更加努力，更多精彩，值得期待！');
+        $xml->writeCdata('一路精彩，皆因一路与您相伴，感谢您对旺财谷持续的有力支持，我们会更加努力，更多精彩，值得期待！');
         $xml->endElement();
         $xml->endDocument();
         $message = $xml->outputMemory(true);
