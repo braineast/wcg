@@ -26,6 +26,7 @@ class AccountController extends Controller{
             if (!$openid) \Yii::$app->end();
             $this->layout = 'wcg';
         }
+        return $this->render('deposit');
     }
 
     public function actionTransactions($openid = null)
