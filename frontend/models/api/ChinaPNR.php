@@ -8,6 +8,8 @@
 
 namespace frontend\models\api;
 
+use Yii;
+
 
 class ChinaPNR {
     const VERSION10 = 10;
@@ -56,16 +58,18 @@ class ChinaPNR {
     private $retUrl;
     private $bgRetUrl;
     private $showId;
+    private $apiInfo;
 
     public function __construct($hostInfo)
     {
+        $this->apiInfo = \Yii::$app->params['api']['cnpnr']['dev'];
         $this->retUrl = $hostInfo . '/cnpnr';
         $this->bgRetUrl = $hostInfo . '/cnpnr/backend';
-        $this->host = 'https://lab.chinapnr.com/muser/publicRequests';
-        $this->merId = '830068';
+        $this->host = $this->apiInfo['host'];
+        $this->merId = $this->apiInfo['merid'];
         $this->params = [
             self::PARAM_VERSION => self::VERSION10,
-            self::PARAM_MERCUSTID => '6000060001283917',
+            self::PARAM_MERCUSTID => $this->apiInfo['mercustid'],
         ];
         $this->link = null;
         $this->queryString = null;
@@ -238,7 +242,7 @@ class ChinaPNR {
     private function _sign($msg)
     {
         $sign = null;
-        $fp = fsockopen("115.28.152.140", 8866, $errno, $errstr, 10);
+        $fp = fsockopen($this->apiInfo['sign']['host'], $this->apiInfo['sign']['port'], $errno, $errstr, 10);
         if ($fp)
         {
             $len = sprintf("%04s", strlen($msg));
@@ -258,7 +262,7 @@ class ChinaPNR {
         $len = sprintf("%04s", strlen($messageBody));
         $out = 'V'.$this->merId.$len.$messageBody.$chkValue;
         $out = sprintf("%04s", strlen($out)).$out;
-        $fp = fsockopen("115.28.152.140", 8866, $errno, $errstr, 10);
+        $fp = fsockopen($this->apiInfo['sign']['host'], $this->apiInfo['sign']['port'], $errno, $errstr, 10);
         if ($fp)
         {
             fputs($fp, $out);
