@@ -16,6 +16,7 @@ use frontend\models\wcg\User as WCGUser;
 class AccountController extends Controller{
     public function actionIndex($openid = null)
     {
+        return $this->redirect('/account/transactions');
     }
 
     public function actionTransactions($openid = null)
