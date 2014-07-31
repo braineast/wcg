@@ -1,0 +1,95 @@
+@charset "utf-8";
+/*register*/
+.register{width:95%; margin-left:auto; margin-right:auto; padding:25px 0;}
+.register table{width:100%; margin-top:26px;}
+.register .borderBt{ border-bottom:1px solid #cccccc;}
+.register tr td.yzm_text{border-bottom:1px solid #ccc;}
+.register table tr td.icon_user{background:url(images/icon_user.png) center no-repeat;}
+.register table tr td.user_lock{background:url(images/icon_lock.png) center no-repeat;}
+.register table tr td.user_pwd{background:url(images/icon_key.png) center no-repeat;}
+.register table tr td.user_mail{background:url(images/icon_mail.png) center no-repeat;}
+.register table tr td.user_num{background:url(images/icon_num.png) center no-repeat;}
+.bt{border-bottom:1px solid #cccccc;}
+.register .recept_role{ margin-top:50px; }
+.register .recept_role tr td{font-size:24px; color:#939393;}
+.register .recept_role tr td.checkbox_deep{ height:50px;}
+.register .recept_role tr td button{margin-top:10px;}
+
+/*home3*/
+.in_list{width:92%; margin-left:auto; margin-right:auto; padding:0; padding-bottom:10px;}
+.in_list .list_table{ width:100%;border-bottom:1px solid #cccccc; height:148px; background:#FFF}
+.in_list .list_tableNew{height:120px; padding-top:20px;}
+.in_list .list_table tr {color:#777777; font-size:24px;}
+.in_list .list_table .td1 {color:#444444; font-size:24px;}
+
+
+.bottom_area{width:100%; position:fixed; bottom:0; }
+.bottom_area tr{}
+.bottom_area td{ margin:0; padding:0;font-size:24px; color:#000; }
+
+.bottom_areaInfo td{ border-top:1px solid #c0e3fa;border-right:1px solid #c0e3fa;background:#e7f6ff; padding:18px 0; color:#444;}
+.bottom_areaInfo td p{ margin:0; padding:0;}
+/*home4*/
+.p_text p{ font-size:27px; color:#444;}
+.p_text_bule{ font-size:30px; color:#2299e6;}
+.inputMoney{ color:#2299e6; font-size:30px;}
+
+/*home5*/
+.bottom_areaInfoOne td{ border-top:1px solid #ebebeb; height:80px;border-right:1px solid #ebebeb; background:#f8f8f8; }
+
+
+.listInforTitle{ margin:0; padding:0;}
+.listInforTitle td{ margin:0; padding:0; font-size:28px; color:#000; line-height:87px; background:#f2f2f2;  border-right:1px solid #dcdcdc; }
+.listInfoOne td{ height:80px;border-top:1px solid #e6e6e6; background:#fbfbfb;font-size:24px; color:#000; padding-left:26px;}
+.in_list .list_tableOne{ border-bottom:none;}
+.list_tableOne .td {border-bottom:1px solid #e5e5e5;}
+
+/*home55*/
+.bg_mask{height:100%; width:100%; position:absolute; top:0; left:0; z-index:1000; background:#000; opacity:0.5;filter:alpha(opacity=50);}
+.floatInfo{background:#fff; border-radius:16px; -webkit-border-radius:16px; -moz-border-radius:16px; position:absolute; top:40%; z-index:1000;width:90%;margin:0 auto 0 30px; padding:0;}
+.table_float{color:#444; font-size:30px;height:280px; padding:0 30px;}
+.table_float .td2{ border-top:1px solid #dbdbdb; border-right:1px solid #dbdbdb;} 
+.table_float .td3{border-top:1px solid #dbdbdb; border-right:0;}
+
+/*home7*/
+.financing{width:100%; margin-left:auto; margin-right:auto; padding:0; padding-bottom:50px;}
+.financingTitle th{ font-size:30px; color:#000; padding-top:30px; padding-left:26px;}
+.financingTitle td{font-size:28px; color:#777;}
+.financingTitle td span{ display:block; margin:20px auto; font-size:128px; color:#2299e6; }
+.financingTitle td span.p_color_red{color:#ff6630}
+td.btnGrey{ background:#fff; height:60px; line-height:60px;}
+.line{ height:1px; background:#cccccc; width:100%; margin:0; padding:0}
+.financingList{width:92%; margin-left:auto; margin-right:auto;}
+.financingList table{border-bottom:1px solid #cccccc; padding:30px 0; }
+.financingList td{ height:50px; line-height:50px; font-size:24px; color:#777;}
+.financingList td span{ font-size:30px; color:#000; display:block; float:left; padding-bottom:10px;}
+.financingList td .icon{padding-left:26px;float:left; padding-top:8px;}
+.zt{height:120px; width:120px; border-radius:60px; background:#ed1c24;}
+.zt .span{display:block; height:100px; line-height:100px; color:#777; width:100px; font-size:24px; padding:0; border-radius:50px; background:#fff; margin:10px 0 0 10px;}
+.zt_1{background:#ff6630}
+
+
+/*home8*/
+.bottom_areaInfoTwo{ border-top:1px solid #c6c6c6;}
+.bottom_areaInfoTwo td{border-right:1px solid #ebebeb;border-top:1px solid #ebebeb; background:#f8f8f8;  font-size:24px; color:#777777; padding-left:20px;}
+.bottom_areaInfoTwo td p{  font-size:36px; color:#000;}
+td.btnBlue{ background:#2299e6;width:100%; height:88px;}
+td.btnBlue p{width:148px;color:#fff; font-size:32px; margin:0 auto; padding:28px 0;}
+td.btnBlue img{  float:left;}
+
+
+/*home10*/
+
+.step td{ height:52px;}
+.step td img{ margin-top:2px;}
+.stepinfo td{font-size:22px; color:#444444; height:80px}
+
+/*home6*/
+.list{ width:100%;}
+.list .tableOut th{background:#f2f2f2; height:68px; line-height:68px;margin:0; padding:0;  padding-left:26px;font-size:28px; color:#000; font-weight:normal;border-bottom:0px solid #e7e7e7;border-top:1px solid #e7e7e7;}
+.list .tableOut td{ margin:0; padding:0;}
+.list .tableOut img{ padding-right:20px;}
+.list .tableIn td{ margin:0; padding:0; height:60px; line-height:60px;font-size:26px; color:#777777;}
+.list .tableIn th{border-bottom:1px solid #e7e7e7;border-top:0px solid #e7e7e7; padding-left:0; background:none;}
+.list .tableIn .td4{border-bottom:1px solid #cccccc; padding-bottom:16px;}
+.list .tableIn .td5{padding-top:16px;}
