@@ -173,7 +173,7 @@ class WechatController extends Controller
             $xml->writeCdata('http://www.wangcaigu.com/template/default/Public/images/logo.png');
             $xml->endElement();
             $xml->startElement('Url');
-            $xml->writeCdata(\Yii::$app->request->hostInfo.\Yii::$app->urlManager->createUrl('account?openid='.$this->postXml->FromUserName));
+            $xml->writeCdata(\Yii::$app->urlManager->createAbsoluteUrl('account?openid='.$this->postXml->FromUserName));
             $xml->endElement();
             $xml->endElement();
             $xml->endElement();
@@ -185,6 +185,7 @@ class WechatController extends Controller
 
     private function userBind()
     {
+        if ($this->getUser()) $this->getAccountBrief();
         $xml = $this->xmlWriter();
         $xml->startElement(self::FIELD_MSG_TYPE);
         $xml->writeCdata('news');
@@ -204,7 +205,7 @@ class WechatController extends Controller
         $xml->writeCdata('http://www.wangcaigu.com/template/default/Public/images/logo.png');
         $xml->endElement();
         $xml->startElement('Url');
-        $xml->writeCdata(\Yii::$app->request->hostInfo.\Yii::$app->urlManager->createUrl('site/bind?openid='.$this->postXml->FromUserName));
+        $xml->writeCdata(\Yii::$app->urlManager->createAbsoluteUrl('site/bind?openid='.$this->postXml->FromUserName));
         $xml->endElement();
         $xml->endElement();
         $xml->endElement();
