@@ -30,6 +30,11 @@ class WechatController extends Controller
         var_dump($this->getUserBaseInfo());
     }
 
+    public function actionMenu()
+    {
+        return $this->createMenu();
+    }
+
     public function actionIndex($signature, $timestamp, $nonce, $echostr=null)
     {
         $this->signature = $signature;
@@ -81,11 +86,11 @@ class WechatController extends Controller
 
     private function getAccountBrief()
     {
-        $user = User::find()->where('wechat_open_id=:openid', [':openid'=>$this->postXml->FromUserName])->one();
+        $user = User::find()->where('open_id=:openid', [':openid'=>$this->postXml->FromUserName])->one();
         if ($user)
         {
-            $balance = number_format($user->getAttribute('money'), 2);
-            $freezeAmt = number_format($user->getAttribute('lock_money'), 2);
+            $balance = number_format($user->getAttribute('balance'), 2);
+            $freezeAmt = number_format($user->getAttribute('freeze_balance'), 2);
             $total = $balance + $freezeAmt;
             $xml = $this->xmlWriter();
             $xml->startElement(self::FIELD_MSG_TYPE);
