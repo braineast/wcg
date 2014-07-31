@@ -23,8 +23,8 @@ class AccountController extends Controller{
     {
         if ($this->isWechat() || true)
         {
-            if (!$openid) \Yii::$app->end();
-            if (!WechatUser::login($openid)) \Yii::$app->end();
+//            if (!$openid) \Yii::$app->end();
+//            if (!WechatUser::login($openid)) \Yii::$app->end();
             $this->layout = 'wcg';
         }
 
