@@ -72,10 +72,9 @@ class CnpnrController extends Controller
         $result = curl_exec($ch);
         curl_close($ch);
         echo(sprintf("%s, %s", $result, 'RECV_ORD_ID_'.$this->response[$this->response[ChinaPNR::PARAM_MERPRIV]['showId']]));
-        \Yii::$app->end();
         if ($result == 'RECV_ORD_ID_'.$this->response[$this->response[ChinaPNR::PARAM_MERPRIV]['showId']])
         {
-            exit;
+            WCGUser::fetch();
         }
     }
 
