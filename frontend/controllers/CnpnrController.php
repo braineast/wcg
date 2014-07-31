@@ -64,7 +64,7 @@ class CnpnrController extends Controller
         $post = implode('&', $post);
 
         //后台地址：：$url
-        $url = 'http://api.yidaifa.com/HuifuPay/OpenReturnBack.html';
+        $url = 'http://888.yidaifa.com/HuifuPay/OpenReturnBack.html';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POST, true);
