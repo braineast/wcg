@@ -88,7 +88,7 @@ class SignupForm extends Model
         $result = curl_exec($ch);
         curl_close($ch);
         $result = json_decode($result, true);
-        if ($result['errors'] && $result['errors']['code'] == -1) $this->addError($attribute, sprintf("您输入的%s已被占用，请重新输入。", $this->getAttributeLabel($attribute)));
+        if ($result['errors']['code'] < 0) $this->addError($attribute, sprintf("您输入的%s已被占用，请重新输入。", $this->getAttributeLabel($attribute)));
     }
 
     public function attributeLabels()

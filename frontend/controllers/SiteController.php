@@ -114,6 +114,7 @@ class SiteController extends Controller
                 if ($result['result'] == 0 && $result['errors']['code'] == 0)
                 {
                     $userData = $result['data'];
+                    if (WCGUser::find()->where('wcg_uid=:wcgUid', [':wcgUid'=>$userData['id']])->one()) exit('您要绑定的旺财谷账号已经被其他微信号绑定！');
                     $signup = new SignupForm();
                     $signup->username = $userData['username'];
                     $signup->email = $userData['email'];
@@ -126,7 +127,9 @@ class SiteController extends Controller
                         WCGUser::bind(['id'=>$user->id, 'wcg_uid'=>$userData['id']]);
                         Yii::$app->getUser()->login($user);
                         WechatUser::create(['user_id'=>$user->id, 'open_id'=>$openid]);
-                        return $this->redirect('site/cnpnr');
+                        $wcgUser = WCGUser::fetch();
+                        if ($wcgUser && !$wcgUser->hasCnpnrAccount()) return $this->redirect('site/cnpnr');
+                        return $this->goHome();
                     }
                 }
                 else  return $this->render('wcg/login', ['model' => $model,]);
@@ -204,11 +207,7 @@ class SiteController extends Controller
         $wcgUser = WCGUser::fetch();
         if ($wcgUser)
         {
-            if ($wcgUser->hasCnpnrAccount())
-            {
-                //
-            }
-            else
+            if (!$wcgUser->hasCnpnrAccount())
             {
                 $cnpnr = new ChinaPNR(Yii::$app->request->hostInfo);
                 $cnpnr->open();
@@ -220,34 +219,9 @@ class SiteController extends Controller
                 if ($this->isWechat() || true) $this->layout = 'wcg';
                 return $this->render('cnpnr/open', ['link'=>$link]);
             }
-            echo($wcgUser->getAttribute('cnpnr_account'));
+            return $wcgUser;
         }
-        exit;
-        //用户资料来自旺财谷网站
-        if (Yii::$app->getUser()->isGuest)
-        {
-        }
-        else
-        {
-            $wcgUser = WCGUser::find()->where('user_id=:userId', [':userId'=>Yii::$app->getUser()->getId()])->one();
-            if ($wcgUser)
-            {
-                if ($wcgUser->getAttribute('wcg_uid'))
-                {
-                    $details = null;
-                    $url = sprintf("http://api.yidaifa.com/weixin/user_info/attribute-id-value-%s", $wcgUser->getAttribute('wcg_uid'));
-                    $ch = curl_init($url);
-                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                    $result = curl_exec($ch);
-                    curl_close($ch);
-                    $result = Json::decode($result, true);
-                    if ($result['result'] == 0 && $result['errors']['code'] == 0)
-                    {
-                        var_dump($result['data']);
-                    }
-                }
-            }
-        }
+        return false;
     }
 
     public function actionRequestPasswordReset()

@@ -84,12 +84,14 @@ class User extends ActiveRecord {
                 }
                 if ($data)
                 {
-                    $wcgUser->setAttribute('cnpnr_account', $data['UsrCustId']);
-                    $wcgUser->setAttribute('balance', $data['AcctBal']);
-                    $wcgUser->setAttribute('avl_balance', $data['AvlBal']);
-                    $wcgUser->setAttribute('freeze_balance', $data['FrzBal']);
-                    $wcgUser->setAttribute('slb_balance', $data['SLBBal']);
-                    $wcgUser->setAttribute('invest_balance', $data['bid_sum']);
+                    $wcgUser->setAttribute('cnpnr_account', $data['UsrCustId'] ? $data['UsrCustId'] : '');
+                    $wcgUser->setAttribute('balance', $data['AcctBal'] ? $data['AcctBal'] : 0.00);
+                    $wcgUser->setAttribute('avl_balance', $data['AvlBal'] ? $data['AvlBal'] : 0.00);
+                    $wcgUser->setAttribute('freeze_balance', $data['FrzBal'] ? $data['FrzBal'] : 0.00);
+                    $wcgUser->setAttribute('slb_balance', $data['SLBBal'] ?  $data['SLBBal'] : 0.00);
+                    $wcgUser->setAttribute('invest_balance', $data['bid_sum'] ? $data['bid_sum'] : 0.00);
+                    $wcgUser->setAttribute('interest_balance', $data['lixi'] ? $data['lixi'] : 0.00);
+                    $wcgUser->setAttribute('returned_interest_balance', $data['yizhuan_lixi'] ? $data['yizhuan_lixi'] : 0.00);
                     $wcgUser->save();
                     $wcgUser->userinfo = $data;
                 }
