@@ -19,6 +19,15 @@ class AccountController extends Controller{
         return $this->redirect('/account/transactions');
     }
 
+    public function actionDeposit($openid = null)
+    {
+        if ($this->isWechat())
+        {
+            if (!$openid) \Yii::$app->end();
+            $this->layout = 'wcg';
+        }
+    }
+
     public function actionTransactions($openid = null)
     {
         if ($this->isWechat() || true)

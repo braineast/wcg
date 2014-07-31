@@ -75,7 +75,8 @@ class WechatController extends Controller
         if ($eventKey == 'account_bind_action') return $this->userBind();
         if ($eventKey == 'account_summary_action') return $this->getAccountBrief();
         if ($eventKey == 'account_transactions') return $this->getAccountTransactions();
-        if ($eventKey == 'account_summary_action') return $this->getAccountBrief();
+        if ($eventKey == 'account_deposit') return $this->accountDeposit();
+        if ($eventKey == '') return $this->getAccountBrief();
         $xml = $this->xmlWriter();
         $xml->startElement(static::FIELD_MSG_TYPE);
         $xml->writeCdata('text');
@@ -87,6 +88,41 @@ class WechatController extends Controller
         $message = $xml->outputMemory(true);
         exit($this->messageFormatter($message));
         return false;
+    }
+
+    private function accountDeposit()
+    {
+        $user = $this->getUser();
+        if ($user)
+        {
+            $xml = $this->xmlWriter();
+            $xml->startElement(self::FIELD_MSG_TYPE);
+            $xml->writeCdata('news');
+            $xml->endElement();
+            $xml->startElement('ArticleCount');
+            $xml->text(1);
+            $xml->endElement();
+            $xml->startElement('Articles');
+            $xml->startElement('item');
+            $xml->startElement('Title');
+            $xml->writeCdata('我要充值！');
+            $xml->endElement();
+            $xml->startElement('Description');
+            $xml->writeCdata(sprintf("提前充值，有助于抢投自己中意的投资产品，剩余资金，更可投放到生利宝产品，每天享受利息收入，赶快行动！"));
+            $xml->endElement();
+            $xml->startElement('PicUrl');
+            $xml->writeCdata('http://www.wangcaigu.com/template/default/Public/images/logo.png');
+            $xml->endElement();
+            $xml->startElement('Url');
+            $xml->writeCdata(\Yii::$app->urlManager->createAbsoluteUrl('account/deposit?openid='.$this->postXml->FromUserName));
+            $xml->endElement();
+            $xml->endElement();
+            $xml->endElement();
+            $xml->endDocument();
+            $message = $xml->outputMemory(true);
+            exit($this->messageFormatter($message));
+        }
+        else $this->userBind();
     }
 
     private function getUser()
@@ -137,13 +173,12 @@ class WechatController extends Controller
             $message = $xml->outputMemory(true);
             exit($this->messageFormatter($message));
         }
+        else $this->userBind();
     }
 
     private function getAccountBrief()
     {
-        $user = null;
-        $wechatUser = WechatUser::find()->where('open_id=:openId', [':openId'=>$this->postXml->FromUserName])->one();
-        if ($wechatUser) $user = User::fetch($wechatUser->getAttribute('user_id'));
+        $user = $this->getUser();
         if ($user)
         {
             $balance = number_format($user->getAttribute('balance'), 2, '.', '');
@@ -181,6 +216,7 @@ class WechatController extends Controller
             $message = $xml->outputMemory(true);
             exit($this->messageFormatter($message));
         }
+        else $this->userBind();
     }
 
     private function userBind()
@@ -300,81 +336,6 @@ class WechatController extends Controller
 
     private function createMenu()
     {
-        $menu = [
-            'button'=>[
-                [
-                    'name'=>'账户',
-                    'sub_button' => [
-                        [
-                            'name'=>'注册/绑定',
-                            'type'=>'click',
-                            'key'=>'account_bind_action',
-                        ],
-                        [
-                            'name'=>'交易明细',
-                            'type'=>'view',
-                            'url'=>\Yii::$app->request->hostInfo.\Yii::$app->urlManager->createUrl('account')
-                        ],
-                        [
-                            'name'=>'账户余额',
-                            'type'=>'click',
-                            'key'=>'account_summary_action',
-                        ],
-                        [
-                            'name'=>'充值',
-                            'type'=>'view',
-                            'url'=>\Yii::$app->request->hostInfo.\Yii::$app->urlManager->createUrl('account/deposit'),
-                        ],
-                    ]
-                ],
-                [
-                    'name'=>'理财',
-                    'sub_button'=> [
-                        [
-                            'name'=>'去理财',
-                            'type'=>'view',
-                            'url'=>\Yii::$app->request->hostInfo.\Yii::$app->urlManager->createUrl('product'),
-                        ],
-                        [
-                            'name'=>'安全保障',
-                            'type'=>'click',
-                            'key'=>'info_get_guarantee_action'
-                        ],
-                        [
-                            'name'=>'持有产品',
-                            'type'=>'view',
-                            'url'=>\Yii::$app->request->hostInfo.\Yii::$app->urlManager->createUrl('account/invests'),
-                        ],
-                    ]
-                ],
-                [
-                    'name'=>'服务',
-                    'sub_button'=> [
-                        [
-                            'name'=>'关于易贷发',
-                            'type'=>'click',
-                            'key'=>'info_get_aboutus_action'
-                        ],
-                        [
-                            'name'=>'新手指导',
-                            'type'=>'click',
-                            'key'=>'info_get_newbie_guide_action'
-                        ],
-                        [
-                            'name'=>'理财咨询',
-                            'type'=>'click',
-                            'key'=>'info_get_question_action'
-                        ],
-                        [
-                            'name'=>'投诉建议',
-                            'type'=>'click',
-                            'key'=>'suggest_action'
-                        ]
-                    ]
-                ]
-            ]
-        ];
-
         $menu = '{
                     "button":[
                                 {

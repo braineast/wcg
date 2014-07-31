@@ -23,13 +23,13 @@ use yii\helpers\Html;
                 <td><?= $form->field($model, 'password', ['template'=>'{input}'])->passwordInput(['class'=>'field_adapt_90', 'placeholder'=>'密码']) ?></td>
             </tr>
             </tbody></table>
-        <table cellpadding="0" cellspacing="0">
+        <!--table cellpadding="0" cellspacing="0">
             <tbody><tr>
                 <td width="80" class="user_pwd bt"></td>
                 <td class="yzm_text"><input type="password" placeholder="验证码" class="field_adapt_90"></td>
                 <td align="right" width="230"><button class="btn_fixed_186px">WWLF</button></td>
             </tr>
-            </tbody></table>
+            </tbody></table-->
         <table class="recept_role">
             <tbody><tr>
                 <td style=" padding-bottom:20px;"><?= Html::submitButton('绑定', ['class' => 'btn_adapt_100 btn btn-primary', 'name' => 'login-button']) ?></td>
@@ -40,5 +40,6 @@ use yii\helpers\Html;
             </tr> -->
             </tbody></table>
         <?php ActiveForm::end(); ?>
+        <div style="color: red; font-size: 2em; padding: 10px; float: right"><a href="<?= Yii::$app->urlManager->createAbsoluteUrl('/site/signup?openid=91899'); ?>">没有旺财谷账户？</a> </div>
     </div>
 </div>
