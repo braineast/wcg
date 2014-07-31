@@ -33,7 +33,7 @@ class WechatController extends Controller
 
     public function actionMenu()
     {
-        $this->deleteMenu();
+//        $this->deleteMenu();
         $this->createMenu();
     }
 
