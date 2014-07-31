@@ -36,7 +36,13 @@ class DepositForm extends Model{
     {
         if ($this->validate()) {
             //请求订单数据
-            $url = sprintf("%s/charge/attribute-data-value-%s", Yii::$app->params['api']['wcg']['baseUrl'], base64_encode(Json::encode(['uid'=>77, 'money'=>$this->amount])));
+            //获取用户的ChinaPNR Account id
+            if ($wcgUser = WCGUser::fetch())
+            {
+                $cnpnrAcctId = $wcgUser->getAttribute('cnpnr_account');
+                $uid = $wcgUser->getAttribute('wcg_uid');
+            }
+            $url = sprintf("%s/charge/attribute-data-value-%s", Yii::$app->params['api']['wcg']['baseUrl'], base64_encode(Json::encode(['uid'=>$uid, 'money'=>$this->amount])));
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             $result = curl_exec($ch);
@@ -46,19 +52,13 @@ class DepositForm extends Model{
             if ($result['result'] == 0 && $result['errors']['code']==0)
             {
                 $order = $result['data'];
-                //获取用户的ChinaPNR Account id
-                $cnpnrAcctId = null;
-                if ($wcgUser = WCGUser::fetch()) $cnpnrAcctId = $wcgUser->getAttribute('cnpnr_account');
-                if ($cnpnrAcctId)
-                {
-                    $cnpnr = new ChinaPNR(Yii::$app->request->hostInfo);
-                    $cnpnr->deposit($cnpnrAcctId);
-                    $cnpnr->transAmt = $order['fund'];
-                    $cnpnr->ordId = $order['number'];
-                    $cnpnr->ordDate = date('Ymd', $order['create_time']);
-                    $cnpnr->merPriv = json_encode(['id'=>$wcgUser->getAttribute('wcg_uid'),'username'=>$order['username'],'cnpnr_acct'=>$cnpnrAcctId]);
-                    return $cnpnr->getLink();
-                }
+                $cnpnr = new ChinaPNR(Yii::$app->request->hostInfo);
+                $cnpnr->deposit($cnpnrAcctId);
+                $cnpnr->transAmt = $order['fund'];
+                $cnpnr->ordId = $order['number'];
+                $cnpnr->ordDate = date('Ymd', $order['create_time']);
+                $cnpnr->merPriv = json_encode(['id'=>$wcgUser->getAttribute('wcg_uid'),'username'=>$order['username'],'cnpnr_acct'=>$cnpnrAcctId]);
+                return $cnpnr->getLink();
             }
         }
 
