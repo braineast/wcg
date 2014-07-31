@@ -43,6 +43,7 @@ class CnpnrController extends Controller
     {
         if ($this->response[ChinaPNR::RESP_CODE] == '000')
         {
+            return $this->postWCG();
             //推送到旺财谷网站 - 开户接口
             $userId = $this->response[ChinaPNR::PARAM_MERPRIV]['id'];
             $wcgUser = WCGUser::find()->where('user_id=:userId', [':userId'=>$userId])->one();
