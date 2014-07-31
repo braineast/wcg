@@ -23,8 +23,8 @@ class AccountController extends Controller{
     {
         if ($this->isWechat() || true)
         {
-            if ($openid) $this->wechatLogin($openid);
             $this->layout = 'wcg';
+            if ($openid) WechatUser::login($openid);
         }
         $wcgUser = WCGUser::fetch();
         $summary = [];

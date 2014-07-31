@@ -18,8 +18,18 @@ class WechatUser extends ActiveRecord{
         return 'wechat_user';
     }
 
-    public function login()
+    public static function login($openid)
     {
+        if ($wechatUser = WechatUser::find()->where('open_id=:openId', [':openId'=>$openid])->one())
+        {
+            $user = User::find()->where('id=:id', [':id'=>$wechatUser->getAttribute('user_id')]);
+            if ($user)
+            {
+                \Yii::$app->getUser()->login($user);
+                return true;
+            }
+        }
+        return false;
     }
 
     public static function create($attributes)
