@@ -151,40 +151,36 @@ class WechatController extends Controller
         exit($this->messageFormatter($message));
     }
 
-    public function unsubscribe()
-    {
-        return file_put_contents(\Yii::$app->runtimePath.'/logs/app.log', 'I am unsubscribe method.', FILE_APPEND);
-    }
-
     private function subscribe()
     {
+        $this->userBind();
         //对订阅用户回复注册绑定的图文内容（news）
-        $xml = $this->xmlWriter();
-        $xml->startElement(self::FIELD_MSG_TYPE);
-        $xml->writeCdata('news');
-        $xml->endElement();
-        $xml->startElement('ArticleCount');
-        $xml->text(1);
-        $xml->endElement();
-        $xml->startElement('Articles');
-        $xml->startElement('item');
-        $xml->startElement('Title');
-        $xml->writeCdata('绑定平台账户，开启财富人生。');
-        $xml->endElement();
-        $xml->startElement('Description');
-        $xml->writeCdata('旺财谷是一家高科技网络金融服务公司，创始团队是来自于金融、法律和互联网行业的资深人士，我们希望通过跨界的合作与知识的共享，通过互联网技术让更多的人享受金融服务，实践普惠金融。');
-        $xml->endElement();
-        $xml->startElement('PicUrl');
-        $xml->writeCdata('http://www.wangcaigu.com/template/default/Public/images/logo.png');
-        $xml->endElement();
-        $xml->startElement('Url');
-        $xml->writeCdata(\Yii::$app->request->hostInfo.\Yii::$app->urlManager->createUrl('site/bind?openid='.$this->postXml->FromUserName));
-        $xml->endElement();
-        $xml->endElement();
-        $xml->endElement();
-        $xml->endDocument();
-        $message = $xml->outputMemory(true);
-        exit($this->messageFormatter($message));
+//        $xml = $this->xmlWriter();
+//        $xml->startElement(self::FIELD_MSG_TYPE);
+//        $xml->writeCdata('news');
+//        $xml->endElement();
+//        $xml->startElement('ArticleCount');
+//        $xml->text(1);
+//        $xml->endElement();
+//        $xml->startElement('Articles');
+//        $xml->startElement('item');
+//        $xml->startElement('Title');
+//        $xml->writeCdata('绑定平台账户，开启财富人生。');
+//        $xml->endElement();
+//        $xml->startElement('Description');
+//        $xml->writeCdata('旺财谷是一家高科技网络金融服务公司，创始团队是来自于金融、法律和互联网行业的资深人士，我们希望通过跨界的合作与知识的共享，通过互联网技术让更多的人享受金融服务，实践普惠金融。');
+//        $xml->endElement();
+//        $xml->startElement('PicUrl');
+//        $xml->writeCdata('http://www.wangcaigu.com/template/default/Public/images/logo.png');
+//        $xml->endElement();
+//        $xml->startElement('Url');
+//        $xml->writeCdata(\Yii::$app->request->hostInfo.\Yii::$app->urlManager->createUrl('site/bind?openid='.$this->postXml->FromUserName));
+//        $xml->endElement();
+//        $xml->endElement();
+//        $xml->endElement();
+//        $xml->endDocument();
+//        $message = $xml->outputMemory(true);
+//        exit($this->messageFormatter($message));
     }
 
     private function messageFormatter($xmlStr)
