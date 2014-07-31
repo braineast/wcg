@@ -326,17 +326,17 @@ class WechatController extends Controller
                                     "name":"账户",
                                     "sub_button":[
                                         {"name":"注册/绑定","type":"click","key":"account_bind_action"},
-                                        {"name":"交易明细","type":"view","url":"http:\/\/m.9huimai.com\/account"},
+                                        {"name":"交易明细","type":"view","url":"http:\/\/m.wangcaigu.com\/account"},
                                         {"name":"账户余额","type":"click","key":"account_summary_action"},
-                                        {"name":"充值","type":"view","url":"http:\/\/m.9huimai.com\/account\/deposit"}
+                                        {"name":"充值","type":"view","url":"http:\/\/m.wangcaigu.com\/account\/deposit"}
                                     ]
                                 },
                                 {
                                     "name":"理财",
                                     "sub_button":[
-                                        {"name":"去理财","type":"view","url":"http:\/\/m.9huimai.com\/product"},
+                                        {"name":"去理财","type":"view","url":"http:\/\/m.wangcaigu.com\/product"},
                                         {"name":"安全保障","type":"click","key":"info_get_guarantee_action"},
-                                        {"name":"持有产品","type":"view","url":"http:\/\/m.9huimai.com\/account\/invests"}
+                                        {"name":"持有产品","type":"view","url":"http:\/\/m.wangcaigu.com\/account\/invests"}
                                     ]
                                 },
                                 {
