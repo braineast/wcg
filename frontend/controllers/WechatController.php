@@ -113,7 +113,7 @@ class WechatController extends Controller
             $xml->writeCdata('账户摘要数据统计');
             $xml->endElement();
             $xml->startElement('Description');
-            $xml->writeCdata(sprintf("账户余额：%s\n其中可用金额：%s，冻结金额：%s\n账户总额：%s\n其中理财金额：%s， 生利宝金额：%s", $balance, $avlBalance, $freezeAmt, sprintf("%s+%s+%s", $balance, $investAmt + $slbAmt), $investAmt, $slbAmt));
+            $xml->writeCdata(sprintf("账户余额：%s\n其中可用金额：%s，冻结金额：%s\n账户总额：%s\n其中理财金额：%s， 生利宝金额：%s", $balance, $avlBalance, $freezeAmt, sprintf("%s+%s+%s", $balance, $investAmt, $slbAmt), $investAmt, $slbAmt));
             $xml->endElement();
             $xml->startElement('PicUrl');
             $xml->writeCdata('http://www.wangcaigu.com/template/default/Public/images/logo.png');
