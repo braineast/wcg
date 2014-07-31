@@ -103,7 +103,7 @@ class WechatController extends Controller
             $xml->writeCdata(sprintf("账户总额：%s\n其中可用金额：%s，冻结金额：%s", $total, $balance, $freezeAmt));
             $xml->endElement();
             $xml->startElement('PicUrl');
-            $xml->writeCdata('http://9huimai.com/public/attachment/201403/06/13/53180bd19c25c.png');
+            $xml->writeCdata('http://www.wangcaigu.com/template/default/Public/images/logo.png');
             $xml->endElement();
             $xml->startElement('Url');
             $xml->writeCdata(\Yii::$app->request->hostInfo.\Yii::$app->urlManager->createUrl(['account', 'openid'=>$this->postXml->FromUserName]));
@@ -134,7 +134,7 @@ class WechatController extends Controller
         $xml->writeCdata('旺财谷是一家高科技网络金融服务公司，创始团队是来自于金融、法律和互联网行业的资深人士，我们希望通过跨界的合作与知识的共享，通过互联网技术让更多的人享受金融服务，实践普惠金融。');
         $xml->endElement();
         $xml->startElement('PicUrl');
-        $xml->writeCdata('http://9huimai.com/public/attachment/201403/06/13/53180bd19c25c.png');
+        $xml->writeCdata('http://www.wangcaigu.com/template/default/Public/images/logo.png');
         $xml->endElement();
         $xml->startElement('Url');
         $xml->writeCdata(\Yii::$app->request->hostInfo.\Yii::$app->urlManager->createUrl(['site/bind', 'openid'=>$this->postXml->FromUserName]));
@@ -170,7 +170,7 @@ class WechatController extends Controller
         $xml->writeCdata('旺财谷是一家高科技网络金融服务公司，创始团队是来自于金融、法律和互联网行业的资深人士，我们希望通过跨界的合作与知识的共享，通过互联网技术让更多的人享受金融服务，实践普惠金融。');
         $xml->endElement();
         $xml->startElement('PicUrl');
-        $xml->writeCdata('http://9huimai.com/public/attachment/201403/06/13/53180bd19c25c.png');
+        $xml->writeCdata('http://www.wangcaigu.com/template/default/Public/images/logo.png');
         $xml->endElement();
         $xml->startElement('Url');
         $xml->writeCdata(\Yii::$app->request->hostInfo.\Yii::$app->urlManager->createUrl('site/bind?openid='.$this->postXml->FromUserName));
