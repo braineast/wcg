@@ -105,7 +105,7 @@ class SiteController extends Controller
             $this->layout = 'wcg';
             $model = new LoginForm();
             if ($model->load(Yii::$app->request->post())) {
-                $url = sprintf("%s/login/attribute-data-value-%s", Yii::$app->params['api']['wcg']['baseUrl'], base64_encode(Json::encode(['username'=>'abiao', 'password'=>md5('111222'), 'login_ip'=>Yii::$app->request->userIP])));
+                $url = sprintf("%s/login/attribute-data-value-%s", Yii::$app->params['api']['wcg']['baseUrl'], base64_encode(Json::encode(['username'=>$model->username, 'password'=>md5($model->password), 'login_ip'=>Yii::$app->request->userIP])));
                 $ch = curl_init($url);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                 $result = curl_exec($ch);
@@ -126,8 +126,10 @@ class SiteController extends Controller
                         WCGUser::bind(['id'=>$user->id, 'wcg_uid'=>$userData['id']]);
                         Yii::$app->getUser()->login($user);
                         WechatUser::create(['user_id'=>$user->id, 'open_id'=>$openid]);
+                        return $this->redirect('site/cnpnr');
                     }
                 }
+                else  return $this->render('wcg/login', ['model' => $model,]);
                 return $this->goBack();
             } else {
                 return $this->render('wcg/login', [
@@ -167,8 +169,9 @@ class SiteController extends Controller
         return $this->render('about');
     }
 
-    public function actionSignup()
+    public function actionSignup($openid = null)
     {
+        if ($this->isWechat() && !$openid) Yii::$app->end();
         $model = new SignupForm();
         if ($model->load(Yii::$app->request->post())) {
             if (Yii::$app->request->isAjax) {
@@ -178,6 +181,7 @@ class SiteController extends Controller
             $user = $model->signup();
             if ($user) {
                 if (Yii::$app->getUser()->login($user)) {
+                    WechatUser::create(['user_id'=>$user->id, 'open_id'=>$openid]);
                     return $this->redirect('site/cnpnr');
                     return $this->goHome();
                 }
