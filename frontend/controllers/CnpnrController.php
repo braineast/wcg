@@ -41,6 +41,7 @@ class CnpnrController extends Controller
 
     protected function UserRegister()
     {
+        var_dump(\Yii::$app->request->post());
         if ($this->response[ChinaPNR::RESP_CODE] == '000')
         {
             return $this->postWCG();
@@ -64,47 +65,37 @@ class CnpnrController extends Controller
         $post = implode('&', $post);
 
         //后台地址：：$url
-        $url = 'http://888.yidaifa.com/HuifuPay/OpenReturnBack.html';
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
-        $result = curl_exec($ch);
-        curl_close($ch);
-        echo(sprintf("%s, %s", $result, 'RECV_ORD_ID_'.$this->response[$this->response[ChinaPNR::PARAM_MERPRIV]['showId']]));
-        if ($result == 'RECV_ORD_ID_'.$this->response[$this->response[ChinaPNR::PARAM_MERPRIV]['showId']])
+        $url = null;
+        switch($this->response[ChinaPNR::PARAM_CMDID])
         {
-            WCGUser::fetch();
+            case ChinaPNR::CMD_DEPOSIT:
+                $url = 'http://888.yidaifa.com/HuifuPay/ChargeReturnBack.html';
+                break;
+            case ChinaPNR::CMD_OPEN:
+                $url = 'http://888.yidaifa.com/HuifuPay/OpenReturnBack.html';
+                break;
+        }
+        if ($url)
+        {
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+            $result = curl_exec($ch);
+            curl_close($ch);
+            echo(sprintf("%s, %s", $result, 'RECV_ORD_ID_'.$this->response[$this->response[ChinaPNR::PARAM_MERPRIV]['showId']]));
+            if ($result == 'RECV_ORD_ID_'.$this->response[$this->response[ChinaPNR::PARAM_MERPRIV]['showId']])
+            {
+                WCGUser::fetch();
+            }
         }
     }
 
     protected function NetSave()
     {
+        return $this->postWCG();
         if ($this->response[ChinaPNR::RESP_CODE] == '000')
         {
-            $orderId = $this->response[ChinaPNR::PARAM_ORDID];
-            $paymentOrder = OrderPayment::loadBySerial($orderId); //获取支付单
-            if ($paymentOrder && $paymentOrder->status != OrderPayment::STATUS_PAID)
-            {
-                $paymentOrder->status = OrderPayment::STATUS_PAID;
-                $paymentOrder->save();
-                if ($paymentOrder->status == OrderPayment::STATUS_PAID)
-                {
-                    $order = Order::loadById($paymentOrder->orderId); //获取支付单对应的订单，并进行处理
-                    if ($order && $order->status == Order::STATUS_UNPAID)
-                    {
-                        $order->paid_amount += $this->response[ChinaPNR::PARAM_TRANSAMT];
-                        if ($order->save())
-                        {
-                            $user = User::find()->where('id=:id', [':id'=>$this->response[ChinaPNR::PARAM_MERPRIV]['id']])->one();
-                            $user->setAttribute('money', $user->getAttribute('money') + $this->response[ChinaPNR::PARAM_TRANSAMT]);
-                            $user->save();
-                        }
-//                        if ($order->status == Order::STATUS_PAID) return true;
-                    }
-                }
-            }
-            $this->redirect('account');
         }
         return false;
     }
