@@ -63,17 +63,17 @@ class CnpnrController extends Controller
         $post = implode('&', $post);
 
         //后台地址：：$url
-        $url = '';
+        $url = 'http://api.yidaifa.com/HuifuPay/OpenReturnBack.html';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
         $result = curl_exec($ch);
         curl_close($ch);
+        echo(sprintf("%s, %s", $result, 'RECV_ORD_ID_'.$this->response[$this->response[ChinaPNR::PARAM_MERPRIV]['showId']]));
+        \Yii::$app->end();
         if ($result == 'RECV_ORD_ID_'.$this->response[$this->response[ChinaPNR::PARAM_MERPRIV]['showId']])
         {
-            var_dump($_POST);
-            var_dump(\Yii::$app->request->post());
             exit;
         }
     }
