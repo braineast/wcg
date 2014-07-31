@@ -74,6 +74,8 @@ class WechatController extends Controller
         if ('unsubscribe' == $eventName) return $this->unsubscribe();
         if ($eventKey == 'account_bind_action') return $this->userBind();
         if ($eventKey == 'account_summary_action') return $this->getAccountBrief();
+        if ($eventKey == 'account_transactions') return $this->getAccountTransactions();
+        if ($eventKey == 'account_summary_action') return $this->getAccountBrief();
         $xml = $this->xmlWriter();
         $xml->startElement(static::FIELD_MSG_TYPE);
         $xml->writeCdata('text');
@@ -85,6 +87,42 @@ class WechatController extends Controller
         $message = $xml->outputMemory(true);
         exit($this->messageFormatter($message));
         return false;
+    }
+
+    private function getAccountTransactions()
+    {
+        $user = null;
+        $wechatUser = WechatUser::find()->where('open_id=:openId', [':openId'=>$this->postXml->FromUserName])->one();
+        if ($wechatUser) $user = User::fetch($wechatUser->getAttribute('user_id'));
+        if ($user)
+        {
+            $xml = $this->xmlWriter();
+            $xml->startElement(self::FIELD_MSG_TYPE);
+            $xml->writeCdata('news');
+            $xml->endElement();
+            $xml->startElement('ArticleCount');
+            $xml->text(1);
+            $xml->endElement();
+            $xml->startElement('Articles');
+            $xml->startElement('item');
+            $xml->startElement('Title');
+            $xml->writeCdata('查看账户交易记录');
+            $xml->endElement();
+            $xml->startElement('Description');
+            $xml->writeCdata(sprintf("账户交易包括您的充值、提现、投标等交易信息。"));
+            $xml->endElement();
+            $xml->startElement('PicUrl');
+            $xml->writeCdata('http://www.wangcaigu.com/template/default/Public/images/logo.png');
+            $xml->endElement();
+            $xml->startElement('Url');
+            $xml->writeCdata(\Yii::$app->urlManager->createAbsoluteUrl('account?openid='.$this->postXml->FromUserName));
+            $xml->endElement();
+            $xml->endElement();
+            $xml->endElement();
+            $xml->endDocument();
+            $message = $xml->outputMemory(true);
+            exit($this->messageFormatter($message));
+        }
     }
 
     private function getAccountBrief()
@@ -328,23 +366,23 @@ class WechatController extends Controller
                                     "name":"账户",
                                     "sub_button":[
                                         {"name":"注册/绑定","type":"click","key":"account_bind_action"},
-                                        {"name":"交易明细","type":"view","url":"http:\/\/m.wangcaigu.com\/account"},
+                                        {"name":"交易明细","type":"click","key":"account_transactions"},
                                         {"name":"账户余额","type":"click","key":"account_summary_action"},
-                                        {"name":"充值","type":"view","url":"http:\/\/m.wangcaigu.com\/account\/deposit"}
+                                        {"name":"充值","type":"click","key":"account_deposit"}
                                     ]
                                 },
                                 {
                                     "name":"理财",
                                     "sub_button":[
-                                        {"name":"去理财","type":"view","url":"http:\/\/m.wangcaigu.com\/product"},
+                                        {"name":"去理财","type":"click","key":"invest_go"},
                                         {"name":"安全保障","type":"click","key":"info_get_guarantee_action"},
-                                        {"name":"持有产品","type":"view","url":"http:\/\/m.wangcaigu.com\/account\/invests"}
+                                        {"name":"持有产品","type":"click","key":"account_invests"}
                                     ]
                                 },
                                 {
                                     "name":"服务",
                                     "sub_button":[
-                                        {"name":"关于易贷发","type":"click","key":"info_get_aboutus_action"},
+                                        {"name":"关于旺财谷","type":"click","key":"info_get_aboutus_action"},
                                         {"name":"新手指导","type":"click","key":"info_get_newbie_guide_action"},
                                         {"name":"理财咨询","type":"click","key":"info_get_question_action"},
                                         {"name":"投诉建议","type":"click","key":"suggest_action"}
