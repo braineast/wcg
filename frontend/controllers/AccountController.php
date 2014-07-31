@@ -30,14 +30,22 @@ class AccountController extends Controller{
         {
             if (!$openid) \Yii::$app->end();
             if (!WechatUser::login($openid)) \Yii::$app->end();
+            if ($wcgUser = WCGUser::fetch())
+            {
+                if (!$wcgUser->hasCnpnrAccount()) $this->redirect(Yii::$app->urlManager->createAbsoluteUrl('/site/cnpnr'));
+            }
             $this->layout = 'wcg';
         }
         $model = new DepositForm();
 
-        $model->load($_POST);
-        if (Yii::$app->request->isAjax) {
-            Yii::$app->response->format = Response::FORMAT_JSON;
-            return ActiveForm::validate($model);
+        if ($model->load(Yii::$app->request->post())) {
+            if (Yii::$app->request->isAjax) {
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                return ActiveForm::validate($model);
+            }
+            if ($link = $model->deposit()) {
+                return $this->redirect($link);
+            }
         }
 
         return $this->render('deposit', ['model'=>$model]);

@@ -9,7 +9,12 @@
 namespace frontend\models\account;
 
 
+use frontend\models\api\ChinaPNR;
 use yii\base\Model;
+use frontend\models\wcg\User as WCGUser;
+
+use Yii;
+use yii\helpers\Json;
 
 class DepositForm extends Model{
     public $amount;
@@ -30,13 +35,31 @@ class DepositForm extends Model{
     public function deposit()
     {
         if ($this->validate()) {
-            $user = User::create($this->attributes);
-            if ($user) {
-                $data = $user->attributes;
-                $data['password'] = $this->password;
-                WcgUser::create($data);
+            //请求订单数据
+            $url = sprintf("%s/charge/attribute-data-value-%s", Yii::$app->params['api']['wcg']['baseUrl'], base64_encode(Json::encode(['uid'=>77, 'money'=>$this->amount])));
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $result = curl_exec($ch);
+            $result = Json::decode($result, true);
+            curl_close($ch);
+            $order = null;
+            if ($result['result'] == 0 && $result['errors']['code']==0)
+            {
+                $order = $result['data'];
+                //获取用户的ChinaPNR Account id
+                $cnpnrAcctId = null;
+                if ($wcgUser = WCGUser::fetch()) $cnpnrAcctId = $wcgUser->getAttribute('cnpnr_account');
+                if ($cnpnrAcctId)
+                {
+                    $cnpnr = new ChinaPNR(Yii::$app->request->hostInfo);
+                    $cnpnr->deposit($cnpnrAcctId);
+                    $cnpnr->transAmt = $order['fund'];
+                    $cnpnr->ordId = $order['number'];
+                    $cnpnr->ordDate = date('Ymd', $order['create_time']);
+                    $cnpnr->merPriv = json_encode(['id'=>$wcgUser->getAttribute('wcg_uid'),'username'=>$order['username'],'cnpnr_acct'=>$cnpnrAcctId]);
+                    return $cnpnr->getLink();
+                }
             }
-            return $user;
         }
 
         return null;

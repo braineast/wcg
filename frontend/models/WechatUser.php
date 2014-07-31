@@ -11,6 +11,9 @@ namespace frontend\models;
 
 use yii\db\ActiveRecord;
 use frontend\models\wcg\User as WCGUser;
+use frontend\models\User;
+
+use Yii;
 
 class WechatUser extends ActiveRecord{
 
@@ -23,10 +26,10 @@ class WechatUser extends ActiveRecord{
     {
         if ($wechatUser = WechatUser::find()->where('open_id=:openId', [':openId'=>$openid])->one())
         {
-            $user = User::find()->where('id=:id', [':id'=>$wechatUser->getAttribute('user_id')]);
+            $user = \frontend\models\User::findIdentity($wechatUser->getAttribute('user_id'));
             if ($user)
             {
-                \Yii::$app->getUser()->login($user);
+                Yii::$app->getUser()->login($user);
                 WCGUser::fetch();
                 return true;
             }
