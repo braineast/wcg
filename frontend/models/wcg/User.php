@@ -60,41 +60,45 @@ class User extends ActiveRecord {
     }
 
     //更新来自旺财谷网站的数据
-    public static function fetch()
+    public static function fetch($userId = null)
     {
         $wcgUser = null;
-        if (!\Yii::$app->getUser()->isGuest)
+        if ($userId)
+        {
+            $wcgUser = WCGUser::find()->where('user_id=:userId', [':userId'=>$userId])->one();
+        }
+        elseif (!\Yii::$app->getUser()->isGuest)
         {
             $wcgUser = WCGUser::find()->where('user_id=:userId', [':userId'=>\Yii::$app->getUser()->getId()])->one();
-            if ($wcgUser)
+        }
+        if ($wcgUser)
+        {
+            $apiPath = sprintf("%s/user_info/attribute-id-value-%s", \Yii::$app->params['api']['wcg']['baseUrl'], $wcgUser->getAttribute('wcg_uid'));
+            $ch = curl_init($apiPath);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $result = curl_exec($ch);
+            $result = Json::decode($result, true);
+            curl_close($ch);
+            $data = null;
+            if ($result['result'] == 0)
             {
-                $apiPath = sprintf("%s/user_info/attribute-id-value-%s", \Yii::$app->params['api']['wcg']['baseUrl'], $wcgUser->getAttribute('wcg_uid'));
-                $ch = curl_init($apiPath);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                $result = curl_exec($ch);
-                $result = Json::decode($result, true);
-                curl_close($ch);
-                $data = null;
-                if ($result['result'] == 0)
+                if ($result['errors']['code'] == 0)
                 {
-                    if ($result['errors']['code'] == 0)
-                    {
-                        $data = $result['data'];
-                    }
+                    $data = $result['data'];
                 }
-                if ($data)
-                {
-                    $wcgUser->setAttribute('cnpnr_account', $data['UsrCustId'] ? $data['UsrCustId'] : '');
-                    $wcgUser->setAttribute('balance', $data['AcctBal'] ? $data['AcctBal'] : 0.00);
-                    $wcgUser->setAttribute('avl_balance', $data['AvlBal'] ? $data['AvlBal'] : 0.00);
-                    $wcgUser->setAttribute('freeze_balance', $data['FrzBal'] ? $data['FrzBal'] : 0.00);
-                    $wcgUser->setAttribute('slb_balance', $data['SLBBal'] ?  $data['SLBBal'] : 0.00);
-                    $wcgUser->setAttribute('invest_balance', $data['bid_sum'] ? $data['bid_sum'] : 0.00);
-                    $wcgUser->setAttribute('interest_balance', $data['lixi'] ? $data['lixi'] : 0.00);
-                    $wcgUser->setAttribute('returned_interest_balance', $data['yizhuan_lixi'] ? $data['yizhuan_lixi'] : 0.00);
-                    $wcgUser->save();
-                    $wcgUser->userinfo = $data;
-                }
+            }
+            if ($data)
+            {
+                $wcgUser->setAttribute('cnpnr_account', $data['UsrCustId'] ? $data['UsrCustId'] : '');
+                $wcgUser->setAttribute('balance', $data['AcctBal'] ? $data['AcctBal'] : 0.00);
+                $wcgUser->setAttribute('avl_balance', $data['AvlBal'] ? $data['AvlBal'] : 0.00);
+                $wcgUser->setAttribute('freeze_balance', $data['FrzBal'] ? $data['FrzBal'] : 0.00);
+                $wcgUser->setAttribute('slb_balance', $data['SLBBal'] ?  $data['SLBBal'] : 0.00);
+                $wcgUser->setAttribute('invest_balance', $data['bid_sum'] ? $data['bid_sum'] : 0.00);
+                $wcgUser->setAttribute('interest_balance', $data['lixi'] ? $data['lixi'] : 0.00);
+                $wcgUser->setAttribute('returned_interest_balance', $data['yizhuan_lixi'] ? $data['yizhuan_lixi'] : 0.00);
+                $wcgUser->save();
+                $wcgUser->userinfo = $data;
             }
         }
 

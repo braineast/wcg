@@ -10,6 +10,7 @@ namespace frontend\controllers;
 
 
 use frontend\models\wcg\User;
+use frontend\models\WechatUser;
 use yii\web\Controller;
 
 class WechatController extends Controller
@@ -86,7 +87,9 @@ class WechatController extends Controller
 
     private function getAccountBrief()
     {
-        $user = User::find()->where('open_id=:openid', [':openid'=>$this->postXml->FromUserName])->one();
+        $user = null;
+        $wechatUser = WechatUser::find()->where('open_id=:openId', [':openId'=>$this->postXml->FromUserName])->one();
+        if ($wechatUser) $user = User::fetch($wechatUser->getAttribute('user_id'));
         if ($user)
         {
             $balance = number_format($user->getAttribute('balance'), 2);
