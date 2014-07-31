@@ -32,7 +32,7 @@ class WechatController extends Controller
 
     public function actionMenu()
     {
-        return $this->createMenu();
+        $this->createMenu();
     }
 
     public function actionIndex($signature, $timestamp, $nonce, $echostr=null)
