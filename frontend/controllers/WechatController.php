@@ -137,11 +137,7 @@ class WechatController extends Controller
         $xml->writeCdata('http://9huimai.com/public/attachment/201403/06/13/53180bd19c25c.png');
         $xml->endElement();
         $xml->startElement('Url');
-<<<<<<< HEAD
         $xml->writeCdata(\Yii::$app->request->hostInfo.\Yii::$app->urlManager->createUrl(['site/bind', 'openid'=>$this->postXml->FromUserName]));
-=======
-        $xml->writeCdata(\Yii::$app->request->hostInfo.\Yii::$app->urlManager->createUrl('site/bind', ['openid'=>$this->postXml->FromUserName]));
->>>>>>> 94197a916add5749a96aa060caaac83315a705bb
         $xml->endElement();
         $xml->endElement();
         $xml->endElement();
@@ -177,11 +173,7 @@ class WechatController extends Controller
         $xml->writeCdata('http://9huimai.com/public/attachment/201403/06/13/53180bd19c25c.png');
         $xml->endElement();
         $xml->startElement('Url');
-<<<<<<< HEAD
         $xml->writeCdata(\Yii::$app->request->hostInfo.\Yii::$app->urlManager->createUrl(['site/bind', 'openid'=>$this->postXml->FromUserName]));
-=======
-        $xml->writeCdata(\Yii::$app->request->hostInfo.\Yii::$app->urlManager->createUrl('site/bind', ['openid'=>$this->postXml->FromUserName]));
->>>>>>> 94197a916add5749a96aa060caaac83315a705bb
         $xml->endElement();
         $xml->endElement();
         $xml->endElement();
