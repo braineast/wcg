@@ -89,11 +89,17 @@ class WechatController extends Controller
         return false;
     }
 
-    private function getAccountTransactions()
+    private function getUser()
     {
         $user = null;
         $wechatUser = WechatUser::find()->where('open_id=:openId', [':openId'=>$this->postXml->FromUserName])->one();
         if ($wechatUser) $user = User::fetch($wechatUser->getAttribute('user_id'));
+        return $user;
+    }
+
+    private function getAccountTransactions()
+    {
+        $user = $this->getUser();
         if ($user)
         {
             $xml = $this->xmlWriter();
@@ -109,7 +115,15 @@ class WechatController extends Controller
             $xml->writeCdata('查看账户交易记录');
             $xml->endElement();
             $xml->startElement('Description');
-            $xml->writeCdata(sprintf("账户交易包括您的充值、提现、投标等交易信息。"));
+            $xml->writeCdata(sprintf("截至目前，您的账户基本统计信息为：\n充值%s次，计充值金额为：%s元；\n提现%s次，计提现金额为：%s元；\n投标%s次，成功投标%s次，成功投标金额为：%s元。",
+                $user->userinfo['recharge_count'],
+                $user->userinfo['recharge_sum'],
+                $user->userinfo['withdraw_count'],
+                $user->userinfo['withdraw_sum'],
+                $user->userinfo['bid_count'],
+                $user->userinfo['win_bid_count'],
+                $user->userinfo['bid_sum']
+            ));
             $xml->endElement();
             $xml->startElement('PicUrl');
             $xml->writeCdata('http://www.wangcaigu.com/template/default/Public/images/logo.png');
