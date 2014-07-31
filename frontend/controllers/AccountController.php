@@ -9,9 +9,14 @@
 namespace frontend\controllers;
 
 
+use frontend\models\account\DepositForm;
 use frontend\models\Controller;
 use frontend\models\WechatUser;
 use frontend\models\wcg\User as WCGUser;
+use yii\web\Response;
+use yii\widgets\ActiveForm;
+
+use Yii;
 
 class AccountController extends Controller{
     public function actionIndex($openid = null)
@@ -27,8 +32,15 @@ class AccountController extends Controller{
 //            if (!WechatUser::login($openid)) \Yii::$app->end();
             $this->layout = 'wcg';
         }
+        $model = new DepositForm();
 
-        return $this->render('deposit');
+        $model->load($_POST);
+        if (Yii::$app->request->isAjax) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($model);
+        }
+
+        return $this->render('deposit', ['model'=>$model]);
     }
 
     public function actionTransactions($openid = null)

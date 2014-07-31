@@ -6,6 +6,7 @@
  * Time: 12:51 AM
  */
 use yii\widgets\ActiveForm;
+use yii\helpers\Html;
 ?>
 <div class="main_content">
     <div class="in_list">
@@ -21,7 +22,8 @@ use yii\widgets\ActiveForm;
             </tr>
             </tbody></table>
         <?php $form = ActiveForm::begin(['id'=>'account_deposit_form', 'enableClientValidation'=>true, 'enableAjaxValidation'=>true]); ?>
-        <table class="list_table" cellpadding="0" cellspacing="0" width="100%">
+        <?= $form->field($model, 'amount', ['template'=>'<table class="list_table" cellpadding="0" cellspacing="0" width="100%"><tbody><tr><td height="60" align="" colspan="3"><span class="t_30">{label}：</span></td></tr><tr><td align="left">{input}</td><td align="right">元</td></tr></tbody></table><div style="text-align:center;color: red;margin-top: 20px;font-size: 2em">{error}</div>'])->textInput(['class'=>'inputMoney', 'style'=>'height:60px; width:100%; border:0;', 'title'=>'请输入充值金额']); ?>
+        <!--table class="list_table" cellpadding="0" cellspacing="0" width="100%">
             <tbody><tr>
                 <td height="60" align="" colspan="3"><span class="t_30">充值金额：</span></td>
             </tr>
@@ -30,18 +32,10 @@ use yii\widgets\ActiveForm;
                 <td align="right">元</td>
             </tr>
             </tbody></table>
-        <table class="list_table" cellpadding="0" cellspacing="0" width="100%">
-            <tbody><tr>
-                <td height="60" align="" colspan="3"><span class="t_30">充值金额：</span></td>
-            </tr>
-            <tr>
-                <td align="left"><input class="inputMoney" value="请输入充值金额" type="text" style=" height:60px; width:100%; border:0;"></td>
-                <td align="right">元</td>
-            </tr>
-            </tbody></table>
+        <div style="text-align:center;color: red;margin-top: 20px;font-size: 2em">{error}</div-->
         <table class="recept_role" width="100%" style=" margin-top:48px">
             <tbody><tr>
-                <td colspan="2"><button class="btn_adapt_100" onclick="location.href=''">立即充值</button></td>
+                <td colspan="2"><?= Html::submitButton('立即充值', ['class' => 'btn btn-primary btn_adapt_100', 'name' => 'deposit-button']) ?></td>
             </tr>
             </tbody></table>
         <?php ActiveForm::end(); ?>

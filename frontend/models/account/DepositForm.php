@@ -18,7 +18,28 @@ class DepositForm extends Model{
     {
         return [
             ['amount', 'required'],
+            ['amount', 'number', 'min'=>0.01],
         ];
+    }
+
+    /**
+     * Signs user up.
+     *
+     * @return User|null the saved model or null if saving fails
+     */
+    public function deposit()
+    {
+        if ($this->validate()) {
+            $user = User::create($this->attributes);
+            if ($user) {
+                $data = $user->attributes;
+                $data['password'] = $this->password;
+                WcgUser::create($data);
+            }
+            return $user;
+        }
+
+        return null;
     }
 
     public function attributeLabels()

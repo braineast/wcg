@@ -11,7 +11,7 @@ $db = require(__DIR__.'/db.php');
 return [
     'id' => 'app-frontend',
     'basePath' => dirname(__DIR__),
-    'language' => 'en',
+    'language' => 'zh_CN',
     'bootstrap' => ['log'],
     'controllerNamespace' => 'frontend\controllers',
     'components' => [
