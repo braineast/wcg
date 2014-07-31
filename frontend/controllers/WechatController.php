@@ -94,6 +94,9 @@ class WechatController extends Controller
         {
             $balance = number_format($user->getAttribute('balance'), 2);
             $freezeAmt = number_format($user->getAttribute('freeze_balance'), 2);
+            $investAmt = number_format($user->getAttribute('invest_balance'), 2);
+            $dueInterestAmt = number_format($user->getAttribute('interest_balance'), 2);
+            $returnedInterestAmt = number_format($user->getAttribute('returned_interest_balance'), 2);
             $total = $balance + $freezeAmt;
             $xml = $this->xmlWriter();
             $xml->startElement(self::FIELD_MSG_TYPE);
@@ -108,7 +111,7 @@ class WechatController extends Controller
             $xml->writeCdata('账户摘要数据统计');
             $xml->endElement();
             $xml->startElement('Description');
-            $xml->writeCdata(sprintf("账户总额：%s\n其中可用金额：%s，冻结金额：%s", $total, $balance, $freezeAmt));
+            $xml->writeCdata(sprintf("账户总额：%s\n其中可用金额：%s，冻结金额：%s\n理财资产：%s\n待收利息：%s， 已赚利息：%s", $total, $balance, $freezeAmt, $investAmt, $dueInterestAmt, $returnedInterestAmt));
             $xml->endElement();
             $xml->startElement('PicUrl');
             $xml->writeCdata('http://www.wangcaigu.com/template/default/Public/images/logo.png');
