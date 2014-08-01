@@ -365,8 +365,7 @@ class SiteController extends Controller
         if ($wcgUser = WCGUser::fetch())
         {
             $list = [];
-//            $url = sprintf("%s/user_deal/attribute-data-value-%s", Yii::$app->params['api']['wcg']['baseUrl'], $wcgUser->getAttribute('wcg_uid'));
-            $url = sprintf("%s/user_deal/attribute-data-value-77", Yii::$app->params['api']['wcg']['baseUrl']);
+            $url = sprintf("%s/user_deal/attribute-data-value-%s", Yii::$app->params['api']['wcg']['baseUrl'], $wcgUser->getAttribute('wcg_uid'));
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             $result = curl_exec($ch);
