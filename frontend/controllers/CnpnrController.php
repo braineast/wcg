@@ -48,7 +48,7 @@ class CnpnrController extends Controller
             if (!\Yii::$app->getUser()->isGuest)
             {
                 WCGUser::fetch();
-                if ($result) $this->redirect('/site/notice');
+                if ($result) $this->redirect('/site/notice?type=open');
             }
         }
         return false;
@@ -89,9 +89,10 @@ class CnpnrController extends Controller
 
     protected function NetSave()
     {
-        $result = $this->postWCG();
         if ($this->response[ChinaPNR::RESP_CODE] == '000')
         {
+            $result = $this->postWCG();
+            if ($result) $this->redirect('/site/notice?type=deposit');
         }
         return false;
     }

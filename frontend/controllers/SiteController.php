@@ -172,9 +172,24 @@ class SiteController extends Controller
         return $this->render('about');
     }
 
-    public function actionNotice()
+    public function actionNotice($type, $message = null)
     {
-        return $this->render('notice');
+        if (!$message)
+        {
+            switch($type)
+            {
+                case 'open':
+                    $message = sprintf("您已经完成了平台账户绑定。");
+                    break;
+                case 'deposit':
+                    $message = sprintf("您已经完成了一笔充值。");
+                    break;
+                case 'tender':
+                    $message = sprintf("您的投标已完成，稍后可以查询到您的投标记录，以确认是否抢到！");
+                    break;
+            }
+        }
+        return $this->render('notice', ['message'=>$message]);
     }
 
     public function actionSignup($openid = null)
