@@ -52,7 +52,7 @@ if (!$transactions || !is_array($transactions)) $transactions = [];
             <td width="34%" align="center" style=" border-right:0">冻结金额:￥<?= number_format($summary['freeze_balance'], 2) ?>元</td>
         </tr>
         <tr>
-            <td align="ceter" colspan="3" class="btnBlue"><p><a href="<?= Yii::$app->urlManager->createAbsoluteUrl('/site/products?openid='.$openid) ?>"><img src="/css/wcg/images/icon_money.png"><span style="color: #ffffff;">去理财</span></a></p></td>
+            <td align="ceter" colspan="3" class="btnBlue"><p><a href="<?= Yii::$app->urlManager->createAbsoluteUrl('/site/products') ?>"><img src="/css/wcg/images/icon_money.png"><span style="color: #ffffff;">去理财</span></a></p></td>
         </tr>
         </tbody></table>
 </div>

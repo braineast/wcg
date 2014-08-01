@@ -62,6 +62,7 @@ class AccountController extends Controller{
             $this->layout = 'wcg';
             if (Yii::$app->getUser()->isGuest)
             {
+                Yii::$app->getUser()->setReturnUrl('/site/transactions');
                 $this->redirect('/site/bind');
             }
         }
@@ -130,7 +131,7 @@ class AccountController extends Controller{
         {
             $summary = $wcgUser->getAttributes();
         }
-        return $this->render('transactions', ['summary'=>$summary, 'transactions'=>$tLogs, 'openid'=>$openid]);
+        return $this->render('transactions', ['summary'=>$summary, 'transactions'=>$tLogs]);
     }
 
     protected function wechatLogin($openid)
