@@ -202,6 +202,12 @@ class SiteController extends Controller
         ]);
     }
 
+    public function actionProducts()
+    {
+        $this->layout = 'wcg';
+        return $this->render('products');
+    }
+
     public function actionCnpnr()
     {
         $wcgUser = WCGUser::fetch();
