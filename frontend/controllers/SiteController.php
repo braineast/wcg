@@ -188,7 +188,7 @@ class SiteController extends Controller
             }
         }
         return $this->render('wcg/login', [
-            'model' => $model,'openid'=>$openid
+            'model' => $model,'openid'=>$openid ? $openid : false
         ]);
     }
 
