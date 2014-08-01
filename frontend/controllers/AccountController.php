@@ -13,6 +13,7 @@ use frontend\models\account\DepositForm;
 use frontend\models\Controller;
 use frontend\models\WechatUser;
 use frontend\models\wcg\User as WCGUser;
+use yii\helpers\Json;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
 
@@ -59,12 +60,45 @@ class AccountController extends Controller{
             if ($openid) WechatUser::login($openid);
         }
         $wcgUser = WCGUser::fetch();
+        $logs = null;
+        $transactions = [];
+        $url = sprintf("%s/cheack_jiaoyi/attribute-data-value-%s", Yii::$app->params['api']['wcg']['baseUrl'], $wcgUser->getAttribute('wcg_uid'));
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $logs = curl_exec($ch);
+        $logs = Json::decode($logs, true);
+        $logs = $logs['data'];
+
+        curl_close($ch);
+        if ($logs)
+        {
+            foreach($logs as $type=>$logsInType)
+            {
+                if ($logsInType && is_array($logsInType))
+                {
+                    foreach($logsInType as $log)
+                    {
+                        $log['type'] = $type;
+                        $transactions[date('Ymd', $log['create_time'])][] = $log;
+                    }
+                }
+                krsort($transactions);
+                $tLogs = null;
+                foreach($transactions as $logs)
+                {
+                    foreach($logs as $log)
+                    {
+                        $tLogs[date('Y  m', $log['create_time'])][] = $log;
+                    }
+                }
+            }
+        }
         $summary = [];
         if ($wcgUser)
         {
             $summary = $wcgUser->getAttributes();
         }
-        return $this->render('transactions', ['summary'=>$summary]);
+        return $this->render('transactions', ['summary'=>$summary, 'transactions'=>$transactions]);
     }
 
     protected function wechatLogin($openid)
