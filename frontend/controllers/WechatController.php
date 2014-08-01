@@ -78,6 +78,7 @@ class WechatController extends Controller
         if ($eventKey == 'account_transactions') return $this->getAccountTransactions();
         if ($eventKey == 'account_deposit') return $this->accountDeposit();
         if ($eventKey == 'invest_go') return $this->investGo();
+        if ($eventKey == 'info_get_question_action') return $this->investQuestion();
         if ($eventKey == '') return $this->getAccountBrief();
         $xml = $this->xmlWriter();
         $xml->startElement(static::FIELD_MSG_TYPE);
@@ -90,6 +91,36 @@ class WechatController extends Controller
         $message = $xml->outputMemory(true);
         exit($this->messageFormatter($message));
         return false;
+    }
+
+    public function investQuestion()
+    {
+        $xml = $this->xmlWriter();
+        $xml->startElement(self::FIELD_MSG_TYPE);
+        $xml->writeCdata('news');
+        $xml->endElement();
+        $xml->startElement('ArticleCount');
+        $xml->text(1);
+        $xml->endElement();
+        $xml->startElement('Articles');
+        $xml->startElement('item');
+        $xml->startElement('Title');
+        $xml->writeCdata('客户服务指南');
+        $xml->endElement();
+        $xml->startElement('Description');
+        $xml->writeCdata(sprintf("服务时间:9:00-17:00;\n联系方式一：在微信中留言即可得到客服的回复，留言用户名可优先得到处理哦~；\n联系方式二：拨打客服热线：400-888-6268；\n联系方式三：添加客服微信（406338911），一对一服务哦~"));
+        $xml->endElement();
+//            $xml->startElement('PicUrl');
+//            $xml->writeCdata('http://www.wangcaigu.com/template/default/Public/images/logo.png');
+//            $xml->endElement();
+        $xml->startElement('Url');
+        $xml->writeCdata(\Yii::$app->urlManager->createAbsoluteUrl('/account/transactions?openid='.$this->postXml->FromUserName));
+        $xml->endElement();
+        $xml->endElement();
+        $xml->endElement();
+        $xml->endDocument();
+        $message = $xml->outputMemory(true);
+        exit($this->messageFormatter($message));
     }
 
     private function investGo()
@@ -365,7 +396,7 @@ class WechatController extends Controller
                                     "name":"服务",
                                     "sub_button":[
                                         {"name":"关于旺财谷","type":"view","url":"http:\/\/m.wangcaigu.com\/site\/about"},
-                                        {"name":"新手指导","type":"click","key":"info_get_newbie_guide_action"},
+                                        {"name":"新手指导","type":"view","url":"http:\/\/www.wangcaigu.com/help/xszy.html"},
                                         {"name":"理财咨询","type":"click","key":"info_get_question_action"},
                                         {"name":"投诉建议","type":"click","key":"suggest_action"}
                                     ]
