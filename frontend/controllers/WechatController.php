@@ -33,10 +33,10 @@ class WechatController extends Controller
 
     public function actionMenu()
     {
-//        $this->deleteMenu();
-//        print_r($this->getMenu());
-//        $this->createMenu();
-//        print_r($this->getMenu());
+        $this->deleteMenu();
+        print_r($this->getMenu());
+        $this->createMenu();
+        print_r($this->getMenu());
     }
 
     public function actionIndex($signature, $timestamp, $nonce, $echostr=null)
@@ -79,6 +79,7 @@ class WechatController extends Controller
         if ($eventKey == 'account_deposit') return $this->accountDeposit();
         if ($eventKey == 'invest_go') return $this->investGo();
         if ($eventKey == 'info_get_question_action') return $this->investQuestion();
+        if ($eventKey == 'suggest_action') return $this->suggestion();
         if ($eventKey == '') return $this->getAccountBrief();
         $xml = $this->xmlWriter();
         $xml->startElement(static::FIELD_MSG_TYPE);
@@ -91,6 +92,36 @@ class WechatController extends Controller
         $message = $xml->outputMemory(true);
         exit($this->messageFormatter($message));
         return false;
+    }
+
+    public function suggestion()
+    {
+        $xml = $this->xmlWriter();
+        $xml->startElement(self::FIELD_MSG_TYPE);
+        $xml->writeCdata('news');
+        $xml->endElement();
+        $xml->startElement('ArticleCount');
+        $xml->text(1);
+        $xml->endElement();
+        $xml->startElement('Articles');
+        $xml->startElement('item');
+        $xml->startElement('Title');
+        $xml->writeCdata('投诉建议');
+        $xml->endElement();
+        $xml->startElement('Description');
+        $xml->writeCdata(sprintf("请说出您的问题或者建议，我们会及时为您回答。"));
+        $xml->endElement();
+//            $xml->startElement('PicUrl');
+//            $xml->writeCdata('http://www.wangcaigu.com/template/default/Public/images/logo.png');
+//            $xml->endElement();
+//        $xml->startElement('Url');
+//        $xml->writeCdata(\Yii::$app->urlManager->createAbsoluteUrl('/account/transactions?openid='.$this->postXml->FromUserName));
+//        $xml->endElement();
+        $xml->endElement();
+        $xml->endElement();
+        $xml->endDocument();
+        $message = $xml->outputMemory(true);
+        exit($this->messageFormatter($message));
     }
 
     public function investQuestion()
