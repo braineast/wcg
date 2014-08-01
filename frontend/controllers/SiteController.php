@@ -100,6 +100,11 @@ class SiteController extends Controller
 
     public function actionBind($openid = null)
     {
+        if ($openid && WechatUser::find()->where('open_id=:openId', [':openId'=>$openid])->one())
+        {
+            //禁止一个微信用户绑定多个账号
+            return $this->redirect('/site/bind');
+        }
         Yii::$app->user->setReturnUrl('/account/transactions');
         $this->layout = 'wcg';
         $model = new LoginForm();
