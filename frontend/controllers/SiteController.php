@@ -98,7 +98,7 @@ class SiteController extends Controller
     {
         if ($wechatUser = WechatUser::find()->where('open_id=:openId', [':openId'=>$openid])->one())
         {
-            $this->redirect('/site/notice?type=system&message=该微信账号已经绑定旺财谷平台用户，请不要重复绑定，谢谢！')
+            $this->redirect('/site/notice?type=system&message=该微信账号已经绑定旺财谷平台用户，请不要重复绑定，谢谢！');
         }
         else
         {
