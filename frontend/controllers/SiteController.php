@@ -241,7 +241,7 @@ class SiteController extends Controller
         $result = curl_exec($ch);
         curl_close($ch);
         $result = Json::decode($result, true);
-        $list = null;
+        $list = [];
         if ($result['result'] == 0 && $result['errors']['code'] == 0)
         {
             $list = $result['data'];
