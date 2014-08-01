@@ -13,7 +13,7 @@
                 <th align="left" width="33%">理财列表</th>
             </tr>
             <tr align="center">
-                <td width="33%"><span>12%-16%</span></td>
+                <td width="33%"><span>10%-13%</span></td>
             </tr>
             </tbody></table>
     </div>
