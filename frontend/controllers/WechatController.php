@@ -120,9 +120,9 @@ class WechatController extends Controller
             $xml->startElement('Description');
             $xml->writeCdata(sprintf("提前充值，有助于抢投自己中意的投资产品，剩余资金，更可投放到生利宝产品，每天享受利息收入，赶快行动！"));
             $xml->endElement();
-            $xml->startElement('PicUrl');
-            $xml->writeCdata('http://www.wangcaigu.com/template/default/Public/images/logo.png');
-            $xml->endElement();
+//            $xml->startElement('PicUrl');
+//            $xml->writeCdata('http://www.wangcaigu.com/template/default/Public/images/logo.png');
+//            $xml->endElement();
             $xml->startElement('Url');
             $xml->writeCdata(\Yii::$app->urlManager->createAbsoluteUrl('account/deposit?openid='.$this->postXml->FromUserName));
             $xml->endElement();
@@ -210,9 +210,9 @@ class WechatController extends Controller
             $xml->startElement('Description');
             $xml->writeCdata(sprintf("账户余额：%s\n其中可用金额：%s，冻结金额：%s\n账户总额：%s\n其中理财金额：%s， 生利宝金额：%s\n平台收益\n已赚利息：%s，待收利息：%s", $balance, $avlBalance, $freezeAmt, $total, $investAmt, $slbAmt, $returnedInterestAmt, $dueInterestAmt));
             $xml->endElement();
-            $xml->startElement('PicUrl');
-            $xml->writeCdata('http://www.wangcaigu.com/template/default/Public/images/logo.png');
-            $xml->endElement();
+//            $xml->startElement('PicUrl');
+//            $xml->writeCdata('http://www.wangcaigu.com/template/default/Public/images/logo.png');
+//            $xml->endElement();
             $xml->startElement('Url');
             $xml->writeCdata(\Yii::$app->urlManager->createAbsoluteUrl('account?openid='.$this->postXml->FromUserName));
             $xml->endElement();
@@ -243,9 +243,9 @@ class WechatController extends Controller
         $xml->startElement('Description');
         $xml->writeCdata('在旺财谷上投资，请您首先进行旺财谷账户与微信账号的绑定，可以新注册旺财谷账户，也可以使用已有的旺财谷账户与微信绑定。');
         $xml->endElement();
-        $xml->startElement('PicUrl');
-        $xml->writeCdata('http://www.wangcaigu.com/template/default/Public/images/logo.png');
-        $xml->endElement();
+//        $xml->startElement('PicUrl');
+//        $xml->writeCdata('http://www.wangcaigu.com/template/default/Public/images/logo.png');
+//        $xml->endElement();
         $xml->startElement('Url');
         $xml->writeCdata(\Yii::$app->urlManager->createAbsoluteUrl('site/bind?openid='.$this->postXml->FromUserName));
         $xml->endElement();
