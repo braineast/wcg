@@ -102,7 +102,6 @@ class SiteController extends Controller
     {
         if ($openid && WechatUser::find()->where('open_id=:openId', [':openId'=>$openid])->one())
         {
-            Yii::$app->user->logout();
             //禁止一个微信用户绑定多个账号
             if (Yii::$app->getUser()->isGuest) return $this->redirect('/site/bind');
             return $this->redirect('/site/notice?type=system&subject=系统提示&message=该微信账号已经绑定旺财谷平台用户，请不要重复绑定，谢谢！');
