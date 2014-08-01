@@ -301,6 +301,7 @@ class SiteController extends Controller
 
     public function actionCnpnr()
     {
+        if (Yii::$app->user->isGuest) return $this->redirect('/site/bind');
         $wcgUser = WCGUser::fetch();
         if ($wcgUser)
         {
