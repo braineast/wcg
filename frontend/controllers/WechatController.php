@@ -35,7 +35,7 @@ class WechatController extends Controller
     {
 //        $this->deleteMenu();
 //        print_r($this->getMenu());
-//        $this->createMenu();
+        $this->createMenu();
         print_r($this->getMenu());
     }
 
