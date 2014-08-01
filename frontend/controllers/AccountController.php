@@ -29,8 +29,11 @@ class AccountController extends Controller{
     {
         if ($this->isWechat())
         {
-            if (!$openid) \Yii::$app->end();
-            if (!WechatUser::login($openid)) \Yii::$app->end();
+            if (Yii::$app->getUser()->isGuest)
+            {
+                if (!$openid) Yii::$app->end();
+                if (!WechatUser::login($openid)) \Yii::$app->end();
+            }
             if ($wcgUser = WCGUser::fetch())
             {
                 if (!$wcgUser->hasCnpnrAccount()) $this->redirect(Yii::$app->urlManager->createAbsoluteUrl('/site/cnpnr'));
