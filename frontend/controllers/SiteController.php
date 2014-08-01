@@ -98,6 +98,7 @@ class SiteController extends Controller
     {
         if ($wechatUser = WechatUser::find()->where('open_id=:openId', [':openId'=>$openid])->one())
         {
+            Yii::$app->response->charset = 'UTF-8';
             exit('您已经绑定了账号');
         }
         else
