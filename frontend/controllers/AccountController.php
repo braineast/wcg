@@ -98,7 +98,7 @@ class AccountController extends Controller{
         {
             $summary = $wcgUser->getAttributes();
         }
-        return $this->render('transactions', ['summary'=>$summary, 'transactions'=>$transactions]);
+        return $this->render('transactions', ['summary'=>$summary, 'transactions'=>$tLogs]);
     }
 
     protected function wechatLogin($openid)

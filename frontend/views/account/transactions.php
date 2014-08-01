@@ -30,22 +30,11 @@
                 <tbody>
                 <?php foreach ($logs as $log): ?>
                     <tr height="60">
-                        <td class="td" width="13%"><?= date('Ymd', $log['create_time']) ?> </td>
-                        <td class="td" width="13%" align="center"><?= $log['type'] ?></td>
+                        <td class="td" width="13%"><?= date('d', $log['create_time']) ?>日 </td>
+                        <td class="td" width="13%" align="center"><?= $log['type'] == 'chongzhi' ? '充值' : ($log['type'] == 'tixian' ? '提现' : ($log['type'] == 'toubiao' ? '提现' : null)) ?></td>
                         <td class="td" width="13%" align="right"><?= $log['fund'] ?>元</td>
                     </tr>
                 <?php endforeach; ?>
-
-                <tr height="60">
-                    <td class="td" width="13%">22日 </td>
-                    <td class="td" width="13%" align="center">提现</td>
-                    <td class="td" width="13%" align="right">-100.00</td>
-                </tr>
-                <tr height="60">
-                    <td width="13%">15日 </td>
-                    <td width="13%" align="center">回收本息</td>
-                    <td width="13%" align="right">+11.68</td>
-                </tr>
                 </tbody></table>
         </div>
     <?php endforeach; ?>
