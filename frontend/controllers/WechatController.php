@@ -35,8 +35,8 @@ class WechatController extends Controller
     {
 //        $this->deleteMenu();
 //        print_r($this->getMenu());
-        $this->createMenu();
-        print_r($this->getMenu());
+//        $this->createMenu();
+//        print_r($this->getMenu());
     }
 
     public function actionIndex($signature, $timestamp, $nonce, $echostr=null)
@@ -288,7 +288,7 @@ class WechatController extends Controller
             $dueInterestAmt = number_format($user->getAttribute('interest_balance'), 2, '.', '');
             $returnedInterestAmt = number_format($user->getAttribute('returned_interest_balance'), 2, '.', '');
             $slbAmt = number_format($user->getAttribute('slb_balance'), 2, '.', '');
-            $total = $balance + $investAmt + $slbAmt;
+            $total = number_format($balance + $investAmt + $slbAmt, 2);
             $xml = $this->xmlWriter();
             $xml->startElement(self::FIELD_MSG_TYPE);
             $xml->writeCdata('news');
