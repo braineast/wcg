@@ -33,10 +33,10 @@ class WechatController extends Controller
 
     public function actionMenu()
     {
-        $this->deleteMenu();
-        print_r($this->getMenu());
-        $this->createMenu();
-        print_r($this->getMenu());
+//        $this->deleteMenu();
+//        print_r($this->getMenu());
+//        $this->createMenu();
+//        print_r($this->getMenu());
     }
 
     public function actionIndex($signature, $timestamp, $nonce, $echostr=null)
@@ -357,7 +357,7 @@ class WechatController extends Controller
                                     "name":"理财",
                                     "sub_button":[
                                         {"name":"去理财","type":"view","url":"http:\/\/m.wangcaigu.com\/site\/products"},
-                                        {"name":"安全保障","type":"click","key":"info_get_guarantee_action"},
+                                        {"name":"安全保障","type":"view","url":"http:\/\/m.wangcaigu.com\/site\/safe"},
                                         {"name":"持有产品","type":"click","key":"account_invests"}
                                     ]
                                 },

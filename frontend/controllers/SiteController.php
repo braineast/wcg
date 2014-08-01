@@ -174,6 +174,12 @@ class SiteController extends Controller
         return $this->render('about');
     }
 
+    public function actionSafe()
+    {
+        $this->layout = 'wcg';
+        return $this->render('safe');
+    }
+
     public function actionNotice($type = null, $subject = null, $message = null)
     {
         $this->layout = 'wcg';
