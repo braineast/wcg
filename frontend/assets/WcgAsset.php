@@ -18,8 +18,8 @@ class WcgAsset extends AssetBundle
         'css/wcg/layout.css',
     ];
     public $js = [
-        'javascript/open.js',
-        'javascript/account/deposit.js',
+//        'javascript/open.js',
+//        'javascript/account/deposit.js',
     ];
     public $depends = [
 //        'yii\web\YiiAsset',
