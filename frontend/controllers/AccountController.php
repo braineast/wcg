@@ -62,7 +62,7 @@ class AccountController extends Controller{
             $this->layout = 'wcg';
             if (Yii::$app->getUser()->isGuest)
             {
-                Yii::$app->getUser()->setReturnUrl('/site/transactions');
+                Yii::$app->getUser()->setReturnUrl('/account/transactions');
                 $this->redirect('/site/bind');
             }
         }
