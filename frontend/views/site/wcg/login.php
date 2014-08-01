@@ -48,7 +48,7 @@ use yii\helpers\Html;
             </tr> -->
             </tbody></table>
         <?php ActiveForm::end(); ?>
-        <?php if (Yii::$app->user->isGuest): ?>
+        <?php if (Yii::$app->user->isGuest || !$openid): ?>
         <div style="color: red; font-size: 2em; padding: 10px; float: right"><a href="<?= Yii::$app->urlManager->createAbsoluteUrl('/site/signup?openid='.$openid); ?>">没有旺财谷账户？</a> </div>
         <?php endif; ?>
     </div>
