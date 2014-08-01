@@ -132,11 +132,11 @@ class SiteController extends Controller
                         return $this->goHome();
                     }
                 }
-                else  return $this->render('wcg/login', ['model' => $model,]);
+                else  return $this->render('wcg/login', ['model' => $model,'openid'=>$openid]);
                 return $this->goBack();
             } else {
                 return $this->render('wcg/login', [
-                    'model' => $model,
+                    'model' => $model,'openid'=>$openid
                 ]);
             }
         }
@@ -194,7 +194,7 @@ class SiteController extends Controller
         if ($this->isWechat() || true)
         {
             $this->layout = 'wcg';
-            return $this->render('/user/signup', ['model'=>$model]) ;
+            return $this->render('/user/signup', ['model'=>$model, 'openid'=>$openid]) ;
         }
 
         return $this->render('signup', [
