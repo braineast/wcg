@@ -172,6 +172,11 @@ class SiteController extends Controller
         return $this->render('about');
     }
 
+    public function actionNotice()
+    {
+        return $this->render('notice');
+    }
+
     public function actionSignup($openid = null)
     {
         if ($this->isWechat() && !$openid) Yii::$app->end();
@@ -205,7 +210,18 @@ class SiteController extends Controller
     public function actionProducts()
     {
         $this->layout = 'wcg';
-        return $this->render('products');
+        $url = sprintf("%s/deal_list/attribute-data-value-wcg", Yii::$app->params['api']['wcg']['baseUrl']);
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $result = curl_exec($ch);
+        curl_close($ch);
+        $result = Json::decode($result, true);
+        $list = null;
+        if ($result['result'] == 0 && $result['errors']['code'] == 0)
+        {
+            $list = $result['data'];
+        }
+        return $this->render('products', ['list'=>$list]);
     }
 
     public function actionCnpnr()

@@ -41,15 +41,14 @@ class CnpnrController extends Controller
 
     protected function UserRegister()
     {
-        var_dump(\Yii::$app->request->post());
         if ($this->response[ChinaPNR::RESP_CODE] == '000')
         {
-            return $this->postWCG();
             //推送到旺财谷网站 - 开户接口
-            $userId = $this->response[ChinaPNR::PARAM_MERPRIV]['id'];
-            $wcgUser = WCGUser::find()->where('user_id=:userId', [':userId'=>$userId])->one();
-            if ($wcgUser)
+            $result =  $this->postWCG();
+            if (!\Yii::$app->getUser()->isGuest)
             {
+                WCGUser::fetch();
+                $this->redirect('/site/notice');
             }
         }
         return false;
@@ -83,12 +82,9 @@ class CnpnrController extends Controller
             curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
             $result = curl_exec($ch);
             curl_close($ch);
-            echo(sprintf("%s, %s", $result, 'RECV_ORD_ID_'.$this->response[$this->response[ChinaPNR::PARAM_MERPRIV]['showId']]));
-            if ($result == 'RECV_ORD_ID_'.$this->response[$this->response[ChinaPNR::PARAM_MERPRIV]['showId']])
-            {
-                WCGUser::fetch();
-            }
+            return $result;
         }
+        return null;
     }
 
     protected function NetSave()

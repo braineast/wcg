@@ -16,6 +16,7 @@ class WcgAsset extends AssetBundle
     public $css = [
         'css/wcg/common.css',
         'css/wcg/layout.css',
+        'css/wcg/process.css',
     ];
     public $js = [
 //        'javascript/open.js',
