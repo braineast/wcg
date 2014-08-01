@@ -8,21 +8,30 @@
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 ?>
+<style>
+    .help-block {
+        margin: 10px;
+        color: red;
+        font-size: 2em;
+    }
+</style>
 <div class="main_content" style=" min-height:1048px;">
     <div class="register">
-        <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
+        <?php $form = ActiveForm::begin(['id' => 'login-form', 'enableClientValidation'=>true, 'enableAjaxValidation'=>true]); ?>
         <table cellpadding="0" cellspacing="0" class="borderBt" style=" margin-top:0">
             <tbody><tr>
                 <td width="80" class="icon_user"></td>
-                <td><?= $form->field($model, 'username', ['template'=>'{input}'])->textInput(['class'=>'field_adapt_90', 'placeholder'=>'用户名 / 邮箱 / 手机号']) ?></td>
+<!--                <td>--><?//= $form->field($model, 'username', ['template'=>'{input}'])->textInput(['class'=>'field_adapt_90', 'placeholder'=>'用户名 / 邮箱 / 手机号']) ?><!--</td>-->
+                <td><?= $form->field($model, 'username', ['template'=>'{input}'])->textInput(['class'=>'field_adapt_90', 'placeholder'=>'用户名']) ?></td>
             </tr>
             </tbody></table>
-        <table cellpadding="0" cellspacing="0" class="borderBt">
-            <tbody><tr>
-                <td width="80" class="user_lock"></td>
-                <td><?= $form->field($model, 'password', ['template'=>'{input}'])->passwordInput(['class'=>'field_adapt_90', 'placeholder'=>'密码']) ?></td>
-            </tr>
-            </tbody></table>
+        <?= $form->field($model, 'password', ['template'=>'<table cellpadding="0" cellspacing="0" class="borderBt"><tbody><tr><td width="80" class="user_lock"></td><td>{input}</td></tr></tbody></table>{error}'])->passwordInput(['class'=>'field_adapt_90', 'placeholder'=>'密码']) ?>
+<!--        <table cellpadding="0" cellspacing="0" class="borderBt">-->
+<!--            <tbody><tr>-->
+<!--                <td width="80" class="user_lock"></td>-->
+<!--                <td></td>-->
+<!--            </tr>-->
+<!--            </tbody></table>-->
         <!--table cellpadding="0" cellspacing="0">
             <tbody><tr>
                 <td width="80" class="user_pwd bt"></td>

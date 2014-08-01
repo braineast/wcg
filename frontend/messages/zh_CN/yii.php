@@ -20,4 +20,5 @@ return [
     'Deposit Amount'=>'充值金额',
     '{attribute} must be a number.'=> '{attribute}必须为一个有效的数字。',
     '{attribute} must be no less than {min}.'=>'{attribute}充值金额不能少于{min}。',
+    'Incorrect username or password.'=>'用户名或密码不正确，请检查后重新输入。',
 ];

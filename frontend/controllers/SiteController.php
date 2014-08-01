@@ -18,6 +18,7 @@ use yii\filters\AccessControl;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
 use frontend\models\Controller;
+use yii\helpers\Html;
 
 use frontend\models\wcg\User as WCGUser;
 
@@ -99,6 +100,7 @@ class SiteController extends Controller
 
     public function actionBind($openid = null)
     {
+        Yii::$app->user->setReturnUrl('/account/transactions');
         $this->layout = 'wcg';
         $model = new LoginForm();
 //        if ($openid)
@@ -149,12 +151,29 @@ class SiteController extends Controller
 //            }
 //        }
         if ($model->load(Yii::$app->request->post())) {
+            if (Yii::$app->request->isAjax) {
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                if (!$model->username)
+                {
+                    $error[Html::getInputId($model, 'password')] = [Yii::t('yii', '用户名不允许为空。')];
+                }elseif (!$model->password) $error[Html::getInputId($model, 'password')] = [Yii::t('yii', '密码不允许为空。')];
+                else $error[Html::getInputId($model, 'password')] = [];
+                return $error;
+            }
             $url = sprintf("%s/login/attribute-data-value-%s", Yii::$app->params['api']['wcg']['baseUrl'], base64_encode(Json::encode(['username'=>$model->username, 'password'=>md5($model->password), 'login_ip'=>Yii::$app->request->userIP])));
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             $result = curl_exec($ch);
             curl_close($ch);
             $result = Json::decode($result, true);
+            if (Yii::$app->request->isAjax) {
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                if ($result['result'] != 0 || $result['errors']['code'] != 0)
+                {
+                    $error[Html::getInputId($model, 'password')] = [Yii::t('yii', 'Incorrect username or password.')];
+                    return $error;
+                }else return [];
+            }
             if ($result['result'] == 0 && $result['errors']['code'] == 0)
             {
                 $userData = $result['data'];
@@ -167,8 +186,9 @@ class SiteController extends Controller
                     if ($openid && !WechatUser::find()->where('open_id=:openId', [':openId'=>$openid])->one())
                         WechatUser::create(['user_id'=>$wcgUser->getAttribute('user_id'), 'open_id'=>$openid]);
                     //该用户在旺财谷登录成功，并已经绑定了微信账号，那么，本地登录
-                    $identity = \frontend\models\User::findIdentity($wcgUser->getAttribute('user_id'));
-                    Yii::$app->user->login($identity);
+                    $user = User::find()->where('id=:id', [':id'=>$wcgUser->getAttribute('user_id')])->one();
+                    if ($user) Yii::$app->user->login($user);
+                    Yii::$app->user->login($user);
                     return $this->goBack();
                 }
                 $signup = new SignupForm();
@@ -188,7 +208,10 @@ class SiteController extends Controller
                     return $this->redirect('/site/notice?type=open');
                 }
             }
-            else  return $this->render('wcg/login', ['model' => $model,'openid'=>$openid]);
+            else {
+                $model->addError('password', Yii::t('yii', 'Incorrect username or password.'));
+                return $this->render('wcg/login', ['model' => $model,'openid'=>$openid]);
+            }
             return $this->goBack();
         }
         return $this->render('wcg/login', [
