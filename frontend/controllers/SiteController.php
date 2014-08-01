@@ -26,6 +26,8 @@ use frontend\models\wcg\User as WCGUser;
  */
 class SiteController extends Controller
 {
+    const DEAL_PERIOD_TYPE_DAY = 'D';
+    const DEAL_PERIOD_TYPE_MONTH = 'M';
     /**
      * @inheritdoc
      */
@@ -277,6 +279,74 @@ class SiteController extends Controller
         return false;
     }
 
+    public function actionMyproducts()
+    {
+        $this->layout = 'wcg';
+        if (Yii::$app->getUser()->isGuest) exit;
+        if ($wcgUser = WCGUser::fetch())
+        {
+            $list = [];
+//            $url = sprintf("%s/user_deal/attribute-data-value-%s", Yii::$app->params['api']['wcg']['baseUrl'], $wcgUser->getAttribute('wcg_uid'));
+            $url = sprintf("%s/user_deal/attribute-data-value-77", Yii::$app->params['api']['wcg']['baseUrl']);
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $result = curl_exec($ch);
+            curl_close($ch);
+            $result = Json::decode($result, true);
+            if ($result['result'] == 0 && $result['errors']['code'] == 0)
+            {
+                $data = $result['data'];
+                if ($data && is_array($data))
+                {
+                    $deal = [];
+                    foreach($data as $repaymentOrder)
+                    {
+                        if (!isset($deal[$repaymentOrder['deal_id']]))
+                        {
+                            $url = sprintf("%s/deal_show/attribute-data-value-%s", Yii::$app->params['api']['wcg']['baseUrl'], $repaymentOrder['deal_id']);
+                            $ch = curl_init($url);
+                            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                            $dealData = curl_exec($ch);
+                            curl_close($ch);
+                            $dealData = Json::decode($dealData, true);
+                            if ($dealData['result'] == 0 && $dealData['errors']['code'] == 0) $dealData = $dealData['data']['deal'];
+                            $plan = self::loanTermCalc(date('Y-m-d', $dealData['full_time']), null, $dealData['deal_end_date']);
+                            if ($dealData['expires_type'] == 1) $period = $plan['days'][1]['period']['days'].'天';
+                            elseif($dealData['expires_type'] == 2) $period = $plan['days'][1]['period']['m'] + $plan['days'][0]['period']['d'] ? 1 : 0 .'个月';
+                        }
+                        //已赚利息
+                        $returnedInterestAmt = isset($returnedInterestAmt) ? ($returnedInterestAmt + ($repaymentOrder['status'] == 2 ? $repaymentOrder['lixi'] + $repaymentOrder['weiyuejin'] + $repaymentOrder['overdue'] :0.00)) : ($repaymentOrder['status'] == 2 ? $repaymentOrder['lixi'] + $repaymentOrder['weiyuejin'] + $repaymentOrder['overdue'] :0.00);
+                        //待收利息
+                        $interestAmt = isset($interestAmt) ? ($interestAmt + ($repaymentOrder['status'] == 1 ? $repaymentOrder['lixi'] + $repaymentOrder['weiyuejin'] + $repaymentOrder['overdue'] : 0.00)) : ($repaymentOrder['status'] == 1 ? $repaymentOrder['lixi'] + $repaymentOrder['weiyuejin'] + $repaymentOrder['overdue'] :0.00);
+                        //投资金额
+                        $investAmt = isset($investAmt) ? $investAmt + $repaymentOrder['benjin'] : $repaymentOrder['benjin'];
+
+                        $list[$repaymentOrder['deal_id']]['info'] = ['title'=>$dealData['title'], 'rate'=>$dealData['syl'], 'period'=>$period];
+                        //投资金额
+                        $list[$repaymentOrder['deal_id']]['invest_amt'] = isset($list[$repaymentOrder['deal_id']]['invest_amt']) ? $list[$repaymentOrder['deal_id']]['invest_amt'] + $repaymentOrder['benjin'] : $repaymentOrder['benjin'];
+                        $list[$repaymentOrder['deal_id']]['interest_amt'] = isset($list[$repaymentOrder['deal_id']]['interest_amt']) ? $list[$repaymentOrder['deal_id']]['interest_amt'] + $repaymentOrder['lixi'] + $repaymentOrder['weiyuejin'] + $repaymentOrder['overdue'] : $repaymentOrder['lixi'] + $repaymentOrder['weiyuejin'] + $repaymentOrder['overdue'];
+                        $list[$repaymentOrder['deal_id']]['deal_time'] = isset($list[$repaymentOrder['deal_id']]['deal_time']) ? max($list[$repaymentOrder['deal_id']]['deal_time'], $repaymentOrder['deal_time']) : $repaymentOrder['deal_time'];
+                    }
+                    $investSummary = [
+                        'investAmt'=> isset($investAmt) ? $investAmt : 0.00,
+                        'returnedInterestAmt'=> isset($returnedInterestAmt) ? $returnedInterestAmt : 0.00,
+                        'interestAmt'=> isset($interestAmt) ? $interestAmt : 0.00,
+                    ];
+                    $lastList = [];
+                    $lastItem = null;
+                    foreach($list as $item)
+                    {
+                        $lastList[$item['deal_time']][] = $item;
+                    }
+                    krsort($lastList);
+
+                }
+            }
+
+        }
+        return $this->render('myproducts', ['list'=>$lastList, 'summary'=>$investSummary]);
+    }
+
     public function actionRequestPasswordReset()
     {
         $model = new PasswordResetRequestForm();
@@ -312,5 +382,105 @@ class SiteController extends Controller
         return $this->render('resetPassword', [
             'model' => $model,
         ]);
+    }
+    /**
+     * @param string $tenderCompletedDate The deal load full timestamp in string, sucn as 2014-08-08.
+     * @param Char $periodType Whether 'D' or 'M', Day or Month
+     * @param Integer $period Day number, or Month number
+     * @param Integer $dueDate The deal's due date, this is timestamp in integer
+     * @param Boolean or Integer (0|1) $amortized 该借款是否属于分期偿付
+     */
+    public static function loanTermCalc($tenderCompletedDate=null, $period=null, $dueDate=null, $periodType=self::DEAL_PERIOD_TYPE_DAY, $amortized = true)
+    {
+        $ret = null;
+        $tz = new \DateTimeZone('Asia/Shanghai');
+        try {
+            if (!$period && !$dueDate) throw new \Exception('Error: The deal\'s period and due date is null.');
+            $periodType = $periodType ? strtoupper($periodType) : null;
+            if (!$periodType) throw new \Exception('Error: The period type not defined.');
+            if ($periodType != self::DEAL_PERIOD_TYPE_DAY && $periodType != self::DEAL_PERIOD_TYPE_MONTH) throw new \Exception('Error: The period type must be \'d\' for day, or \'m\' for month.');
+            if ($dueDate)
+            {
+                $dt = new \DateTime();
+                $dt->setTimestamp($dueDate);
+                $dt->setTimezone($tz);
+                $dueDate=$dt;
+            }
+            if ($tenderCompletedDate)
+            {
+                $dt = new \DateTime($tenderCompletedDate, $tz);
+                $tenderCompletedDate = $dt;
+            }
+            if ($tenderCompletedDate)
+            {
+                if (!$dueDate)
+                {
+                    $dueDate = new \DateTime();
+                    $dueDate->setTimestamp($tenderCompletedDate->format('U'));
+                    $dueDate->setTimezone($tz);
+                    $dueDate->add(new \DateInterval(sprintf("P%s%s", $period, $periodType)));
+                }
+                $period = $tenderCompletedDate->diff($dueDate);
+                if (!$period->invert)
+                {
+                    if ($amortized)
+                    {
+                        $monthNumber = 0;
+                        if ($period->y) $monthNumber += $period->y * 12;
+                        $monthNumber += $period->m;
+                        if ($monthNumber)
+                        {
+                            $formatStr = $tenderCompletedDate->format('Ymd') == $tenderCompletedDate->format('Ymt') ? 'Y-m-t' : 'Y-m-d';
+                            for($i=1;$i<=$monthNumber;$i++)
+                            {
+                                if ($i == 1) $lastDT = $tenderCompletedDate;
+                                $lastU = $lastDT->format('U');
+                                $lastDT->add(new \DateInterval('P1M'));
+                                $nextU = $lastDT->format('U');
+                                $last = new \DateTime();
+                                $last->setTimestamp($lastU);
+                                $last->setTimezone($tz);
+                                $next = new \DateTime();
+                                $next->setTimestamp($nextU);
+                                $next->setTimezone($tz);
+                                $dt1 = new \DateTime($last->format($formatStr), $tz);
+                                $dt2 = new \DateTime($next->format($formatStr), $tz);
+                                if ($dt2->format('Ym') == $dueDate->format('Ym') && $tenderCompletedDate->format('Ymd') == $tenderCompletedDate->format('Ymt') ) $dt2 = $dueDate;
+                                $ret['days'][$i] = ['date'=>$dt2->format('Y-m-d'), 'length'=>$dt1->diff($dt2)->days, 'period'=>['y'=>$period->y, 'm'=>$period->m, 'd'=>$period->d, 'days'=>$period->days]];
+                            }
+                        }
+                        if ($period->d)
+                        {
+                            if (isset($ret['days']) && $ret['days'])
+                            {
+                                $ret['days'][count($ret['days'])+1] = ['date'=>$dueDate->format('Y-m-d'), 'length'=>$period->d, 'period'=>['y'=>$period->y, 'm'=>$period->m, 'd'=>$period->d, 'days'=>$period->days]];
+                            }
+                        }
+                    }
+                    else
+                    {
+                        $ret['days'][1] = ['date'=>$dueDate->format('Y-m-d'), 'length'=>$period->days, 'period'=>['y'=>$period->y, 'm'=>$period->m, 'd'=>$period->d, 'days'=>$period->days]];
+                    }
+                }
+            }
+            else
+            {
+                if (!$dueDate)
+                {
+                    $dueDate = new \DateTime();
+                    $dueDate->setTimezone($tz);
+                    $dueDate->add(new \DateInterval(sprintf("P%s%s", $period, $periodType)));
+                }
+                $now = new \DateTime();
+                $now->setTimezone($tz);
+                $period = $now->diff($dueDate);
+                $ret = ['period'=>['y'=>$period->y, 'm'=>$period->m, 'd'=>$period->d, 'days'=>$period->days]];
+            }
+            if ($ret && isset($ret['days']) && $ret['days']) $ret['count'] = count($ret['days']);
+            return $ret;
+        }
+        catch(\Exception $e) {
+            exit($e->getMessage());
+        }
     }
 }
