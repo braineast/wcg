@@ -38,6 +38,7 @@ class SignupForm extends Model
 
             ['mobile', 'filter', 'filter' => 'trim'],
             ['mobile', 'required'],
+            ['mobile', 'isMobile'],
             ['mobile', 'unique', 'targetClass' => '\frontend\models\User', 'message' => 'This mobile number has already been taken.'],
 
             ['password', 'required'],
@@ -65,6 +66,12 @@ class SignupForm extends Model
         }
 
         return null;
+    }
+
+    public function isMobile($attribute, $params)
+    {
+        $pattern = '/^[13|15|17|18]{1}[\d]{9}$/';
+        if (!preg_match($pattern, $this->$attribute)) $this->addError($attribute, '请输入正确的手机号码。');
     }
 
 
