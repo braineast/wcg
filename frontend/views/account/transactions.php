@@ -5,6 +5,7 @@
  * Date: 7/30/2014
  * Time: 8:12 AM
  */
+if (!$transactions || !is_array($transactions)) $transactions = [];
 ?>
 <div class="main_content" style=" padding-bottom:250px;">
     <table class="listInforTitle" cellpadding="0" cellspacing="0" width="100%">
