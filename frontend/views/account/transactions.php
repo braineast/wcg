@@ -31,7 +31,7 @@
                 <?php foreach ($logs as $log): ?>
                     <tr height="60">
                         <td class="td" width="13%"><?= date('d', $log['create_time']) ?>日 </td>
-                        <td class="td" width="13%" align="center"><?= $log['type'] == 'chongzhi' ? '充值' : ($log['type'] == 'tixian' ? '提现' : ($log['type'] == 'toubiao' ? '提现' : ($log['type'] == 'refund' ? '本息汇款' : null))) ?></td>
+                        <td class="td" width="13%" align="center"><?= $log['type'] == 'chongzhi' ? '充值' : ($log['type'] == 'tixian' ? '提现' : ($log['type'] == 'toubiao' ? '提现' : ($log['type'] == 'refund_record' ? '回收本息' : null))) ?></td>
                         <td class="td" width="13%" align="right"><?= $log['fund'] ?>元</td>
                     </tr>
                 <?php endforeach; ?>
@@ -51,7 +51,7 @@
             <td width="34%" align="center" style=" border-right:0">冻结金额:￥<?= number_format($summary['freeze_balance'], 2) ?>元</td>
         </tr>
         <tr>
-            <td align="ceter" colspan="3" class="btnBlue"><p><img src="/css/wcg/images/icon_money.png">去理财 </p></td>
+            <td align="ceter" colspan="3" class="btnBlue"><p><a href="<?= Yii::$app->urlManager->createAbsoluteUrl('/site/products?openid='.$openid) ?>"><img src="/css/wcg/images/icon_money.png"><span style="color: #ffffff;">去理财</span></a></p></td>
         </tr>
         </tbody></table>
 </div>

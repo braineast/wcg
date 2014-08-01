@@ -79,6 +79,10 @@ class AccountController extends Controller{
                     foreach($logsInType as $log)
                     {
                         $log['type'] = $type;
+                        if ($type == 'refund_record')
+                        {
+                            $log['fund'] = $log['benxi'];
+                        }
                         if ($type == 'tixian') $log['fund'] = sprintf('-%s', $log['fund']);
                         else $log['fund'] = sprintf('+%s', $log['fund']);
                         $transactions[date('YmdHis', $log['create_time'])][] = $log;
@@ -100,7 +104,7 @@ class AccountController extends Controller{
         {
             $summary = $wcgUser->getAttributes();
         }
-        return $this->render('transactions', ['summary'=>$summary, 'transactions'=>$tLogs]);
+        return $this->render('transactions', ['summary'=>$summary, 'transactions'=>$tLogs, 'openid'=>$openid]);
     }
 
     protected function wechatLogin($openid)
