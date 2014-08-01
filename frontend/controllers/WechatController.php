@@ -149,20 +149,6 @@ class WechatController extends Controller
         if ($user)
         {
             $xml = $this->xmlWriter();
-            $xml->startElement(static::FIELD_MSG_TYPE);
-            $xml->writeCdata('text');
-            $xml->endElement();
-            $xml->startElement(static::FIELD_CONTENT);
-            $xml->writeCdata(sprintf("截至目前，您的账户基本统计信息为：投标%s次，成功投标%s次，成功投标金额为：%s元。",
-                $user->userinfo['bid_count'],
-                $user->userinfo['win_bid_count'],
-                $user->userinfo['bid_sum']
-            ));
-            $xml->endElement();
-            $xml->endDocument();
-            $message = $xml->outputMemory(true);
-            exit($this->messageFormatter($message));
-            $xml = $this->xmlWriter();
             $xml->startElement(self::FIELD_MSG_TYPE);
             $xml->writeCdata('news');
             $xml->endElement();
@@ -181,9 +167,9 @@ class WechatController extends Controller
                 $user->userinfo['bid_sum']
             ));
             $xml->endElement();
-            $xml->startElement('PicUrl');
-            $xml->writeCdata('http://www.wangcaigu.com/template/default/Public/images/logo.png');
-            $xml->endElement();
+//            $xml->startElement('PicUrl');
+//            $xml->writeCdata('http://www.wangcaigu.com/template/default/Public/images/logo.png');
+//            $xml->endElement();
             $xml->startElement('Url');
             $xml->writeCdata(\Yii::$app->urlManager->createAbsoluteUrl('/account/transactions?openid='.$this->postXml->FromUserName));
             $xml->endElement();
