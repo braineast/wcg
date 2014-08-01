@@ -136,6 +136,7 @@ class SiteController extends Controller
             }
             if ($result['result'] == 0 && $result['errors']['code'] == 0)
             {
+                $userData = $result['data'];
                 if ($openid)
                 {
                     $_wechatUser = WechatUser::find()->where('open_id=:openId', [':openId'=>$openid])->one();
@@ -149,7 +150,6 @@ class SiteController extends Controller
                     }
                     else
                     {
-                        $userData = $result['data'];
                         if ($wcgUser = WCGUser::find()->where('wcg_uid=:wcgUid', [':wcgUid'=>$userData['id']])->one())
                         {
                             WechatUser::create(['user_id'=>$wcgUser->getAttribute('user_id'), 'open_id'=>$openid]);
