@@ -37,9 +37,9 @@ if (!$summary || !is_array($summary)) $summary = [];
         <tbody><tr>
             <td width="33%" align="center">理财金额
                 <p><?= $summary && isset($summary['investAmt']) ? number_format($summary['investAmt'], 2) : 0.00 ?>元</p></td>
-            <td width="34%" align="center">获得收益
+            <td width="34%" align="center">已赚利息
                 <p><?= $summary && isset($summary['returnedInterestAmt']) ? number_format($summary['returnedInterestAmt'], 2) : 0.00 ?>元</p></td>
-            <td width="33%" align="center">可用余额
+            <td width="33%" align="center">待收利息
                 <p><?= $summary && isset($summary['interestAmt']) ? number_format($summary['interestAmt'], 2) : 0.00 ?>元</p></td>
         </tr>
         <tr>
