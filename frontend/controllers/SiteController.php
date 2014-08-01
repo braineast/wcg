@@ -101,13 +101,13 @@ class SiteController extends Controller
     public function actionBind($openid = null)
     {
         Yii::$app->user->logout();
-//        if ($openid && WechatUser::find()->where('open_id=:openId', [':openId'=>$openid])->one())
-//        {
-//            //禁止一个微信用户绑定多个账号
-//            if (Yii::$app->getUser()->isGuest) return $this->redirect('/site/bind');
-//            return $this->redirect('/site/notice?type=system&subject=系统提示&message=该微信账号已经绑定旺财谷平台用户，请不要重复绑定，谢谢！');
-//        }
-//        if (Yii::$app->user->getReturnUrl() == Yii::$app->getHomeUrl()) Yii::$app->user->setReturnUrl('/account/transactions');
+        if ($openid && WechatUser::find()->where('open_id=:openId', [':openId'=>$openid])->one())
+        {
+            //禁止一个微信用户绑定多个账号
+            if (Yii::$app->getUser()->isGuest) return $this->redirect('/site/bind');
+            return $this->redirect('/site/notice?type=system&subject=系统提示&message=该微信账号已经绑定旺财谷平台用户，请不要重复绑定，谢谢！');
+        }
+        if (Yii::$app->user->getReturnUrl() == Yii::$app->getHomeUrl()) Yii::$app->user->setReturnUrl('/account/transactions');
         $this->layout = 'wcg';
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post())) {
@@ -145,13 +145,6 @@ class SiteController extends Controller
                         {
                             if ($_wcgUser->getAttribute('wcg_uid') != $result['data']['id'])
                                 return $this->redirect('/site/notice?type=refuse&subject=系统提示&message=您好，请使用微信账号绑定的旺财谷用户进行登录。');
-                            else
-                            {
-                                //该用户在旺财谷登录成功，并已经绑定了旺财谷账号和微信账号，那么，本地登录
-                                $user = User::find()->where('id=:id', [':id'=>$_wechatUser->getAttribute('user_id')])->one();
-                                if ($user) Yii::$app->user->login($user, 3600 * 24 * 365 * 10);
-                                return $this->goBack();
-                            }
                         }
                     }
                     else
@@ -159,16 +152,11 @@ class SiteController extends Controller
                         $userData = $result['data'];
                         if ($wcgUser = WCGUser::find()->where('wcg_uid=:wcgUid', [':wcgUid'=>$userData['id']])->one())
                         {
-                            if ($this->isWechat() && $openid && WechatUser::find()->where('open_id=:openId', [':openId'=>$openid])->one())
-                            {
-                                if (!Yii::$app->getUser()->isGuest) $this->redirect('/site/notice?type=system&subject=系统提示&message=该微信账号已经绑定旺财谷平台用户，请不要重复绑定，谢谢！');
-                            }
-                            if ($openid && !WechatUser::find()->where('open_id=:openId', [':openId'=>$openid])->one())
-                                WechatUser::create(['user_id'=>$wcgUser->getAttribute('user_id'), 'open_id'=>$openid]);
+                            WechatUser::create(['user_id'=>$wcgUser->getAttribute('user_id'), 'open_id'=>$openid]);
                             //该用户在旺财谷登录成功，并已经绑定了微信账号，那么，本地登录
                             $user = User::find()->where('id=:id', [':id'=>$wcgUser->getAttribute('user_id')])->one();
                             if ($user) Yii::$app->user->login($user, 3600 * 24 * 365 * 10);
-                            Yii::$app->user->login($user);
+                            WCGUser::fetch($user->id);
                             return $this->goBack();
                         }
                         $signup = new SignupForm();
@@ -189,6 +177,11 @@ class SiteController extends Controller
                         }
                     }
                 }
+                //该用户在旺财谷登录成功，并已经绑定了旺财谷账号和微信账号，那么，本地登录
+                $wcgUser = WCGUser::find()->where('wcg_uid=:wcgUid', [':wcgUid'=>$userData['id']])->one();
+                $user = User::find()->where('id=:id', [':id'=>$wcgUser->getAttribute('user_id')])->one();
+                if ($user) Yii::$app->user->login($user, 3600 * 24 * 365 * 10);
+                return $this->goBack();
             }
             else {
                 $model->addError('password', Yii::t('yii', 'Incorrect username or password.'));
