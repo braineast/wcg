@@ -27,19 +27,13 @@ class AccountController extends Controller{
 
     public function actionDeposit($openid = null)
     {
-        if ($this->isWechat())
+        if (Yii::$app->user->isGuest)
+            return $this->redirect('/site/bind');
+        if ($wcgUser = WCGUser::fetch())
         {
-            if (Yii::$app->getUser()->isGuest)
-            {
-                if (!$openid) Yii::$app->end();
-                if (!WechatUser::login($openid)) \Yii::$app->end();
-            }
-            if ($wcgUser = WCGUser::fetch())
-            {
-                if (!$wcgUser->hasCnpnrAccount()) $this->redirect(Yii::$app->urlManager->createAbsoluteUrl('/site/cnpnr'));
-            }
-            $this->layout = 'wcg';
+            if (!$wcgUser->hasCnpnrAccount()) $this->redirect(Yii::$app->urlManager->createAbsoluteUrl('/site/cnpnr'));
         }
+        if ($this->isWechat()) $this->layout = 'wcg';
         $model = new DepositForm();
 
         if ($model->load(Yii::$app->request->post())) {
@@ -51,7 +45,6 @@ class AccountController extends Controller{
                 return $this->redirect($link);
             }
         }
-
         return $this->render('deposit', ['model'=>$model]);
     }
 
