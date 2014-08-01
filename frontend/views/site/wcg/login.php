@@ -21,7 +21,6 @@ use yii\helpers\Html;
         <table cellpadding="0" cellspacing="0" class="borderBt" style=" margin-top:0">
             <tbody><tr>
                 <td width="80" class="icon_user"></td>
-<!--                <td>--><?//= $form->field($model, 'username', ['template'=>'{input}'])->textInput(['class'=>'field_adapt_90', 'placeholder'=>'用户名 / 邮箱 / 手机号']) ?><!--</td>-->
                 <td><?= $form->field($model, 'username', ['template'=>'{input}'])->textInput(['class'=>'field_adapt_90', 'placeholder'=>'用户名']) ?></td>
             </tr>
             </tbody></table>
