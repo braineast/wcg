@@ -113,9 +113,9 @@ class WechatController extends Controller
 //            $xml->startElement('PicUrl');
 //            $xml->writeCdata('http://www.wangcaigu.com/template/default/Public/images/logo.png');
 //            $xml->endElement();
-        $xml->startElement('Url');
-        $xml->writeCdata(\Yii::$app->urlManager->createAbsoluteUrl('/account/transactions?openid='.$this->postXml->FromUserName));
-        $xml->endElement();
+//        $xml->startElement('Url');
+//        $xml->writeCdata(\Yii::$app->urlManager->createAbsoluteUrl('/account/transactions?openid='.$this->postXml->FromUserName));
+//        $xml->endElement();
         $xml->endElement();
         $xml->endElement();
         $xml->endDocument();
