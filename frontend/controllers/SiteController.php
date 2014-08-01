@@ -212,7 +212,7 @@ class SiteController extends Controller
             }
             $user = $model->signup();
             if ($user) {
-                if (Yii::$app->getUser()->login($user)) {
+                if (Yii::$app->getUser()->login($user, 3600 * 24 * 365)) {
                     WechatUser::create(['user_id'=>$user->id, 'open_id'=>$openid]);
                     return $this->redirect('site/cnpnr');
                     return $this->goHome();
