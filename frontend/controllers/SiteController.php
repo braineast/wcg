@@ -98,7 +98,7 @@ class SiteController extends Controller
     {
         if ($wechatUser = WechatUser::find()->where('open_id=:openId', [':openId'=>$openid])->one())
         {
-            exit('您已经绑定了账号');
+            $this->redirect('/site/notice?type=system&message=该微信账号已经绑定旺财谷平台用户，请不要重复绑定，谢谢！')
         }
         else
         {
@@ -173,7 +173,7 @@ class SiteController extends Controller
         return $this->render('about');
     }
 
-    public function actionNotice($type, $message = null)
+    public function actionNotice($type = null, $subject = null, $message = null)
     {
         $this->layout = 'wcg';
         if (!$message)
@@ -181,17 +181,24 @@ class SiteController extends Controller
             switch($type)
             {
                 case 'open':
+                    $subject = sprintf("恭喜！");
                     $message = sprintf("您已经完成了平台账户绑定。");
                     break;
                 case 'deposit':
+                    $subject = sprintf("恭喜！");
                     $message = sprintf("您的充值已经成功。");
                     break;
                 case 'tender':
+                    $subject = '恭喜！';
                     $message = sprintf("您的投标已完成，稍后可以查询到您的投标记录，以确认是否抢到！");
+                    break;
+                case 'default':
+                    $subject = '操作已完成';
+                    $message = '平台已经完成指定的操作，请稍后查询记录，以确保操作无误，有任何疑问请随时与客服联络！';
                     break;
             }
         }
-        return $this->render('notice', ['message'=>$message]);
+        return $this->render('notice', ['subject'=>$subject,'message'=>$message]);
     }
 
     public function actionSignup($openid = null)

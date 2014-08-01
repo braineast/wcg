@@ -18,7 +18,7 @@
     }
 </style>
 <div class="jumbotron">
-    <h1>恭喜您！</h1>
+    <h1><?= $subject ?></h1>
 
     <p class="lead"><?= $message ?></p>
 
