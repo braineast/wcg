@@ -81,7 +81,7 @@ class AccountController extends Controller{
                         $log['type'] = $type;
                         if ($type == 'tixian') $log['fund'] = sprintf('-%s', $log['fund']);
                         else $log['fund'] = sprintf('+%s', $log['fund']);
-                        $transactions[date('Ymd', $log['create_time'])][] = $log;
+                        $transactions[date('YmdHis', $log['create_time'])][] = $log;
                     }
                 }
                 krsort($transactions);
