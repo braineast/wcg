@@ -340,6 +340,7 @@ class SiteController extends Controller
             $result = curl_exec($ch);
             curl_close($ch);
             $result = Json::decode($result, true);
+            $lastList = [];
             if ($result['result'] == 0 && $result['errors']['code'] == 0)
             {
                 $data = $result['data'];
@@ -379,7 +380,6 @@ class SiteController extends Controller
                         'returnedInterestAmt'=> isset($returnedInterestAmt) ? $returnedInterestAmt : 0.00,
                         'interestAmt'=> isset($interestAmt) ? $interestAmt : 0.00,
                     ];
-                    $lastList = [];
                     $lastItem = null;
                     foreach($list as $item)
                     {
