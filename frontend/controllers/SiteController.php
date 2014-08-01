@@ -98,7 +98,6 @@ class SiteController extends Controller
     {
         if ($wechatUser = WechatUser::find()->where('open_id=:openId', [':openId'=>$openid])->one())
         {
-            Yii::$app->response->charset = 'UTF-8';
             exit('您已经绑定了账号');
         }
         else
@@ -126,10 +125,11 @@ class SiteController extends Controller
                     if ($user)
                     {
                         WCGUser::bind(['id'=>$user->id, 'wcg_uid'=>$userData['id']]);
-                        Yii::$app->getUser()->login($user);
                         WechatUser::create(['user_id'=>$user->id, 'open_id'=>$openid]);
-                        $wcgUser = WCGUser::fetch();
+                        $wcgUser = WCGUser::fetch($user->id);
+                        Yii::$app->getUser()->login($user);
                         if ($wcgUser && !$wcgUser->hasCnpnrAccount()) return $this->redirect('site/cnpnr');
+                        return $this->redirect('/site/notice?type=open');
                         return $this->goHome();
                     }
                 }
