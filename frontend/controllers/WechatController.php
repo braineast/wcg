@@ -109,7 +109,7 @@ class WechatController extends Controller
         $xml->writeCdata('投诉建议');
         $xml->endElement();
         $xml->startElement('Description');
-        $xml->writeCdata(sprintf("请说出您的问题或者建议，我们会及时为您回答。\n我们的热线服务时间为上午9点到下午17点，在此期间，欢迎您拨打客服热线：400-888-6268。"));
+        $xml->writeCdata(sprintf("请说出您的问题或者建议，我们将及时为您回答。\n您也可以在工作日的上午9点到下午17点，拨打客服热线：400-888-6268。"));
         $xml->endElement();
 //            $xml->startElement('PicUrl');
 //            $xml->writeCdata('http://www.wangcaigu.com/template/default/Public/images/logo.png');
