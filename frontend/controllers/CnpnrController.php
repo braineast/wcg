@@ -82,10 +82,7 @@ class CnpnrController extends Controller
             curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
             $result = curl_exec($ch);
             curl_close($ch);
-            echo($this->response[$this->response[ChinaPNR::PARAM_MERPRIV]['showId']]);
-            echo($result);
-            var_dump($result == $this->response[$this->response[ChinaPNR::PARAM_MERPRIV]['showId']]);
-            return $result == $this->response[$this->response[ChinaPNR::PARAM_MERPRIV]['showId']];
+            return $result == 'RECV_ORD_ID_'.$this->response[$this->response[ChinaPNR::PARAM_MERPRIV]['showId']];
         }
         return null;
     }
