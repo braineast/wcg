@@ -5,6 +5,8 @@
  * Date: 8/1/2014
  * Time: 1:09 PM
  */
+$this->registerCssFile(Yii::$app->basePath.'/css/layout.css');
+$this->registerCssFile(Yii::$app->basePath.'/css/common.css');
 ?>
 <div class="jumbotron">
     <h1>恭喜您！</h1>
