@@ -68,10 +68,10 @@ class CnpnrController extends Controller
         switch($this->response[ChinaPNR::PARAM_CMDID])
         {
             case ChinaPNR::CMD_DEPOSIT:
-                $url = 'http://888.yidaifa.com/HuifuPay/ChargeReturnBack.html';
+                $url = 'http://www.wangcaigu.com/HuifuPay/ChargeReturnBack.html';
                 break;
             case ChinaPNR::CMD_OPEN:
-                $url = 'http://888.yidaifa.com/HuifuPay/OpenReturnBack.html';
+                $url = 'http://www.wangcaigu.com/HuifuPay/OpenReturnBack.html';
                 break;
         }
         if ($url)
