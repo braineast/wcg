@@ -76,6 +76,7 @@ class WechatController extends Controller
         if ($eventKey == 'account_summary_action') return $this->getAccountBrief();
         if ($eventKey == 'account_transactions') return $this->getAccountTransactions();
         if ($eventKey == 'account_deposit') return $this->accountDeposit();
+        if ($eventKey == 'invest_go') return $this->investGo();
         if ($eventKey == '') return $this->getAccountBrief();
         $xml = $this->xmlWriter();
         $xml->startElement(static::FIELD_MSG_TYPE);
@@ -88,6 +89,14 @@ class WechatController extends Controller
         $message = $xml->outputMemory(true);
         exit($this->messageFormatter($message));
         return false;
+    }
+
+    private function investGo()
+    {
+        if ($user = $this->getUser())
+        {
+        }
+        else $this->userBind();
     }
 
     private function accountDeposit()
@@ -235,7 +244,7 @@ class WechatController extends Controller
         $xml->writeCdata('绑定平台账户，开启财富人生。');
         $xml->endElement();
         $xml->startElement('Description');
-        $xml->writeCdata('旺财谷是一家高科技网络金融服务公司，创始团队是来自于金融、法律和互联网行业的资深人士，我们希望通过跨界的合作与知识的共享，通过互联网技术让更多的人享受金融服务，实践普惠金融。');
+        $xml->writeCdata('在旺财谷上投资，请您首先进行旺财谷账户与微信账号的绑定，可以新注册旺财谷账户，也可以使用已有的旺财谷账户与微信绑定。');
         $xml->endElement();
         $xml->startElement('PicUrl');
         $xml->writeCdata('http://www.wangcaigu.com/template/default/Public/images/logo.png');
