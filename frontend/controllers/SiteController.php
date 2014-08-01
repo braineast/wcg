@@ -100,7 +100,6 @@ class SiteController extends Controller
 
     public function actionBind($openid = null)
     {
-        Yii::$app->user->logout();
 //        if ($openid && WechatUser::find()->where('open_id=:openId', [':openId'=>$openid])->one())
 //        {
 //            //禁止一个微信用户绑定多个账号
