@@ -100,6 +100,7 @@ class SiteController extends Controller
 
     public function actionBind($openid = null)
     {
+        Yii::$app->user->logout();
         if ($openid && WechatUser::find()->where('open_id=:openId', [':openId'=>$openid])->one())
         {
             //禁止一个微信用户绑定多个账号
@@ -191,8 +192,8 @@ class SiteController extends Controller
             }
             else {
                 $model->addError('password', Yii::t('yii', 'Incorrect username or password.'));
-                return $this->render('wcg/login', ['model' => $model,'openid'=>$openid]);
             }
+            return $this->render('wcg/login', ['model' => $model,'openid'=>$openid]);
             if ($result['result'] == 0 && $result['errors']['code'] == 0)
             {
                 $userData = $result['data'];
