@@ -452,7 +452,7 @@ class WechatController extends Controller
                                     "sub_button":[
                                         {"name":"去理财","type":"view","url":"http:\/\/m.wangcaigu.com\/site\/products"},
                                         {"name":"安全保障","type":"view","url":"http:\/\/www.wangcaigu.com\/safe.html"},
-                                        {"name":"持有产品","type":"click","key":"account_invests"}
+                                        {"name":"持有产品","type":"view","url":"http://m.wangcaigu.com\/site\/myproducts"}
                                     ]
                                 },
                                 {
