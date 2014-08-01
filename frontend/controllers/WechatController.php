@@ -78,6 +78,7 @@ class WechatController extends Controller
         if ($eventKey == 'account_transactions') return $this->getAccountTransactions();
         if ($eventKey == 'account_deposit') return $this->accountDeposit();
         if ($eventKey == 'invest_go') return $this->investGo();
+        if ($eventKey == 'info_about') return $this->about();
         if ($eventKey == 'info_get_question_action') return $this->investQuestion();
         if ($eventKey == 'suggest_action') return $this->suggestion();
         if ($eventKey == '') return $this->getAccountBrief();
@@ -92,6 +93,37 @@ class WechatController extends Controller
         $message = $xml->outputMemory(true);
         exit($this->messageFormatter($message));
         return false;
+    }
+
+    public function about()
+    {
+        $xml = $this->xmlWriter();
+        $xml->startElement(self::FIELD_MSG_TYPE);
+        $xml->writeCdata('news');
+        $xml->endElement();
+        $xml->startElement('ArticleCount');
+        $xml->text(1);
+        $xml->endElement();
+        $xml->startElement('Articles');
+        $xml->startElement('item');
+        $xml->startElement('Title');
+        $xml->writeCdata('关于旺财谷');
+        $xml->endElement();
+        $xml->startElement('Description');
+        $xml->writeCdata(sprintf("旺财谷，wangcaigu.com，专业的应收账款融资与理财平台。\n旺财谷是由南京易投贷金融信息服务有限公司运营的互联网金融F2B平台，以信息撮合为核心，一端对接有投资理财需求的各类理财者，提供安全、便捷、收益可观的理财产品，一端对接有融资需求的中小微企业，提供专业、便捷、高效的融资渠道，推动直接融资，践行普惠金融，助力中国实体经济的发展。\n
+旺财谷，财旺财安之所也。\n旺，兴盛之意；谷，两山之间水草肥美之地，有安全屏障之所在。\n旺财谷，使理财者的资金，在安全之所，更加兴盛。"));
+        $xml->endElement();
+//            $xml->startElement('PicUrl');
+//            $xml->writeCdata('http://www.wangcaigu.com/template/default/Public/images/logo.png');
+//            $xml->endElement();
+//        $xml->startElement('Url');
+//        $xml->writeCdata(\Yii::$app->urlManager->createAbsoluteUrl('/account/transactions?openid='.$this->postXml->FromUserName));
+//        $xml->endElement();
+        $xml->endElement();
+        $xml->endElement();
+        $xml->endDocument();
+        $message = $xml->outputMemory(true);
+        exit($this->messageFormatter($message));
     }
 
     public function suggestion()
@@ -426,7 +458,7 @@ class WechatController extends Controller
                                 {
                                     "name":"服务",
                                     "sub_button":[
-                                        {"name":"关于旺财谷","type":"view","url":"http:\/\/m.wangcaigu.com\/site\/about"},
+                                        {"name":"关于旺财谷","type":"click","key":"info_about"},
                                         {"name":"新手指导","type":"view","url":"http:\/\/www.wangcaigu.com/help/xszy.html"},
                                         {"name":"理财咨询","type":"click","key":"info_get_question_action"},
                                         {"name":"投诉建议","type":"click","key":"suggest_action"}

@@ -4,7 +4,7 @@ use yii\helpers\Html;
 /**
  * @var yii\web\View $this
  */
-$this->title = 'About';
+$this->title = '关于旺财谷';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <link href="http://www.wangcaigu.com/template/default/Public/css/base.css" type="text/css" rel="stylesheet">
