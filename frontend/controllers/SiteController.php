@@ -174,6 +174,7 @@ class SiteController extends Controller
 
     public function actionNotice($type, $message = null)
     {
+        $this->layout = 'wcg';
         if (!$message)
         {
             switch($type)
