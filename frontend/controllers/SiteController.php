@@ -101,12 +101,12 @@ class SiteController extends Controller
     public function actionBind($openid = null)
     {
         Yii::$app->user->logout();
-        if ($openid && WechatUser::find()->where('open_id=:openId', [':openId'=>$openid])->one())
-        {
-            //禁止一个微信用户绑定多个账号
-            if (Yii::$app->getUser()->isGuest) return $this->redirect('/site/bind');
-            return $this->redirect('/site/notice?type=system&subject=系统提示&message=该微信账号已经绑定旺财谷平台用户，请不要重复绑定，谢谢！');
-        }
+//        if ($openid && WechatUser::find()->where('open_id=:openId', [':openId'=>$openid])->one())
+//        {
+//            //禁止一个微信用户绑定多个账号
+//            if (Yii::$app->getUser()->isGuest) return $this->redirect('/site/bind');
+//            return $this->redirect('/site/notice?type=system&subject=系统提示&message=该微信账号已经绑定旺财谷平台用户，请不要重复绑定，谢谢！');
+//        }
 //        if (Yii::$app->user->getReturnUrl() == Yii::$app->getHomeUrl()) Yii::$app->user->setReturnUrl('/account/transactions');
         $this->layout = 'wcg';
         $model = new LoginForm();
