@@ -170,6 +170,7 @@ class SiteController extends Controller
 
     public function actionAbout()
     {
+        $this->layout = 'wcg';
         return $this->render('about');
     }
 

@@ -33,8 +33,9 @@ class WechatController extends Controller
 
     public function actionMenu()
     {
-//        $this->deleteMenu();
-//        $this->createMenu();
+        $this->deleteMenu();
+        print_r($this->getMenu());
+        $this->createMenu();
         print_r($this->getMenu());
     }
 
@@ -353,13 +354,13 @@ class WechatController extends Controller
                                         {"name":"注册/绑定","type":"click","key":"account_bind_action"},
                                         {"name":"交易明细","type":"click","key":"account_transactions"},
                                         {"name":"账户余额","type":"click","key":"account_summary_action"},
-                                        {"name":"充值","type":"click","key":"account_deposit"}
+                                        {"name":"充值","type":"view","url":"http:\/\/m.wangcaigu.com\/account\/deposit"}
                                     ]
                                 },
                                 {
                                     "name":"理财",
                                     "sub_button":[
-                                        {"name":"去理财","type":"click","key":"invest_go"},
+                                        {"name":"去理财","type":"view","url":"http:\/\/m.wangcaigu.com\/site\/products"},
                                         {"name":"安全保障","type":"click","key":"info_get_guarantee_action"},
                                         {"name":"持有产品","type":"click","key":"account_invests"}
                                     ]
@@ -367,7 +368,7 @@ class WechatController extends Controller
                                 {
                                     "name":"服务",
                                     "sub_button":[
-                                        {"name":"关于旺财谷","type":"click","key":"info_get_aboutus_action"},
+                                        {"name":"关于旺财谷","type":"view","url":"http:\/\/m.wangcaigu.com\/site\/about"},
                                         {"name":"新手指导","type":"click","key":"info_get_newbie_guide_action"},
                                         {"name":"理财咨询","type":"click","key":"info_get_question_action"},
                                         {"name":"投诉建议","type":"click","key":"suggest_action"}
