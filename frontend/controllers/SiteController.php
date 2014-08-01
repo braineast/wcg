@@ -100,6 +100,7 @@ class SiteController extends Controller
 
     public function actionBind($openid = null)
     {
+        Yii::$app->user->logout();
         if ($openid && WechatUser::find()->where('open_id=:openId', [':openId'=>$openid])->one())
         {
             //禁止一个微信用户绑定多个账号
@@ -171,7 +172,7 @@ class SiteController extends Controller
                     WCGUser::bind(['id'=>$user->id, 'wcg_uid'=>$userData['id']]);
                     if ($this->isWechat() && $openid) WechatUser::create(['user_id'=>$user->id, 'open_id'=>$openid]);
                     $wcgUser = WCGUser::fetch($user->id);
-                    Yii::$app->getUser()->login($user, 3600 * 24 * 365);
+                    Yii::$app->getUser()->login($user, 3600 * 24 * 365 * 10);
                     if ($wcgUser && !$wcgUser->hasCnpnrAccount()) return $this->redirect('site/cnpnr');
                     return $this->redirect('/site/notice?type=open');
                 }
@@ -263,7 +264,7 @@ class SiteController extends Controller
             }
             $user = $model->signup();
             if ($user) {
-                if (Yii::$app->getUser()->login($user, 3600 * 24 * 365)) {
+                if (Yii::$app->getUser()->login($user, 3600 * 24 * 365 * 10)) {
                     WechatUser::create(['user_id'=>$user->id, 'open_id'=>$openid]);
                     return $this->redirect('site/cnpnr');
                     return $this->goHome();
