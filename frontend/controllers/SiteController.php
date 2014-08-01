@@ -324,8 +324,8 @@ class SiteController extends Controller
 
     public function actionMyproducts()
     {
+        if (Yii::$app->user->isGuest) return $this->redirect('/site/bind');
         $this->layout = 'wcg';
-        if (Yii::$app->getUser()->isGuest) exit;
         if ($wcgUser = WCGUser::fetch())
         {
             $list = [];
