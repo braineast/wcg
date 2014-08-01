@@ -86,6 +86,11 @@ class AccountController extends Controller{
                         {
                             $log['fund'] = $log['benxi'];
                         }
+                        if ($type == 'toubiao')
+                        {
+                            $log['fund'] = $log['order_money'];
+                        }
+                        if ($type == 'toubiao') $log['fund'] = sprintf("-%s", $log['fund']);
                         if ($type == 'tixian') $log['fund'] = sprintf('-%s', $log['fund']);
                         else $log['fund'] = sprintf('+%s', $log['fund']);
                         $transactions[date('YmdHis', $log['create_time'])][] = $log;
