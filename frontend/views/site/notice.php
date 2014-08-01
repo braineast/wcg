@@ -5,8 +5,18 @@
  * Date: 8/1/2014
  * Time: 1:09 PM
  */
-$this->registerCssFile(Yii::$app->basePath.'/web/css/site.css');
 ?>
+<style>
+    .jumbotron {
+        text-align: center;
+        background-color: transparent;
+    }
+
+    .jumbotron .btn {
+        font-size: 21px;
+        padding: 14px 24px;
+    }
+</style>
 <div class="jumbotron">
     <h1>恭喜您！</h1>
 
