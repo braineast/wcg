@@ -77,7 +77,7 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
-        return $this->redirect('bind');
+        return $this->redirect('/site/bind');
         return $this->render('index');
     }
 
