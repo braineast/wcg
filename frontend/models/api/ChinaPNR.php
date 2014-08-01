@@ -62,7 +62,7 @@ class ChinaPNR {
 
     public function __construct($hostInfo)
     {
-        $this->apiInfo = \Yii::$app->params['api']['cnpnr']['dev'];
+        $this->apiInfo = \Yii::$app->params['api']['cnpnr'];
         $this->retUrl = $hostInfo . '/cnpnr';
         $this->bgRetUrl = $hostInfo . '/cnpnr/backend';
         $this->host = $this->apiInfo['host'];
