@@ -91,8 +91,23 @@ class AccountController extends Controller{
                             $log['fund'] = $log['order_money'];
                         }
                         if ($type == 'toubiao') $log['fund'] = sprintf("-%s", $log['fund']);
-                        if ($type == 'tixian') $log['fund'] = sprintf('-%s', $log['fund']);
+                        elseif ($type == 'tixian') $log['fund'] = sprintf('-%s', $log['fund']);
                         else $log['fund'] = sprintf('+%s', $log['fund']);
+                        switch($type)
+                        {
+                            case 'toubiao':
+                                $log['type'] = '投标';
+                                break;
+                            case 'refund_record':
+                                $log['type'] = '回收本息';
+                                break;
+                            case 'chongzhi':
+                                $log['type'] = '充值';
+                                break;
+                            case 'tixian':
+                                $log['type'] = '提现';
+                                break;
+                        }
                         $transactions[date('YmdHis', $log['create_time'])][] = $log;
                     }
                 }

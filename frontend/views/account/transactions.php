@@ -31,7 +31,7 @@
                 <?php foreach ($logs as $log): ?>
                     <tr height="60">
                         <td class="td" width="13%"><?= date('d', $log['create_time']) ?>日 </td>
-                        <td class="td" width="13%" align="center"><?= $log['type'] == 'chongzhi' ? '充值' : ($log['type'] == 'tixian' ? '提现' : ($log['type'] == 'toubiao' ? '提现' : ($log['type'] == 'refund_record' ? '回收本息' : null))) ?></td>
+                        <td class="td" width="13%" align="center"><?= $log['type'] ?></td>
                         <td class="td" width="13%" align="right"><?= $log['fund'] ?>元</td>
                     </tr>
                 <?php endforeach; ?>
