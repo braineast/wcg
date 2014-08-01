@@ -149,6 +149,20 @@ class WechatController extends Controller
         if ($user)
         {
             $xml = $this->xmlWriter();
+            $xml->startElement(static::FIELD_MSG_TYPE);
+            $xml->writeCdata('text');
+            $xml->endElement();
+            $xml->startElement(static::FIELD_CONTENT);
+            $xml->writeCdata(sprintf("截至目前，您的账户基本统计信息为：投标%s次，成功投标%s次，成功投标金额为：%s元。",
+                $user->userinfo['bid_count'],
+                $user->userinfo['win_bid_count'],
+                $user->userinfo['bid_sum']
+            ));
+            $xml->endElement();
+            $xml->endDocument();
+            $message = $xml->outputMemory(true);
+            exit($this->messageFormatter($message));
+            $xml = $this->xmlWriter();
             $xml->startElement(self::FIELD_MSG_TYPE);
             $xml->writeCdata('news');
             $xml->endElement();
@@ -161,11 +175,7 @@ class WechatController extends Controller
             $xml->writeCdata('查看账户交易记录');
             $xml->endElement();
             $xml->startElement('Description');
-            $xml->writeCdata(sprintf("截至目前，您的账户基本统计信息为：\n充值%s次，计充值金额为：%s元；\n提现%s次，计提现金额为：%s元；\n投标%s次，成功投标%s次，成功投标金额为：%s元。",
-                $user->userinfo['recharge_count'],
-                $user->userinfo['recharge_sum'],
-                $user->userinfo['withdraw_count'],
-                $user->userinfo['withdraw_sum'],
+            $xml->writeCdata(sprintf("截至目前，您的账户基本统计信息为：投标%s次，成功投标%s次，成功投标金额为：%s元。",
                 $user->userinfo['bid_count'],
                 $user->userinfo['win_bid_count'],
                 $user->userinfo['bid_sum']
