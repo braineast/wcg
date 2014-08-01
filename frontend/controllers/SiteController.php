@@ -183,7 +183,7 @@ class SiteController extends Controller
                     $message = sprintf("您已经完成了平台账户绑定。");
                     break;
                 case 'deposit':
-                    $message = sprintf("您已经完成了一笔充值。");
+                    $message = sprintf("您的充值已经成功。");
                     break;
                 case 'tender':
                     $message = sprintf("您的投标已完成，稍后可以查询到您的投标记录，以确认是否抢到！");
