@@ -98,7 +98,7 @@ class SiteController extends Controller
 
     public function actionBind($openid = null)
     {
-        if ($this->isWechat() || $openid) $this->layout = 'wcg';
+        $this->layout = 'wcg';
         $model = new LoginForm();
 //        if ($openid)
 //        {
