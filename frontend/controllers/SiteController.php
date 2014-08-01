@@ -98,7 +98,7 @@ class SiteController extends Controller
     {
         if ($wechatUser = WechatUser::find()->where('open_id=:openId', [':openId'=>$openid])->one())
         {
-            $this->redirect('/site/notice?type=system&message=该微信账号已经绑定旺财谷平台用户，请不要重复绑定，谢谢！');
+            $this->redirect('/site/notice?type=system&subject=系统提示&message=该微信账号已经绑定旺财谷平台用户，请不要重复绑定，谢谢！');
         }
         else
         {
@@ -114,7 +114,7 @@ class SiteController extends Controller
                 if ($result['result'] == 0 && $result['errors']['code'] == 0)
                 {
                     $userData = $result['data'];
-                    if (WCGUser::find()->where('wcg_uid=:wcgUid', [':wcgUid'=>$userData['id']])->one()) exit('您要绑定的旺财谷账号已经被其他微信号绑定！');
+                    if (WCGUser::find()->where('wcg_uid=:wcgUid', [':wcgUid'=>$userData['id']])->one()) $this->redirect('/site/notice?type=system&subject=系统提示&message=您要绑定的旺财谷账号已经被其他微信号绑定！请谨慎保管理财账户，谢谢！');
                     $signup = new SignupForm();
                     $signup->username = $userData['username'];
                     $signup->email = $userData['email'];
