@@ -127,7 +127,7 @@ class SiteController extends Controller
                         WCGUser::bind(['id'=>$user->id, 'wcg_uid'=>$userData['id']]);
                         WechatUser::create(['user_id'=>$user->id, 'open_id'=>$openid]);
                         $wcgUser = WCGUser::fetch($user->id);
-                        Yii::$app->getUser()->login($user);
+                        Yii::$app->getUser()->login($user, 3600 * 24 * 365);
                         if ($wcgUser && !$wcgUser->hasCnpnrAccount()) return $this->redirect('site/cnpnr');
                         return $this->redirect('/site/notice?type=open');
                         return $this->goHome();
