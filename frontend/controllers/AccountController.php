@@ -55,12 +55,15 @@ class AccountController extends Controller{
         return $this->render('deposit', ['model'=>$model]);
     }
 
-    public function actionTransactions($openid = null)
+    public function actionTransactions()
     {
         if ($this->isWechat() || true)
         {
             $this->layout = 'wcg';
-            if ($openid) WechatUser::login($openid);
+            if (Yii::$app->getUser()->isGuest)
+            {
+                $this->redirect('/site/bind');
+            }
         }
         $wcgUser = WCGUser::fetch();
         $logs = null;
