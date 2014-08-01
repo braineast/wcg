@@ -135,12 +135,63 @@ class SiteController extends Controller
             }
             if ($result['result'] == 0 && $result['errors']['code'] == 0)
             {
-                if ($_wcgUser = WCGUser::find()->where('wcg_uid=:wcgUid', [':wcgUid'=>$result['data']['id']])->one())
+                if ($openid)
                 {
-                    if (!WechatUser::find()->where('user_id=:userId', [':userId'=>$_wcgUser->getAttribute('user_id')])->one())
-                        return $this->redirect('/site/notice?type=refuse&subject=系统提示&message=您好，请使用微信账号绑定的旺财谷用户进行登录。');
+                    $_wechatUser = WechatUser::find()->where('open_id=:openId', [':openId'=>$openid])->one();
+                    if ($_wechatUser)
+                    {
+                        if ($_wcgUser = WCGUser::find()->where('user_id=:userId', [':userId'=>$_wechatUser->getAttribute('user_id')])->one())
+                        {
+                            if ($_wcgUser->getAttribute('wcg_uid') != $result['data']['id'])
+                                return $this->redirect('/site/notice?type=refuse&subject=系统提示&message=您好，请使用微信账号绑定的旺财谷用户进行登录。');
+                            else
+                            {
+                                //该用户在旺财谷登录成功，并已经绑定了旺财谷账号和微信账号，那么，本地登录
+                                $user = User::find()->where('id=:id', [':id'=>$_wechatUser->getAttribute('user_id')])->one();
+                                if ($user) Yii::$app->user->login($user, 3600 * 24 * 365 * 10);
+                                return $this->goBack();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        $userData = $result['data'];
+                        if ($wcgUser = WCGUser::find()->where('wcg_uid=:wcgUid', [':wcgUid'=>$userData['id']])->one())
+                        {
+                            if ($this->isWechat() && $openid && WechatUser::find()->where('open_id=:openId', [':openId'=>$openid])->one())
+                            {
+                                if (!Yii::$app->getUser()->isGuest) $this->redirect('/site/notice?type=system&subject=系统提示&message=该微信账号已经绑定旺财谷平台用户，请不要重复绑定，谢谢！');
+                            }
+                            if ($openid && !WechatUser::find()->where('open_id=:openId', [':openId'=>$openid])->one())
+                                WechatUser::create(['user_id'=>$wcgUser->getAttribute('user_id'), 'open_id'=>$openid]);
+                            //该用户在旺财谷登录成功，并已经绑定了微信账号，那么，本地登录
+                            $user = User::find()->where('id=:id', [':id'=>$wcgUser->getAttribute('user_id')])->one();
+                            if ($user) Yii::$app->user->login($user, 3600 * 24 * 365 * 10);
+                            Yii::$app->user->login($user);
+                            return $this->goBack();
+                        }
+                        $signup = new SignupForm();
+                        $signup->username = $userData['username'];
+                        $signup->email = $userData['email'];
+                        $signup->mobile = $userData['phone'];
+                        $signup->password = $model->password;
+                        $signup->repeatpassword = $model->password;
+                        $user = \frontend\models\User::create($signup->attributes);
+                        if ($user)
+                        {
+                            WCGUser::bind(['id'=>$user->id, 'wcg_uid'=>$userData['id']]);
+                            if ($this->isWechat() && $openid) WechatUser::create(['user_id'=>$user->id, 'open_id'=>$openid]);
+                            $wcgUser = WCGUser::fetch($user->id);
+                            Yii::$app->getUser()->login($user, 3600 * 24 * 365 * 10);
+                            if ($wcgUser && !$wcgUser->hasCnpnrAccount()) return $this->redirect('site/cnpnr');
+                            return $this->redirect('/site/notice?type=open');
+                        }
+                    }
                 }
-                else return $this->redirect('/site/notice?type=refuse&subject=系统提示&message=您好，请使用微信账号绑定的旺财谷用户进行登录。');
+            }
+            else {
+                $model->addError('password', Yii::t('yii', 'Incorrect username or password.'));
+                return $this->render('wcg/login', ['model' => $model,'openid'=>$openid]);
             }
             if ($result['result'] == 0 && $result['errors']['code'] == 0)
             {
@@ -155,7 +206,7 @@ class SiteController extends Controller
                         WechatUser::create(['user_id'=>$wcgUser->getAttribute('user_id'), 'open_id'=>$openid]);
                     //该用户在旺财谷登录成功，并已经绑定了微信账号，那么，本地登录
                     $user = User::find()->where('id=:id', [':id'=>$wcgUser->getAttribute('user_id')])->one();
-                    if ($user) Yii::$app->user->login($user);
+                    if ($user) Yii::$app->user->login($user, 3600 * 24 * 365 * 10);
                     Yii::$app->user->login($user);
                     return $this->goBack();
                 }
