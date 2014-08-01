@@ -48,7 +48,7 @@ class CnpnrController extends Controller
             if (!\Yii::$app->getUser()->isGuest)
             {
                 WCGUser::fetch();
-                $this->redirect('/site/notice');
+                if ($result) $this->redirect('/site/notice');
             }
         }
         return false;
@@ -82,14 +82,14 @@ class CnpnrController extends Controller
             curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
             $result = curl_exec($ch);
             curl_close($ch);
-            return $result;
+            return $result == $this->response[$this->response[ChinaPNR::PARAM_MERPRIV]['showId']];
         }
         return null;
     }
 
     protected function NetSave()
     {
-        return $this->postWCG();
+        $result = $this->postWCG();
         if ($this->response[ChinaPNR::RESP_CODE] == '000')
         {
         }
