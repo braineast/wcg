@@ -24,17 +24,19 @@ class WechatUser extends ActiveRecord{
 
     public static function login($openid)
     {
-        if ($wechatUser = WechatUser::find()->where('open_id=:openId', [':openId'=>$openid])->one())
+        if (Yii::$app->getUser()->isGuest)
         {
-            $user = \frontend\models\User::findIdentity($wechatUser->getAttribute('user_id'));
-            if ($user)
+            if ($wechatUser = WechatUser::find()->where('open_id=:openId', [':openId'=>$openid])->one())
             {
-                Yii::$app->getUser()->login($user);
-                WCGUser::fetch();
-                return true;
+                $user = \frontend\models\User::findIdentity($wechatUser->getAttribute('user_id'));
+                if ($user)
+                {
+                    Yii::$app->getUser()->login($user);
+                    WCGUser::fetch();
+                }
             }
         }
-        return false;
+        return true;
     }
 
     public static function create($attributes)
