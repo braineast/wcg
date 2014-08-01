@@ -94,7 +94,7 @@ class User extends ActiveRecord {
                 $wcgUser->setAttribute('avl_balance', $data['AvlBal'] ? $data['AvlBal'] : 0.00);
                 $wcgUser->setAttribute('freeze_balance', $data['FrzBal'] ? $data['FrzBal'] : 0.00);
                 $wcgUser->setAttribute('slb_balance', $data['SLBBal'] ?  $data['SLBBal'] : 0.00);
-                $wcgUser->setAttribute('invest_balance', $data['bid_sum'] ? $data['bid_sum'] : 0.00);
+                $wcgUser->setAttribute('invest_balance', $data['benjin'] ? $data['benjin'] : 0.00);
                 $wcgUser->setAttribute('interest_balance', $data['lixi'] ? $data['lixi'] : 0.00);
                 $wcgUser->setAttribute('returned_interest_balance', $data['yizhuan_lixi'] ? $data['yizhuan_lixi'] : 0.00);
                 $wcgUser->save();
