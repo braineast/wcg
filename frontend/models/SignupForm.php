@@ -70,7 +70,7 @@ class SignupForm extends Model
 
     public function isMobile($attribute, $params)
     {
-        $pattern = '/^[13|15|17|18]{1}[\d]{9}$/';
+        $pattern = '/^[13|15|17|18]{2}[\d]{9}$/';
         if (!preg_match($pattern, $this->$attribute)) $this->addError($attribute, '请输入正确的手机号码。');
     }
 
