@@ -40,9 +40,9 @@ $dealOrders = isset($dealOrders) && $dealOrders ? $dealOrders : [];
             <td width="34%" rowspan="3" align="center">
                     <?php if ($deal['deal_status'] == 1): ?>
 <!--                        <span>标的处于预告期</span>-->
-                        <div style=" height:44px; width:240px; border:3px solid #ccc; background:none">
-                            <span style=" display:block; height:37px; margin:3px; line-height:100px; font-size:12px; color:#777; width:234px; background:#ff6630;padding:0">100%</span>
-                        </div>
+<!--                        <div style=" height:44px; width:240px; border:3px solid #ccc; background:none">-->
+<!--                            <span style=" display:block; height:37px; margin:3px; line-height:100px; font-size:12px; color:#777; width:234px; background:#ff6630;padding:0">100%</span>-->
+<!--                        </div>-->
                     <?php endif; ?>
                     <?php if ($deal['deal_status'] == 2): ?>
                         <div style=" height:44px; width:240px; border:3px solid #ccc; background:none">
