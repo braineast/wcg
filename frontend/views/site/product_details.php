@@ -238,13 +238,13 @@ $dealOrders = isset($dealOrders) && $dealOrders ? $dealOrders : [];
     </tbody></table>
 </div>
 </div>
-<div class="bottom_area">
-    <table cellspacing="0" width="100%" class="bottom_areaInfoOne">
-        <tbody><tr>
-            <td align="center" class="btnBlue" s=""><p>立即投资</p></td>
-        </tr>
-        </tbody></table>
-</div>
+<!--<div class="bottom_area">-->
+<!--    <table cellspacing="0" width="100%" class="bottom_areaInfoOne">-->
+<!--        <tbody><tr>-->
+<!--            <td align="center" class="btnBlue" s=""><p>立即投资</p></td>-->
+<!--        </tr>-->
+<!--        </tbody></table>-->
+<!--</div>-->
 <script type="text/javascript">
     jQuery(document).ready(
         function()
