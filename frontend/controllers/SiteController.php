@@ -369,6 +369,21 @@ class SiteController extends Controller
         var_dump(json_decode($result, true));
     }
 
+    public function actionGetdealbrief($dealId)
+    {
+        $url = sprintf("%s/deal_jiben/attribute-data-value-%s", Yii::$app->params['api']['wcg']['baseUrl'], $dealId);
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $_data = curl_exec($ch);
+        $_data = Json::decode($_data, true);
+        curl_close($ch);
+        if ($_data['result'] == 0 && $_data['errors']['code'] == 0) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return $_data['data'];
+        }
+        return [];
+    }
+
     public function actionProducts()
     {
         $this->layout = 'wcg';

@@ -45,8 +45,9 @@ $dealOrders = isset($dealOrders) && $dealOrders ? $dealOrders : [];
 <!--                        </div>-->
                     <?php endif; ?>
                     <?php if ($deal['deal_status'] == 2): ?>
-                        <div style=" height:44px; width:240px; border:3px solid #ccc; background:none">
-                            <span style=" display:block; height:37px; margin:3px; line-height:100px; font-size:12px; color:#777; width:234px; background:#ff6630;padding:0"><?php $perc = round((($deal['money'] - $deal['balance']) / $deal['money'])*100);if ($perc == 100 && $deal['balance'] > 0) {$perc = 99;} echo($perc); ?>%</span>
+                        <?php $perc = round((($deal['money'] - $deal['balance']) / $deal['money'])*100);if ($perc == 100 && $deal['balance'] > 0) {$perc = 99;} ?>
+                        <div id="deal_percent" style=" height:44px; width:240px; border:3px solid #ccc; background:none">
+                            <span style=" display:block; height:37px; margin:3px; line-height:100px; font-size:12px; color:#777; width:<?= $perc*234/100 ?>px; background:#ff6630;padding:0"><?= $perc ?>%</span>
                         </div>
                     <?php endif; ?>
                     <?php if ($deal['deal_status'] == 3): ?>
@@ -79,7 +80,7 @@ $dealOrders = isset($dealOrders) && $dealOrders ? $dealOrders : [];
     <table class="list_table" cellpadding="0" cellspacing="0" width="100%" style="padding-bottom:0; padding-top:0;border-bottom:0<?php if ($deal['deal_status'] == 1) echo(';display: block;'); ?>">
         <tbody>
         <tr>
-            <td height="60" align="" colspan="3"><p class="t_30"><?php if ($deal['balance'] > 0): ?>剩余<?= $deal['balance'] ?>元可投<?php endif; ?></p></td>
+            <td height="60" align="" colspan="3"><p id="deal_balance" class="t_30"><?php if ($deal['balance'] > 0): ?>剩余<?= $deal['balance'] ?>元可投<?php endif; ?></p></td>
         </tr>
         <tr>
             <td align="left">
@@ -249,11 +250,13 @@ $dealOrders = isset($dealOrders) && $dealOrders ? $dealOrders : [];
     jQuery(document).ready(
         function()
         {
+            getDealBrief();
             var timerElement = $('#left_time_text');
             if (timerElement)
             {
                 var timerId = null;
-                var period = <?= $deal['deal_status'] == 2 ? $deal['end_date']-$deal['start_date'] : ($deal['deal_status'] == 1 ? $deal['start_date'] - time() : 0); ?>;
+                var period = 0;
+                period = <?= $deal['deal_status'] == 2 ? $deal['end_date']-$deal['start_date'] : ($deal['deal_status'] == 1 ? $deal['start_date'] - time() : 0); ?>;
                 if (period)
                 {
                     timerId = window.setInterval(function(){
@@ -293,5 +296,25 @@ $dealOrders = isset($dealOrders) && $dealOrders ? $dealOrders : [];
         message = '剩余时间：'+message;
         <?php endif; ?>
         return $('#left_time_text').text(message);
+    }
+
+    function getDealBrief()
+    {
+        var timerId = window.setInterval(function(){
+            $.ajax(
+                {
+                    url: 'http://wcg.ltxigu.com/site/getdealbrief?dealId=20',
+                    success: function(data) {
+                        if (data.deal_status > 2 || data.balance == 0) clearInterval(timerId);
+                        $('#deal_balance').text('剩余'+data.balance+'元可投');
+                        var percent = 0;
+                        percent = Math.round((data.money - data.balance) / data.money * 100);
+                        if (percent == 100 && data.balance > 0) percent = 100;
+                        if (data.balance == 0) percent = 100;
+                        $('#deal_percent').html('<span style=" display:block; height:37px; margin:3px; line-height:100px; font-size:12px; color:#777; width:'+ parseInt(percent * 234 / 100) +'px; background:#ff6630;padding:0">'+percent+'%</span>');
+                    }
+                }
+            );
+        }, 500);
     }
 </script>

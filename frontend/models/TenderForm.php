@@ -75,6 +75,30 @@ class TenderForm extends Model
             $order = null;
             if ($result['result'] == 0 && $result['errors']['code']==0)
             {
+                //Get deal details data
+                $url = sprintf("%s/deal_show/attribute-data-value-%s",Yii::$app->params['api']['wcg']['baseUrl'], $this->dealId);
+                $ch = curl_init($url);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                $dealData = curl_exec($ch);
+                curl_close($ch);
+                $dealData = Json::decode($dealData, true);
+                if ($dealData['result'] == 0 && $dealData['errors']['code'] == 0)
+                {
+                    $dealData = $dealData['data']['deal'];
+                    $borrowerUid = $dealData['uid'];
+                    //Get Borrower user info
+                    $url = sprintf("%s/user_info/attribute-id-value-%s", \Yii::$app->params['api']['wcg']['baseUrl'], $borrowerUid);
+                    $ch = curl_init($url);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                    $userData = curl_exec($ch);
+                    $userData = Json::decode($userData, true);
+                    curl_close($ch);
+                    if ($userData['result'] == 0 && $userData['errors']['code'] == 0)
+                    {
+                        $userData = $userData['data'];
+                        $borrowerCustId = $userData['UsrCustId'];
+                    }
+                }
                 $order = $result['data'];
                 $cnpnr = new ChinaPNR(Yii::$app->request->hostInfo);
                 $cnpnr->tender($cnpnrAcctId);
@@ -84,7 +108,7 @@ class TenderForm extends Model
                 $cnpnr->isFreeze = 'Y';
                 $cnpnr->freezeordid = $order['deal_number'] . '000';
                 $cnpnr->maxTenderRate = 0.09;
-                $cnpnr->BorrowerDetails = Json::encode([['BorrowerCustId'=>'6000060000288503', 'BorrowerAmt'=>$cnpnr->transAmt, 'BorrowerRate'=>'0.99']]);
+                $cnpnr->BorrowerDetails = Json::encode([['BorrowerCustId'=>$borrowerCustId, 'BorrowerAmt'=>$cnpnr->transAmt, 'BorrowerRate'=>'0.99']]);
                 $cnpnr->merPriv = json_encode(['id'=>$wcgUser->getAttribute('wcg_uid'),'username'=>$order['username'],'cnpnr_acct'=>$cnpnrAcctId]);
                 return $cnpnr->getLink();
             }
