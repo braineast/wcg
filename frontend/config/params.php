@@ -28,8 +28,8 @@ return [
             ],
         ],
         'wcg' => [
-//            'baseUrl' => 'http://api.wangcaigu.com/weixin',
-            'baseUrl' => 'http://api.yidaifa.com/weixin',
+            'baseUrl' => 'http://api.wangcaigu.com/weixin',
+//            'baseUrl' => 'http://api.yidaifa.com/weixin',
         ],
     ],
 ];
