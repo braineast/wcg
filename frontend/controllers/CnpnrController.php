@@ -68,13 +68,13 @@ class CnpnrController extends Controller
         switch($this->response[ChinaPNR::PARAM_CMDID])
         {
             case ChinaPNR::CMD_DEPOSIT:
-                $url = sprintf("%s/HuifuPay/ChargeReturnBack.html", \Yii::$app->params['api']['cnpnr']['dev']['noticeUrl']);
+                $url = sprintf("%s/HuifuPay/ChargeReturnBack.html", \Yii::$app->params['api']['cnpnr']['noticeUrl']);
                 break;
             case ChinaPNR::CMD_OPEN:
-                $url = sprintf("%s/HuifuPay/OpenReturnBack.html", \Yii::$app->params['api']['cnpnr']['dev']['noticeUrl']);
+                $url = sprintf("%s/HuifuPay/OpenReturnBack.html", \Yii::$app->params['api']['cnpnr']['noticeUrl']);
                 break;
             case ChinaPNR::CMD_TENDER:
-                $url = sprintf("%s/HuifuPay/BidReturnBack.html", \Yii::$app->params['api']['cnpnr']['dev']['noticeUrl']);
+                $url = sprintf("%s/HuifuPay/BidReturnBack.html", \Yii::$app->params['api']['cnpnr']['noticeUrl']);
                 break;
         }
         if ($url)
