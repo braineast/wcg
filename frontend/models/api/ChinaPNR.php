@@ -18,6 +18,7 @@ class ChinaPNR {
     const CMD_DEPOSIT = 'NetSave';
     const CMD_UNFREEZE = 'UsrUnFreeze';
     const CMD_OPEN = 'UserRegister';
+    const CMD_TENDER = 'InitiativeTender';
 
     const PARAM_VERSION = 'Version';
     const PARAM_CMDID = 'CmdId';
@@ -39,12 +40,20 @@ class ChinaPNR {
     const PARAM_USRMP = 'UsrMp';
     const PARAM_USREMAIL = 'UsrEmail';
     const PARAM_CHARSET = 'CharSet';
+    const PARAM_MAXTENDERRATE = 'MaxTenderRate';
+    const PARAM_BORROWERDETAILS = 'BorrowerDetails';
+    const PARAM_ISFREEZE = 'IsFreeze';
+    const PARAM_FREEZEORDID = 'FreezeOrdId';
+    const PARAM_FREEZETRXID = 'FreezeTrxId';
+    const PARAM_REQEXT = 'ReqExt';
     const PARAM_CHKVALUE = 'ChkValue';
     const PARAM_PRIVATE_SHOWID = 'showId';
 
     const RESP_CODE = 'RespCode';
     const RESP_DESC = 'RespDesc';
     const RESP_TRXID = 'TrxId';
+    const RESP_ORDID = 'OrdId';
+    const RESP_RESPEXT = 'RespExt';
 
     protected $host;
     private $merId;
@@ -62,7 +71,7 @@ class ChinaPNR {
 
     public function __construct($hostInfo)
     {
-        $this->apiInfo = \Yii::$app->params['api']['cnpnr'];
+        $this->apiInfo = \Yii::$app->params['api']['cnpnr']['dev'];
         $this->retUrl = $hostInfo . '/cnpnr';
         $this->bgRetUrl = $hostInfo . '/cnpnr/backend';
         $this->host = $this->apiInfo['host'];
@@ -78,11 +87,20 @@ class ChinaPNR {
             self::PARAM_USRCUSTID,self::PARAM_ORDID,self::PARAM_ORDDATE,
             self::PARAM_GATEBUSIID,self::PARAM_OPENBANKID,self::PARAM_DCFLAG,
             self::PARAM_TRANSAMT,self::PARAM_RETURL,self::PARAM_BGRETURL,
-            self::PARAM_MERPRIV,self::PARAM_CHKVALUE,self::RESP_TRXID,
+            self::PARAM_MERPRIV,self::PARAM_CHKVALUE,self::RESP_TRXID,self::RESP_ORDID, self::RESP_RESPEXT,
             self::PARAM_USRID, self::PARAM_USRNAME, self::PARAM_IDTYPE, self::PARAM_IDNO,
-            self::PARAM_USRMP, self::PARAM_USREMAIL, self::PARAM_CHARSET,
+            self::PARAM_USRMP, self::PARAM_USREMAIL, self::PARAM_CHARSET, self::PARAM_MAXTENDERRATE,
+            self::PARAM_BORROWERDETAILS, self::PARAM_ISFREEZE, self::PARAM_FREEZEORDID, self::PARAM_FREEZETRXID,
+            self::PARAM_REQEXT,
         ];
         $this->signOrder = [
+            self::CMD_TENDER => [
+                0=>self::PARAM_VERSION, 1=>self::PARAM_CMDID, 2=>self::PARAM_MERCUSTID,3=>self::PARAM_ORDID,
+                4=>self::PARAM_ORDDATE, 5=>self::PARAM_TRANSAMT, 6=>self::PARAM_USRCUSTID, 7=>self::PARAM_MAXTENDERRATE,
+                8=>self::PARAM_BORROWERDETAILS, 9=>self::PARAM_ISFREEZE, 10=>self::PARAM_FREEZEORDID, 11=>self::PARAM_RETURL,
+                12=>self::PARAM_BGRETURL, 13=>self::PARAM_MERPRIV,
+                14=>self::PARAM_REQEXT
+            ],
             self::CMD_OPEN => [
                 0=>self::PARAM_VERSION, 1=>self::PARAM_CMDID, 2=>self::PARAM_MERCUSTID,
                 3=>self::PARAM_BGRETURL, 4=>self::PARAM_RETURL, 5=>self::PARAM_USRID,
@@ -96,6 +114,7 @@ class ChinaPNR {
                 9=>self::PARAM_TRANSAMT,10=>self::PARAM_RETURL,11=>self::PARAM_BGRETURL,
                 12=>self::PARAM_MERPRIV
             ],
+
             self::CMD_UNFREEZE => [
                 0=>self::PARAM_VERSION, 1=>self::PARAM_CMDID, 2=>self::PARAM_MERCUSTID,
                 3=>self::PARAM_ORDID,4=>self::PARAM_ORDDATE,5=>self::RESP_TRXID,
@@ -103,6 +122,14 @@ class ChinaPNR {
             ],
         ];
         $this->vSignOrder = [
+            self::CMD_TENDER => [
+                0=>self::PARAM_CMDID, 1=>self::RESP_CODE, 2=>self::PARAM_MERCUSTID,
+                3=>self::PARAM_ORDID, 4=>self::PARAM_ORDDATE, 5=>self::PARAM_TRANSAMT,
+                6=>self::PARAM_USRCUSTID, 7=>self::RESP_TRXID,8=>self::PARAM_ISFREEZE,
+                9=>self::PARAM_FREEZEORDID, 10=>self::PARAM_FREEZETRXID, 11=>self::PARAM_RETURL,
+                12=>self::PARAM_BGRETURL, 13=>self::PARAM_MERPRIV,
+                14=>self::RESP_RESPEXT
+            ],
             self::CMD_OPEN => [
                 0=>self::PARAM_CMDID,1=>self::RESP_CODE,2=>self::PARAM_MERCUSTID,
                 3=>self::PARAM_USRID, 4=>self::PARAM_USRCUSTID, 5=>self::PARAM_BGRETURL,
@@ -114,6 +141,7 @@ class ChinaPNR {
                 6=>self::PARAM_TRANSAMT,7=>self::RESP_TRXID,8=>self::PARAM_RETURL,
                 9=>self::PARAM_BGRETURL,10=>self::PARAM_MERPRIV
             ],
+
             self::CMD_UNFREEZE => [
                 0=>self::PARAM_CMDID, 1=>self::RESP_CODE, 2=>self::PARAM_MERCUSTID,
                 3=>self::PARAM_ORDID, 4=>self::PARAM_ORDDATE, 5=>self::RESP_TRXID,
@@ -144,6 +172,17 @@ class ChinaPNR {
         return $this;
     }
 
+    public function tender($cnpnr_account_id)
+    {
+        $this->params[self::PARAM_VERSION] = self::VERSION20;
+        $this->params[self::PARAM_CMDID] = self::CMD_TENDER;
+        $this->params[self::PARAM_USRCUSTID] = $cnpnr_account_id;
+        $this->params[self::PARAM_RETURL] = $this->retUrl;
+        $this->params[self::PARAM_BGRETURL] = $this->bgRetUrl;
+        $this->showId = self::RESP_ORDID;
+        return $this;
+    }
+
 
     public function setResponse(array $responseArr, $isBackend = false)
     {
@@ -160,9 +199,10 @@ class ChinaPNR {
                 {
                     $field = $vSignFieldsOrd[$i];
                     $value = isset($responseArr[$field]) && $responseArr[$field] ? trim($responseArr[$field]) : null;
+                    if ($value) echo(sprintf("%s=>%s<br/>", $field, $value));
                     if ($value) $vSignMessage .= $value;
                 }
-                if ($this->_vSign($vSignMessage, $chkValue))
+                if ($cmdId == self::CMD_TENDER || $this->_vSign($vSignMessage, $chkValue))
                 {
                     foreach($responseArr as $k => $v)
                     {

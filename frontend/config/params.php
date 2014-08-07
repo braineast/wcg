@@ -15,8 +15,10 @@ return [
                 'host'=>'115.28.152.140',
                 'port'=>'8888'
             ],
+            'noticeUrl'=>'http://www.wangcaigu.com',
             'dev'=>[
                 'host'=>'http://test.chinapnr.com/muser/publicRequests',
+                'noticeUrl'=>'http://888.yidaifa.com',
                 'merid'=>'530091',
                 'mercustid'=>'6000060000141804',
                 'sign'=>[
@@ -26,7 +28,8 @@ return [
             ],
         ],
         'wcg' => [
-            'baseUrl' => 'http://api.wangcaigu.com/weixin',
+//            'baseUrl' => 'http://api.wangcaigu.com/weixin',
+            'baseUrl' => 'http://api.yidaifa.com/weixin',
         ],
     ],
 ];

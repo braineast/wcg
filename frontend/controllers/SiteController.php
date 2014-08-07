@@ -3,6 +3,7 @@ namespace frontend\controllers;
 
 use common\models\User;
 use frontend\models\api\ChinaPNR;
+use frontend\models\TenderForm;
 use frontend\models\WechatUser;
 use Yii;
 use common\models\LoginForm;
@@ -100,14 +101,25 @@ class SiteController extends Controller
 
     public function actionBind($openid = null)
     {
-//        Yii::$app->user->logout();
-        if ($openid && WechatUser::find()->where('open_id=:openId', [':openId'=>$openid])->one())
-        {
-            //禁止一个微信用户绑定多个账号
-            if (Yii::$app->getUser()->isGuest) return $this->redirect('/site/bind');
-            return $this->redirect('/site/notice?type=system&subject=系统提示&message=该微信账号已经绑定旺财谷平台用户，请不要重复绑定，谢谢！');
-        }
+        $wechatUser = null;
+        $wcgUser = null;
+        $user = null;
         if (Yii::$app->user->getReturnUrl() == Yii::$app->getHomeUrl()) Yii::$app->user->setReturnUrl('/account/transactions');
+        if ($openid)
+        {
+            if ($wechatUser = WechatUser::find()->where('open_id=:openId', [':openId'=>$openid])->one())
+            {
+                if ($wcgUser = WCGUser::find()->where('user_id=:userId', [':userId'=>$wechatUser->getAttribute('user_id')])->one())
+                {
+                    if ($user = \frontend\models\User::find()->where('id=:id', [':id'=>$wcgUser->getAttribute('user_id')])->one())
+                    {
+                        Yii::$app->user->login($user);
+                        return $this->goBack();
+                    }
+                }
+            }
+        }
+
         $this->layout = 'wcg';
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post())) {
@@ -120,6 +132,7 @@ class SiteController extends Controller
                 else $error[Html::getInputId($model, 'password')] = [];
                 return $error;
             }
+            //于旺财谷WEB接口登录
             $url = sprintf("%s/login/attribute-data-value-%s", Yii::$app->params['api']['wcg']['baseUrl'], base64_encode(Json::encode(['username'=>$model->username, 'password'=>md5($model->password), 'login_ip'=>Yii::$app->request->userIP])));
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -137,6 +150,60 @@ class SiteController extends Controller
             if ($result['result'] == 0 && $result['errors']['code'] == 0)
             {
                 $userData = $result['data'];
+                if ($wcgUser = WCGUser::find()->where('wcg_uid=:wcgUid', [':wcgUid'=>$userData['id']])->one())
+                {
+                    $user = \frontend\models\User::find()->where('id=:id', [':id'=>$wcgUser->getAttribute('user_id')])->one();
+                    if ($openid)
+                    {
+                        if ($wechatUser = WechatUser::find()->where('open_id=:openId', [':openId'=>$openid]))
+                        {
+                            if ($_compareWcgUser = WCGUser::find()->where('user_id=:userId', [':userId'=>$wechatUser->getAttribute('user_id')])->one())
+                            {
+                                if ($wcgUser->getAttribute('wcg_uid') == $_compareWcgUser->getAttribute('wcg_uid'))
+                                {
+                                    Yii::$app->user->login(\frontend\models\User::find()->where('id=:userId', [':userId'=>$wcgUser->getAttribute('user_id')])->one());
+                                    return $this->goBack();
+                                }
+                                else
+                                    $model->addError('password', '您的微信账号已绑定了一个旺财谷平台账户，请正确登录账户信息。');
+                            }
+                        }
+                        else WechatUser::create(['open_id'=>$openid, 'user_id'=>$wcgUser->getAttribute('user_id')]);
+                    }
+                    if ($user)
+                    {
+                        Yii::$app->user->login($user);
+                        return $this->goBack();
+                    }
+                }
+                else
+                {
+                    $signup = new SignupForm();
+                    $signup->username = $userData['username'];
+                    $signup->email = $userData['email'];
+                    $signup->mobile = $userData['phone'];
+                    $signup->password = $model->password;
+                    $signup->repeatpassword = $model->password;
+                    if ($user = \frontend\models\User::create($signup->attributes))
+                    {
+                        $wcgUser = WCGUser::bind(['id'=>$user->getAttribute('id'), 'wcg_uid'=>$userData['id']]);
+                    }
+                }
+                $wcgUser = WCGUser::find()->where('wcg_uid=:wcgUid', [':wcgUid'=>$userData['id']])->one();
+                if ($wcgUser)
+                {
+                    if ($user = \frontend\models\User::find()->where('id=:id', [':id'=>$wcgUser->getAttribute('user_id')])->one())
+                    {
+                        Yii::$app->user->login($user);
+                    }
+                }
+                if ($wcgUser)
+                {
+                    if ($openid && !$wechatUser)
+                    {
+                        WechatUser::create(['open_id'=>$openid, 'user_id'=>$wcgUser->getAttribute('user_id')]);
+                    }
+                }
                 if ($openid)
                 {
                     $_wechatUser = WechatUser::find()->where('open_id=:openId', [':openId'=>$openid])->one();
@@ -179,7 +246,7 @@ class SiteController extends Controller
                 }
                 //该用户在旺财谷登录成功，并已经绑定了旺财谷账号和微信账号，那么，本地登录
                 $wcgUser = WCGUser::find()->where('wcg_uid=:wcgUid', [':wcgUid'=>$userData['id']])->one();
-                $user = User::find()->where('id=:id', [':id'=>$wcgUser->getAttribute('user_id')])->one();
+                if ($wcgUser) $user = User::find()->where('id=:id', [':id'=>$wcgUser->getAttribute('user_id')])->one();
                 if ($user) Yii::$app->user->login($user, 3600 * 24 * 365 * 10);
                 return $this->goBack();
             }
@@ -287,6 +354,21 @@ class SiteController extends Controller
         ]);
     }
 
+    public function actionTender()
+    {
+        //获取投标订单号
+        $uid = 2;
+        $deal_id = 19;
+        $money = 1000.00;
+        $data = ['uid'=>$uid, 'deal_id'=>$deal_id, 'money'=>$money];
+        $url = sprintf("%s/deal_order/attribute-data-value-%s", Yii::$app->params['api']['wcg']['baseUrl'], base64_encode(json_encode($data)));
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $result = curl_exec($ch);
+        curl_close($ch);
+        var_dump(json_decode($result, true));
+    }
+
     public function actionProducts()
     {
         $this->layout = 'wcg';
@@ -300,8 +382,60 @@ class SiteController extends Controller
         if ($result['result'] == 0 && $result['errors']['code'] == 0)
         {
             $list = $result['data'];
+            if ($list && !is_array($list)) $list = (array)$list;
+            foreach($list as $k => $deal)
+            {
+                $interval = null;
+                if ($deal['deal_status'] == 1) $interval = $this->_getDateTimeDiff($deal['start_date']);
+                $deal['interval'] = $interval;
+                $list[$k] = $deal;
+            }
         }
         return $this->render('products', ['list'=>$list]);
+    }
+
+    public function actionProduct($id)
+    {
+        if (Yii::$app->user->isGuest) return $this->redirect('/site/bind');
+        $wcgUser = \frontend\models\wcg\User::fetch();
+        $model = new TenderForm();
+        if ($model->load(Yii::$app->request->post())) {
+            if (Yii::$app->request->isAjax) {
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                return ActiveForm::validate($model);
+            }
+            var_dump($model->tender());
+            return $this->redirect($model->tender());
+        }
+        $loanTypes = [1 => '等额本息', 2=>'付息还本', 3=>'到期本息'];
+        $this->layout = 'wcg';
+        //获取标的详情
+        $url = sprintf("%s/deal_show/attribute-data-value-%s", Yii::$app->params['api']['wcg']['baseUrl'], $id);
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $result = curl_exec($ch);
+        curl_close($ch);
+        $result = json_decode($result, true);
+        $_data = $result['result'] == 0 && $result['errors']['code'] == 0 ? $result['data'] : null;
+        $deal = $_data['deal'];
+        $timeStamp = $deal['deal_status'] < 3 || $deal['deal_status'] == 4 ? $deal['start_date'] : $deal['full_time'];
+        $plan = self::loanTermCalc(date('Y-m-d', $timeStamp), null, $deal['deal_end_date']);
+        if ($deal['expires_type'] == 1) $period = $plan['days'][1]['period']['days'].'天';
+        elseif($deal['expires_type'] == 2) $period = $plan['days'][1]['period']['m'] + ($plan['days'][1]['period']['d'] ? 1 : 0) .'个月';
+        $deal['period'] = $period;
+        $deal['loan_type'] = $loanTypes[$deal['refund_method']];
+        $interval = null;
+        if ($deal['deal_status'] == 1) $interval = $this->_getDateTimeDiff($deal['start_date']);
+        if ($deal['deal_status'] == 2) $interval = $this->_getDateTimeDiff($deal['end_date']);
+        $deal['interval'] = $interval;
+        $deal['security'] = explode("<br />", $deal['fxkz']);
+        foreach($deal['security'] as $k => $v)
+        {
+            unset($deal['security'][$k]);
+            $v = trim($v);
+            if ($v) $deal['security'][$k] = $v;
+        }
+        return $this->render('product_details', ['deal'=>$deal, 'refunds'=>$_data['refund_record'], 'dealOrders'=>$_data['deal_order'], 'model'=>$model, 'user'=>$wcgUser]);
     }
 
     public function actionCnpnr()
@@ -361,7 +495,7 @@ class SiteController extends Controller
                             if ($dealData['result'] == 0 && $dealData['errors']['code'] == 0) $dealData = $dealData['data']['deal'];
                             $plan = self::loanTermCalc(date('Y-m-d', $dealData['full_time']), null, $dealData['deal_end_date']);
                             if ($dealData['expires_type'] == 1) $period = $plan['days'][1]['period']['days'].'天';
-                            elseif($dealData['expires_type'] == 2) $period = $plan['days'][1]['period']['m'] + $plan['days'][0]['period']['d'] ? 1 : 0 .'个月';
+                            elseif($dealData['expires_type'] == 2) $period = $plan['days'][1]['period']['m'] + $plan['days'][1]['period']['d'] ? 1 : 0 .'个月';
                         }
                         //已赚利息
                         $returnedInterestAmt = isset($returnedInterestAmt) ? ($returnedInterestAmt + ($repaymentOrder['status'] == 2 ? $repaymentOrder['lixi'] + $repaymentOrder['weiyuejin'] + $repaymentOrder['overdue'] :0.00)) : ($repaymentOrder['status'] == 2 ? $repaymentOrder['lixi'] + $repaymentOrder['weiyuejin'] + $repaymentOrder['overdue'] :0.00);
@@ -530,5 +664,13 @@ class SiteController extends Controller
         catch(\Exception $e) {
             exit($e->getMessage());
         }
+    }
+
+    public function _getDateTimeDiff($timePoint)
+    {
+        $timeZone = new \DateTimeZone(Yii::$app->timeZone);
+        $now = new \DateTime('now', $timeZone);
+        $timePoint = new \DateTime(date('Y-m-d H:i:s', $timePoint), $timeZone);
+        return $now->diff($timePoint);
     }
 }

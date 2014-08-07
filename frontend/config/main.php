@@ -12,6 +12,7 @@ return [
     'id' => 'app-frontend',
     'basePath' => dirname(__DIR__),
     'language' => 'zh_CN',
+    'timezone'=>'Asia/Shanghai',
     'bootstrap' => ['log'],
     'controllerNamespace' => 'frontend\controllers',
     'components' => [
@@ -39,6 +40,9 @@ return [
         'i18n'=>[
             'translations'=>[
                 'yii*'=>[
+                    'class'=>'yii\i18n\PhpMessageSource',
+                ],
+                'tender'=>[
                     'class'=>'yii\i18n\PhpMessageSource',
                 ],
             ],

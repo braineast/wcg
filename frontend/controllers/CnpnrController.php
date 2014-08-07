@@ -68,10 +68,13 @@ class CnpnrController extends Controller
         switch($this->response[ChinaPNR::PARAM_CMDID])
         {
             case ChinaPNR::CMD_DEPOSIT:
-                $url = 'http://www.wangcaigu.com/HuifuPay/ChargeReturnBack.html';
+                $url = sprintf("%s/HuifuPay/ChargeReturnBack.html", \Yii::$app->params['api']['cnpnr']['dev']['noticeUrl']);
                 break;
             case ChinaPNR::CMD_OPEN:
-                $url = 'http://www.wangcaigu.com/HuifuPay/OpenReturnBack.html';
+                $url = sprintf("%s/HuifuPay/OpenReturnBack.html", \Yii::$app->params['api']['cnpnr']['dev']['noticeUrl']);
+                break;
+            case ChinaPNR::CMD_TENDER:
+                $url = sprintf("%s/HuifuPay/BidReturnBack.html", \Yii::$app->params['api']['cnpnr']['dev']['noticeUrl']);
                 break;
         }
         if ($url)
@@ -82,9 +85,20 @@ class CnpnrController extends Controller
             curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
             $result = curl_exec($ch);
             curl_close($ch);
+            var_dump($result);
             return $result == 'RECV_ORD_ID_'.$this->response[$this->response[ChinaPNR::PARAM_MERPRIV]['showId']];
         }
         return null;
+    }
+
+    protected function InitiativeTender()
+    {
+        if ($this->response[ChinaPNR::RESP_CODE] == '000')
+        {
+            $result = $this->postWCG();
+            if ($result) $this->redirect('/site/notice?type=deposit');
+        }
+        return false;
     }
 
     protected function NetSave()

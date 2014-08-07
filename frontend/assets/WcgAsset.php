@@ -16,14 +16,14 @@ class WcgAsset extends AssetBundle
     public $css = [
         'css/wcg/common.css',
         'css/wcg/layout.css',
-        'css/wcg/process.css',
+//        'css/wcg/process.css',
     ];
     public $js = [
-//        'javascript/open.js',
+        'javascript/open.js',
 //        'javascript/account/deposit.js',
     ];
     public $depends = [
-//        'yii\web\YiiAsset',
+        'yii\web\YiiAsset',
 //        'yii\bootstrap\BootstrapAsset',
     ];
 
