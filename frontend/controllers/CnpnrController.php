@@ -56,6 +56,7 @@ class CnpnrController extends Controller
 
     protected function postWCG()
     {
+        echo(sprintf("已经进入postWCG;<br/>"));
         $post = [];
         foreach($_POST as $field=>$value)
         {
@@ -77,6 +78,7 @@ class CnpnrController extends Controller
                 $url = sprintf("%s/HuifuPay/BidReturnBack.html", \Yii::$app->params['api']['cnpnr']['noticeUrl']);
                 break;
         }
+        echo(sprintf("%s<br/>", $url));
         if ($url)
         {
             $ch = curl_init($url);
@@ -85,6 +87,11 @@ class CnpnrController extends Controller
             curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
             $result = curl_exec($ch);
             curl_close($ch);
+            echo("<hr>");
+            var_dump($result);
+            echo("<hr>");
+            var_dump($result == 'RECV_ORD_ID_'.$this->response[$this->response[ChinaPNR::PARAM_MERPRIV][ChinaPNR::PARAM_PRIVATE_SHOWID]]);
+            echo("<hr>");
             return $result == 'RECV_ORD_ID_'.$this->response[$this->response[ChinaPNR::PARAM_MERPRIV][ChinaPNR::PARAM_PRIVATE_SHOWID]];
         }
         return null;
