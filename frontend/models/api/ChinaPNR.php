@@ -327,8 +327,6 @@ class ChinaPNR {
                 {
                     $val = json_decode($val, true);
                     $val[self::PARAM_PRIVATE_SHOWID] = $this->showId;
-                    var_dump($val);
-                    exit;
                     $val = base64_encode(json_encode($val));
                 }
                 $message .= $val;
