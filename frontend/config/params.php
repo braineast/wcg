@@ -1,6 +1,6 @@
 <?php
 return [
-    'adminEmail' => 'admin@example.com',
+    'adminEmail' => 'lix@wangcaigu.com',
     'wechat'=>[
         'token'=>'f1582cb3ffa64bd4bdfca73d8795',
         'appid'=>'wx806677715e0a9965',
