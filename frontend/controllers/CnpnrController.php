@@ -78,11 +78,11 @@ class CnpnrController extends Controller
                 $url = sprintf("%s/HuifuPay/BidReturnBack.html", \Yii::$app->params['api']['cnpnr']['noticeUrl']);
                 break;
         }
-        echo(sprintf("%s<br/>", $url));
         if ($url)
         {
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 0);
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
             $result = curl_exec($ch);

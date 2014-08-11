@@ -139,6 +139,7 @@ class TenderForm extends Model
         $url = sprintf("%s/deal_order/attribute-data-value-%s", Yii::$app->params['api']['wcg']['baseUrl'], base64_encode(Json::encode($data)));
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 0);
         $result = curl_exec($ch);
         $result = Json::decode($result, true);
         curl_close($ch);
