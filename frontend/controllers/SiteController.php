@@ -505,10 +505,14 @@ class SiteController extends Controller
                             $ch = curl_init($url);
                             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                             $dealData = curl_exec($ch);
-                            var_dump($url);
-                            var_dump($dealData);exit;
                             curl_close($ch);
-                            $dealData = Json::decode($dealData, true);
+                            try
+                            {
+                                $dealData = Json::decode($dealData, true);
+                            }
+                            catch(\Exception $e) {
+                                $dealData = ['result'=>-1, 'errors'=>['code'=>-1, 'message'=>'系统错误！'], 'data'=>[]];
+                            }
                             if ($dealData['result'] == 0 && $dealData['errors']['code'] == 0)
                             {
                                 $dealData = $dealData['data']['deal'];
