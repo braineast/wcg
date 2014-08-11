@@ -29,7 +29,7 @@ use \yii\helpers\Html;
                         <div class="span">即将开始</div>
                         <div id="fk001" seconds="<?= $deal['start_date'] - time() ?>"><?= $deal['interval']->d.':'.$deal['interval']->h.':'.$deal['interval']->i.':'.$deal['interval']->s ?></div>
                     <?php elseif($deal['deal_status'] == 2):?>
-                        <div class="progress-radial progress-<?= (1 - $deal['balance'] / $deal['money'])*100 ?>"><b>立即投资</b></div>
+                        <div class="progress-radial progress-<?= (1 - $deal['balance'] / $deal['money'])*100 ?>"><?= Html::a('立即投资', Yii::$app->urlManager->createAbsoluteUrl('/site/product?id='.$deal['deal_id'])) ?></div>
                         <?php elseif($deal['deal_status'] == 5):?>
                         <div class="zt zt_1"><span class="span">还款中</span></div>
                     <?php elseif($deal['deal_status'] == 6):?>
