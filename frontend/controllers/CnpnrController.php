@@ -94,7 +94,7 @@ class CnpnrController extends Controller
             var_dump($result == 'RECV_ORD_ID_'.$this->response[$this->response[ChinaPNR::PARAM_MERPRIV][ChinaPNR::PARAM_PRIVATE_SHOWID]]);
             echo("<hr>");
             $status = $result == 'RECV_ORD_ID_'.$this->response[$this->response[ChinaPNR::PARAM_MERPRIV][ChinaPNR::PARAM_PRIVATE_SHOWID]];
-            if (!$status)
+            if (!$status && $this->response[ChinaPNR::PARAM_CMDID] == ChinaPNR::CMD_TENDER)
             {
                 $tenderModel = new TenderForm();
                 if ($tenderModel->tenderIsCompleted($this->response[$this->response[ChinaPNR::PARAM_MERPRIV][ChinaPNR::PARAM_PRIVATE_SHOWID]])) $status = true;
