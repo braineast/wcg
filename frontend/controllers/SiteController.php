@@ -507,10 +507,13 @@ class SiteController extends Controller
                             $dealData = curl_exec($ch);
                             curl_close($ch);
                             $dealData = Json::decode($dealData, true);
-                            if ($dealData['result'] == 0 && $dealData['errors']['code'] == 0) $dealData = $dealData['data']['deal'];
-                            $plan = self::loanTermCalc(date('Y-m-d', $dealData['full_time']), null, $dealData['deal_end_date']);
-                            if ($dealData['expires_type'] == 1) $period = $plan['days'][1]['period']['days'].'天';
-                            elseif($dealData['expires_type'] == 2) $period = $plan['days'][1]['period']['m'] + $plan['days'][1]['period']['d'] ? 1 : 0 .'个月';
+                            if ($dealData['result'] == 0 && $dealData['errors']['code'] == 0)
+                            {
+                                $dealData = $dealData['data']['deal'];
+                                $plan = self::loanTermCalc(date('Y-m-d', $dealData['full_time']), null, $dealData['deal_end_date']);
+                                if ($dealData['expires_type'] == 1) $period = $plan['days'][1]['period']['days'].'天';
+                                elseif($dealData['expires_type'] == 2) $period = $plan['days'][1]['period']['m'] + $plan['days'][1]['period']['d'] ? 1 : 0 .'个月';
+                            }
                         }
                         //已赚利息
                         $returnedInterestAmt = isset($returnedInterestAmt) ? ($returnedInterestAmt + ($repaymentOrder['status'] == 2 ? $repaymentOrder['lixi'] + $repaymentOrder['weiyuejin'] + $repaymentOrder['overdue'] :0.00)) : ($repaymentOrder['status'] == 2 ? $repaymentOrder['lixi'] + $repaymentOrder['weiyuejin'] + $repaymentOrder['overdue'] :0.00);

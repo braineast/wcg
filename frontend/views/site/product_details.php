@@ -24,7 +24,7 @@ $dealOrders = isset($dealOrders) && $dealOrders ? $dealOrders : [];
         color: red;
     }
 </style>
-<div class="main_content" style=" padding-bottom:88px;">
+<div class="main_content" style="padding-bottom:88px;">
 <div class="financingList">
     <table width="100%" border="0" cellspacing="0" cellpadding="0" style=" border-bottom:0">
         <tbody><tr>
