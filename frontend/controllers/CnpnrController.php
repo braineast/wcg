@@ -10,6 +10,7 @@ namespace frontend\controllers;
 
 use frontend\models\Controller;
 use frontend\models\api\ChinaPNR;
+use frontend\models\TenderForm;
 use frontend\models\wcg\User as WCGUser;
 
 class CnpnrController extends Controller
@@ -92,7 +93,13 @@ class CnpnrController extends Controller
             echo("<hr>");
             var_dump($result == 'RECV_ORD_ID_'.$this->response[$this->response[ChinaPNR::PARAM_MERPRIV][ChinaPNR::PARAM_PRIVATE_SHOWID]]);
             echo("<hr>");
-            return $result == 'RECV_ORD_ID_'.$this->response[$this->response[ChinaPNR::PARAM_MERPRIV][ChinaPNR::PARAM_PRIVATE_SHOWID]];
+            $status = $result == 'RECV_ORD_ID_'.$this->response[$this->response[ChinaPNR::PARAM_MERPRIV][ChinaPNR::PARAM_PRIVATE_SHOWID]];
+            if (!$status)
+            {
+                $tenderModel = new TenderForm();
+                if ($tenderModel->tenderIsCompleted($this->response[$this->response[ChinaPNR::PARAM_MERPRIV][ChinaPNR::PARAM_PRIVATE_SHOWID]])) $status = true;
+            }
+            return $status;
         }
         return null;
     }
