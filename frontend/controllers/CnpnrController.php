@@ -92,11 +92,11 @@ class CnpnrController extends Controller
 
     protected function InitiativeTender()
     {
-//        if ($this->response[ChinaPNR::RESP_CODE] == '000')
-//        {
-//            $result = $this->postWCG();
-//            if ($result) $this->redirect('/site/notice?type=tender');
-//        }
+        if ($this->response[ChinaPNR::RESP_CODE] == '000')
+        {
+            $result = $this->postWCG();
+            if ($result) $this->redirect('/site/notice?type=tender');
+        }
         return false;
     }
 
