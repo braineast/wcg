@@ -199,7 +199,6 @@ class ChinaPNR {
                 {
                     $field = $vSignFieldsOrd[$i];
                     $value = isset($responseArr[$field]) && $responseArr[$field] ? trim(urldecode($responseArr[$field])) : null;
-                    if ($value) echo(sprintf("%s=>%s<br/>", $field, $value));
                     if ($value) $vSignMessage .= $value;
                 }
                 if ($this->_vSign($vSignMessage, $chkValue))
