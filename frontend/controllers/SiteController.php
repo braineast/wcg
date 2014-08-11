@@ -505,6 +505,7 @@ class SiteController extends Controller
                             $ch = curl_init($url);
                             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                             $dealData = curl_exec($ch);
+                            var_dump($url);
                             var_dump($dealData);exit;
                             curl_close($ch);
                             $dealData = Json::decode($dealData, true);
