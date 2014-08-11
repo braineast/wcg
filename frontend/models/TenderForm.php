@@ -63,8 +63,6 @@ class TenderForm extends Model
                 'deal_id'=>$this->dealId,
                 'uid'=>$uid,
                 'money'=>$this->amount,
-                'freeze_order_id'=>$this->_createSerial(),
-                'freeze_order_date'=>date('Ymd'),
             ];
             $url = sprintf("%s/deal_order/attribute-data-value-%s", Yii::$app->params['api']['wcg']['baseUrl'], base64_encode(Json::encode($data)));
             $ch = curl_init($url);
@@ -73,8 +71,10 @@ class TenderForm extends Model
             $result = Json::decode($result, true);
             curl_close($ch);
             $order = null;
-            if ($result['result'] == 0 && $result['errors']['code']==0)
+            if ($result['result'] == 0 && $result['errors']['code'] == 0) $order = $result['data'];
+            if ($order)
             {
+                Yii::error(json_encode($order));
                 //Get deal details data
                 $url = sprintf("%s/deal_show/attribute-data-value-%s",Yii::$app->params['api']['wcg']['baseUrl'], $this->dealId);
                 $ch = curl_init($url);
@@ -97,21 +97,22 @@ class TenderForm extends Model
                     {
                         $userData = $userData['data'];
                         $borrowerCustId = $userData['UsrCustId'];
+                        $order = $result['data'];
+                        $cnpnr = new ChinaPNR(Yii::$app->request->hostInfo);
+                        $cnpnr->tender($cnpnrAcctId);
+                        $cnpnr->transAmt = $order['order_money'];
+                        $cnpnr->ordId = $order['deal_number'];
+                        $cnpnr->ordDate = $order['OrdDate'];
+                        $cnpnr->isFreeze = 'Y';
+                        $cnpnr->freezeordid = $order['deal_number'] . '000';
+                        $cnpnr->maxTenderRate = 0.09;
+                        $cnpnr->BorrowerDetails = Json::encode([['BorrowerCustId'=>$borrowerCustId, 'BorrowerAmt'=>$cnpnr->transAmt, 'BorrowerRate'=>'0.99']]);
+                        $cnpnr->merPriv = json_encode(['id'=>$wcgUser->getAttribute('wcg_uid'),'username'=>$order['username'],'cnpnr_acct'=>$cnpnrAcctId]);
+                        return $cnpnr->getLink();
                     }
                 }
-                $order = $result['data'];
-                $cnpnr = new ChinaPNR(Yii::$app->request->hostInfo);
-                $cnpnr->tender($cnpnrAcctId);
-                $cnpnr->transAmt = $order['order_money'];
-                $cnpnr->ordId = $order['deal_number'];
-                $cnpnr->ordDate = $order['OrdDate'];
-                $cnpnr->isFreeze = 'Y';
-                $cnpnr->freezeordid = $order['deal_number'] . '000';
-                $cnpnr->maxTenderRate = 0.09;
-                $cnpnr->BorrowerDetails = Json::encode([['BorrowerCustId'=>$borrowerCustId, 'BorrowerAmt'=>$cnpnr->transAmt, 'BorrowerRate'=>'0.99']]);
-                $cnpnr->merPriv = json_encode(['id'=>$wcgUser->getAttribute('wcg_uid'),'username'=>$order['username'],'cnpnr_acct'=>$cnpnrAcctId]);
-                return $cnpnr->getLink();
             }
+            else exit('从旺财谷WEB接口获取新订单出错！无法继续投标！');
         }
 
         return null;

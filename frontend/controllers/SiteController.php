@@ -419,7 +419,6 @@ class SiteController extends Controller
                 Yii::$app->response->format = Response::FORMAT_JSON;
                 return ActiveForm::validate($model);
             }
-            var_dump($model->tender());
             return $this->redirect($model->tender());
         }
         $loanTypes = [1 => '等额本息', 2=>'付息还本', 3=>'到期本息'];
