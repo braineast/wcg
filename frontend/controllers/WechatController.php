@@ -34,7 +34,8 @@ class WechatController extends Controller
 
     public function actionMenu()
     {
-//        $this->deleteMenu();
+        header("Content-Type: text/html; charset=utf-8");
+        $this->deleteMenu();
         print_r($this->getMenu());
         $this->createMenu();
         print_r($this->getMenu());
