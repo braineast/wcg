@@ -107,7 +107,8 @@ class TenderForm extends Model
                         $cnpnr->freezeordid = $order['deal_number'] . '000';
                         $cnpnr->maxTenderRate = 0.09;
                         $cnpnr->BorrowerDetails = Json::encode([['BorrowerCustId'=>$borrowerCustId, 'BorrowerAmt'=>$cnpnr->transAmt, 'BorrowerRate'=>'0.99']]);
-                        $cnpnr->merPriv = json_encode(['id'=>$wcgUser->getAttribute('wcg_uid'),'username'=>$order['username'],'cnpnr_acct'=>$cnpnrAcctId]);
+//                        $cnpnr->merPriv = json_encode(['id'=>$wcgUser->getAttribute('wcg_uid'),'username'=>$order['username'],'cnpnr_acct'=>$cnpnrAcctId]);
+                        $cnpnr->merPriv = ['id'=>$wcgUser->getAttribute('wcg_uid'),'username'=>$order['username'],'cnpnr_acct'=>$cnpnrAcctId];
                         return $cnpnr->getLink();
                     }
                 }
