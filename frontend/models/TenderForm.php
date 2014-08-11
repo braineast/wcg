@@ -59,22 +59,8 @@ class TenderForm extends Model
                 $cnpnrAcctId = $wcgUser->getAttribute('cnpnr_account');
                 $uid = $wcgUser->getAttribute('wcg_uid');
             }
-            $data = [
-                'deal_id'=>$this->dealId,
-                'uid'=>$uid,
-                'money'=>$this->amount,
-            ];
-            $url = sprintf("%s/deal_order/attribute-data-value-%s", Yii::$app->params['api']['wcg']['baseUrl'], base64_encode(Json::encode($data)));
-            $ch = curl_init($url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            $result = curl_exec($ch);
-            $result = Json::decode($result, true);
-            curl_close($ch);
-            $order = null;
-            if ($result['result'] == 0 && $result['errors']['code'] == 0) $order = $result['data'];
-            if ($order)
+            if ($order = $this->getOrder($uid))
             {
-                Yii::error(json_encode($order));
                 //Get deal details data
                 $url = sprintf("%s/deal_show/attribute-data-value-%s",Yii::$app->params['api']['wcg']['baseUrl'], $this->dealId);
                 $ch = curl_init($url);
@@ -112,7 +98,6 @@ class TenderForm extends Model
                     }
                 }
             }
-            else exit('从旺财谷WEB接口获取新订单出错！无法继续投标！');
         }
 
         return null;
@@ -145,13 +130,33 @@ class TenderForm extends Model
         return $result;
     }
 
-    private function _createSerial()
+    /**
+     * Get order object from WCG web site
+     */
+    public function getOrder($userId)
     {
-        $orderNumber = false;
-        if (preg_match('/.*\.+?(\d+)?\s*(\d+)$/', microtime(), $microTimeArr))
-        {
-            $orderNumber = date('YmdHis', $microTimeArr[2]).substr($microTimeArr[1], 0, 6);
-        }
-        return $orderNumber;
+        $order = null;
+        $data = ['deal_id'=>$this->dealId, 'uid'=>$userId, 'money'=>$this->amount,];
+        $url = sprintf("%s/deal_order/attribute-data-value-%s", Yii::$app->params['api']['wcg']['baseUrl'], base64_encode(Json::encode($data)));
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $result = curl_exec($ch);
+        $result = Json::decode($result, true);
+        curl_close($ch);
+        if ($result['result'] == 0 && $result['errors']['code'] == 0) $order = $result['data'];
+        if (!$order || $this->tenderIsCompleted($order['deal_number'])) return $this->getOrder($userId);
+        return $order;
+    }
+
+    public function tenderIsCompleted($orderId)
+    {
+        $url = sprintf("%s/cheack_toubiao/attribute-data-value-%s", Yii::$app->params['api']['wcg']['baseUrl'], $orderId);
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $result = curl_exec($ch);
+        $result = Json::decode($result, true);
+        curl_close($ch);
+        if ($result['result'] == 0 && $result['errors']['code'] == 0) return true;
+        return false;
     }
 }
