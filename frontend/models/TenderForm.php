@@ -83,7 +83,6 @@ class TenderForm extends Model
                     {
                         $userData = $userData['data'];
                         $borrowerCustId = $userData['UsrCustId'];
-                        $order = $result['data'];
                         $cnpnr = new ChinaPNR(Yii::$app->request->hostInfo);
                         $cnpnr->tender($cnpnrAcctId);
                         $cnpnr->transAmt = $order['order_money'];
