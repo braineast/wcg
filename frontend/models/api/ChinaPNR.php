@@ -69,11 +69,11 @@ class ChinaPNR {
     private $showId;
     private $apiInfo;
 
-    public function __construct($hostInfo)
+    public function __construct($hostInfo = null)
     {
         $this->apiInfo = \Yii::$app->params['api']['cnpnr'];
-        $this->retUrl = $hostInfo . '/cnpnr';
-        $this->bgRetUrl = $hostInfo . '/cnpnr/backend';
+        $this->retUrl = Yii::$app->request->hostInfo.'/cnpnr';
+        $this->bgRetUrl = Yii::$app->request->hostInfo . '/cnpnr/backend';
         $this->host = $this->apiInfo['host'];
         $this->merId = $this->apiInfo['merid'];
         $this->params = [
