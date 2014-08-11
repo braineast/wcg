@@ -511,7 +511,7 @@ class SiteController extends Controller
                                 $dealData = Json::decode($dealData, true);
                             }
                             catch(\Exception $e) {
-                                $dealData = ['result'=>0, 'errors'=>['code'=>0, 'message'=>'系统错误！'], 'data'=>['deal'=>['title'=>'']]];
+                                $dealData = ['result'=>0, 'errors'=>['code'=>0, 'message'=>'系统错误！'], 'data'=>['deal'=>['title'=>'', 'full_time'=>time()]]];
                             }
                             if ($dealData['result'] == 0 && $dealData['errors']['code'] == 0)
                             {
