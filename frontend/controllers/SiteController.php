@@ -313,7 +313,7 @@ class SiteController extends Controller
                     break;
                 case 'tender':
                     $subject = $subject ? $subject : '恭喜！';
-                    $message = $message ? $message : sprintf("您的投标已完成，您可以查询您的投标记录，也可以继续投资！");
+                    $message = $message ? $message : sprintf("您的投标已完成，您可以查询您的交易记录进行确认，也可以继续投资！");
                     break;
                 case 'default':
                     $subject = '操作已完成';
