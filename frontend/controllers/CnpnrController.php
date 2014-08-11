@@ -25,6 +25,7 @@ class CnpnrController extends Controller
         {
             $cnpnr = new ChinaPNR();
             $cnpnr->setResponse($_POST, $backend);
+            exit;
             if ($response = $cnpnr->getResponse())
             {
                 $this->response = $response;
