@@ -207,7 +207,7 @@ class ChinaPNR {
                     {
                         if ($k == self::PARAM_MERPRIV)
                         {
-                            $v = json_decode(base64_decode($v), true);
+                            $v = json_decode(base64_decode(urldecode($v)), true);
                             if ($isBackend) $v['return'] = 'backend';
                         }
                         $this->response[$k] = $v;
