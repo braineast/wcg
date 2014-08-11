@@ -12,6 +12,7 @@ namespace frontend\controllers;
 use frontend\models\wcg\User;
 use frontend\models\WechatUser;
 use yii\web\Controller;
+use Yii;
 
 class WechatController extends Controller
 {
@@ -444,22 +445,22 @@ class WechatController extends Controller
                                         {"name":"注册/绑定","type":"click","key":"account_bind_action"},
                                         {"name":"交易明细","type":"click","key":"account_transactions"},
                                         {"name":"账户余额","type":"click","key":"account_summary_action"},
-                                        {"name":"充值","type":"view","url":"http:\/\/m.wangcaigu.com\/account\/deposit"}
+                                        {"name":"充值","type":"view","url":"'.Yii::$app->params['wechat']['siteUrl'].'\/account\/deposit"}
                                     ]
                                 },
                                 {
                                     "name":"理财",
                                     "sub_button":[
-                                        {"name":"去理财","type":"view","url":"http:\/\/m.wangcaigu.com\/site\/products"},
-                                        {"name":"安全保障","type":"view","url":"http:\/\/www.wangcaigu.com\/safe.html"},
-                                        {"name":"持有产品","type":"view","url":"http://m.wangcaigu.com\/site\/myproducts"}
+                                        {"name":"去理财","type":"view","url":"'.Yii::$app->params['wechat']['siteUrl'].'\/site\/products"},
+                                        {"name":"安全保障","type":"view","url":"'.Yii::$app->params['wechat']['siteUrl'].'\/safe.html"},
+                                        {"name":"持有产品","type":"view","url":"'.Yii::$app->params['wechat']['siteUrl'].'\/site\/myproducts"}
                                     ]
                                 },
                                 {
                                     "name":"服务",
                                     "sub_button":[
                                         {"name":"关于旺财谷","type":"click","key":"info_about"},
-                                        {"name":"新手指导","type":"view","url":"http:\/\/www.wangcaigu.com/help/xszy.html"},
+                                        {"name":"新手指导","type":"view","url":"'.Yii::$app->params['wechat']['siteUrl'].'/help/xszy.html"},
                                         {"name":"理财咨询","type":"click","key":"info_get_question_action"},
                                         {"name":"投诉建议","type":"click","key":"suggest_action"}
                                     ]

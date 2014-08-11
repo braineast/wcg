@@ -5,6 +5,7 @@ return [
         'token'=>'f1582cb3ffa64bd4bdfca73d8795',
         'appid'=>'wx806677715e0a9965',
         'appsecret'=>'223c114936d52b4c29dddb59084b4092',
+        'siteUrl'=>'http://m.wangcaigu.com',
     ],
     'api' => [
         'cnpnr'=>[
