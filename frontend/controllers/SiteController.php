@@ -312,8 +312,8 @@ class SiteController extends Controller
                     $message = sprintf("您的充值已经成功。");
                     break;
                 case 'tender':
-                    $subject = '恭喜！';
-                    $message = sprintf("您的投标已完成，稍后可以查询到您的投标记录，以确认是否抢到！");
+                    $subject = $subject ? $subject : '恭喜！';
+                    $message = $message ? $message : sprintf("您的投标已完成，您可以查询您的投标记录，也可以继续投资！");
                     break;
                 case 'default':
                     $subject = '操作已完成';
