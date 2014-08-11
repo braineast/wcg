@@ -198,11 +198,11 @@ class ChinaPNR {
                 for($i=0;$i<count($vSignFieldsOrd);$i++)
                 {
                     $field = $vSignFieldsOrd[$i];
-                    $value = isset($responseArr[$field]) && $responseArr[$field] ? trim($responseArr[$field]) : null;
+                    $value = isset($responseArr[$field]) && $responseArr[$field] ? trim(urldecode($responseArr[$field])) : null;
                     if ($value) echo(sprintf("%s=>%s<br/>", $field, $value));
                     if ($value) $vSignMessage .= $value;
                 }
-                if ($cmdId == self::CMD_TENDER || $this->_vSign($vSignMessage, $chkValue))
+                if ($this->_vSign($vSignMessage, $chkValue))
                 {
                     foreach($responseArr as $k => $v)
                     {

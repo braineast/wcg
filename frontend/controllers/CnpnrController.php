@@ -25,7 +25,6 @@ class CnpnrController extends Controller
         {
             $cnpnr = new ChinaPNR();
             $cnpnr->setResponse($_POST, $backend);
-            exit;
             if ($response = $cnpnr->getResponse())
             {
                 $this->response = $response;
@@ -86,13 +85,6 @@ class CnpnrController extends Controller
             curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
             $result = curl_exec($ch);
             curl_close($ch);
-//            var_dump($result);
-//            echo("<hr>");
-//            var_dump($this->response);
-//            echo("<hr>");
-//            var_dump($_POST);
-//            echo("<hr>");
-            exit;
             return $result == 'RECV_ORD_ID_'.$this->response[$this->response[ChinaPNR::PARAM_MERPRIV][ChinaPNR::PARAM_PRIVATE_SHOWID]];
         }
         return null;
