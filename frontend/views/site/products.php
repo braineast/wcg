@@ -71,8 +71,7 @@ use \yii\helpers\Html;
                             showTime(period,contentDiv);
                             if (timerId && period == 0) {
                                 clearInterval(timerId);
-                                contentDiv.parent().html('Begin!!!');
-<!--                                contentDiv.parent().find('td.deal_status_text').html('<div><a href="--><?//= Yii::$app->request->hostInfo ?><!--/site/product?id='+contentDiv.attr('deal_id')+'">立即投资</a></div>');-->
+                                contentDiv.parent().html('<div><a href="--><?//= Yii::$app->request->hostInfo ?><!--/site/product?id='+contentDiv.attr('deal_id')+'">立即投资</a></div>');
                             }
                         }, 1000);
                     }
