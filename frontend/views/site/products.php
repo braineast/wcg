@@ -27,7 +27,7 @@ use \yii\helpers\Html;
                 <td width="17%" rowspan="3" id="deal_status_text">
                     <?php if ($deal['deal_status'] == 1): ?>
                         <div class="span">即将开始</div>
-                        <div class="fk001" seconds="<?= $deal['start_date'] - time() ?>"><?= $deal['interval']->d.':'.$deal['interval']->h.':'.$deal['interval']->i.':'.$deal['interval']->s ?></div>
+                        <div class="fk001" seconds="<?= $deal['start_date'] - time() ?>" deal_id="<?= $deal['deal_id'] ?>"><?= $deal['interval']->d.':'.$deal['interval']->h.':'.$deal['interval']->i.':'.$deal['interval']->s ?></div>
                     <?php elseif($deal['deal_status'] == 2):?>
                         <div class="progress-radial progress-<?= (1 - $deal['balance'] / $deal['money'])*100 ?>"><?= Html::a('立即投资', Yii::$app->urlManager->createAbsoluteUrl('/site/product?id='.$deal['deal_id'])) ?></div>
                         <?php elseif($deal['deal_status'] == 5):?>
@@ -71,7 +71,7 @@ use \yii\helpers\Html;
                             showTime(period,contentDiv);
                             if (timerId && period == 0) {
                                 clearInterval(timerId);
-                                $('#deal_status_text').html('<div><?= Html::a("立即投资", Yii::$app->urlManager->createAbsoluteUrl("/site/product?id=".$deal["deal_id"])) ?></div>');
+                                $('#deal_status_text').html('<div><a href="<?= Yii::$app->request->hostInfo ?>/site/product?id='+contentDiv.attr('deal_id')+'">立即投资</a></div>');
                             }
                         }, 1000);
                     }
