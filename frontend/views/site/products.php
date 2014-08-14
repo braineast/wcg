@@ -24,7 +24,7 @@ use \yii\helpers\Html;
         <table width="100%" border="0" cellspacing="0" cellpadding="0">
             <tbody><tr align="center">
                 <td align="left" colspan="2"><span><?= Html::a($deal['title'], Yii::$app->urlManager->createAbsoluteUrl('/site/product?id='.$deal['deal_id'])) ?></span><?php if ($deal['baoxian'] == 2): ?><img class="icon" src="/css/wcg/images/home7_03.png"><?php endif; ?></td>
-                <td width="17%" rowspan="3" id="deal_status_text">
+                <td width="17%" rowspan="3" class="deal_status_text">
                     <?php if ($deal['deal_status'] == 1): ?>
                         <div class="span">即将开始</div>
                         <div class="fk001" seconds="<?= $deal['start_date'] - time() ?>" deal_id="<?= $deal['deal_id'] ?>"><?= $deal['interval']->d.':'.$deal['interval']->h.':'.$deal['interval']->i.':'.$deal['interval']->s ?></div>
@@ -71,7 +71,7 @@ use \yii\helpers\Html;
                             showTime(period,contentDiv);
                             if (timerId && period == 0) {
                                 clearInterval(timerId);
-                                $('#deal_status_text').html('<div><a href="<?= Yii::$app->request->hostInfo ?>/site/product?id='+contentDiv.attr('deal_id')+'">立即投资</a></div>');
+                                contentDiv.parents.find('td.deal_status_text').html('<div><a href="<?= Yii::$app->request->hostInfo ?>/site/product?id='+contentDiv.attr('deal_id')+'">立即投资</a></div>');
                             }
                         }, 1000);
                     }
