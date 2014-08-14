@@ -71,7 +71,7 @@ use \yii\helpers\Html;
                             showTime(period,contentDiv);
                             if (timerId && period == 0) {
                                 clearInterval(timerId);
-                                $('#deal_status_text').html('<div>'+<?= Html::a('立即投资', Yii::$app->urlManager->createAbsoluteUrl('/site/product?id='.$deal['deal_id'])) ?>+'</div>');
+                                $('#deal_status_text').html('<div><?= Html::a("立即投资", Yii::$app->urlManager->createAbsoluteUrl("/site/product?id=".$deal["deal_id"])) ?></div>');
                             }
                         }, 1000);
                     }
