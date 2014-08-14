@@ -27,7 +27,7 @@ use \yii\helpers\Html;
                 <td width="17%" rowspan="3">
                     <?php if ($deal['deal_status'] == 1): ?>
                         <div class="span">即将开始</div>
-                        <div id="fk001" seconds="<?= $deal['start_date'] - time() ?>"><?= $deal['interval']->d.':'.$deal['interval']->h.':'.$deal['interval']->i.':'.$deal['interval']->s ?></div>
+                        <div class="fk001" seconds="<?= $deal['start_date'] - time() ?>"><?= $deal['interval']->d.':'.$deal['interval']->h.':'.$deal['interval']->i.':'.$deal['interval']->s ?></div>
                     <?php elseif($deal['deal_status'] == 2):?>
                         <div class="progress-radial progress-<?= (1 - $deal['balance'] / $deal['money'])*100 ?>"><?= Html::a('立即投资', Yii::$app->urlManager->createAbsoluteUrl('/site/product?id='.$deal['deal_id'])) ?></div>
                         <?php elseif($deal['deal_status'] == 5):?>
@@ -58,16 +58,17 @@ use \yii\helpers\Html;
     jQuery(document).ready(
         function()
         {
-            jQuery('#fk001').each(
+            jQuery('.fk001').each(
                 function()
                 {
                     var timerId = null;
                     var period = $(this).attr('seconds');
                     if (period)
                     {
+                        var contentDiv = $(this);
                         timerId = window.setInterval(function(){
                             period--;
-                            showTime(period);
+                            showTime(period,contentDiv);
                             if (timerId && period == 0) clearInterval(timerId);
                         }, 1000);
                     }
@@ -76,7 +77,7 @@ use \yii\helpers\Html;
         }
     );
 
-    function showTime(intervalSeconds)
+    function showTime(intervalSeconds, contentContainer)
     {
         var minuteLength = 60;
         var hourLength = minuteLength * 60;
@@ -95,6 +96,6 @@ use \yii\helpers\Html;
             minutes = minutes < 10 ? '0'+minutes : minutes;
             seconds = seconds < 10 ? '0'+seconds : seconds;
         }
-        return $('#fk001').text(days+'天'+hours+'时'+minutes+'分'+seconds+'秒后开放');
+        return contentContainer.text((days ? days+'天': '')+hours+'时'+minutes+'分'+seconds+'秒后开放');
     }
 </script>
