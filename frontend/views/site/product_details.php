@@ -7,7 +7,6 @@
  */
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
-use yii\helpers\Json;
 
 //$details = $details ? ($details['result']==0 && $details['errors']['code'] == 0 ? $details['data'] : null) : null;
 $deal = $deal ? $deal : null;
@@ -303,7 +302,7 @@ $dealOrders = isset($dealOrders) && $dealOrders ? $dealOrders : [];
         var timerId = window.setInterval(function(){
             $.ajax(
                 {
-                    url: 'http://wcg.ltxigu.com/site/getdealbrief?dealId=20',
+                    url: '<?= Yii::$app->request->hostInfo ?>/site/getdealbrief?dealId=20',
                     success: function(data) {
                         if (data.deal_status > 2 || data.balance == 0) clearInterval(timerId);
                         $('#deal_balance').text('剩余'+data.balance+'元可投');
