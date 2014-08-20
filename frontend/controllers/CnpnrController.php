@@ -101,17 +101,17 @@ class CnpnrController extends Controller
 
     protected function InitiativeTender()
     {
-        if ($this->response[ChinaPNR::RESP_CODE] == '000')
-        {
-            $result = $this->postWCG();
+//        if ($this->response[ChinaPNR::RESP_CODE] == '000')
+//        {
+           $result = $this->postWCG();
             $status = false;
             $tenderModel = new TenderForm();
             if ($tenderModel->tenderIsCompleted($this->response[$this->response[ChinaPNR::PARAM_MERPRIV][ChinaPNR::PARAM_PRIVATE_SHOWID]])) $status = true;
             if ($status)
                 return $this->redirect('/site/notice?type=tender');
             else return $this->redirect('/site/notice?type=tender&subject=抱歉，投标失败！&message=非常抱歉，您本次投标没有成功，请再次进行尝试！');
-        }
-        return false;
+//        }
+//        return false;
     }
 
     protected function NetSave()
