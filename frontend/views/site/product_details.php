@@ -302,7 +302,7 @@ $dealOrders = isset($dealOrders) && $dealOrders ? $dealOrders : [];
         var timerId = window.setInterval(function(){
             $.ajax(
                 {
-                    url: '<?= Yii::$app->request->hostInfo ?>/site/getdealbrief?dealId=20',
+                    url: '<?= Yii::$app->request->hostInfo ?>/site/getdealbrief?dealId=<?= $deal['deal_id'] ?>',
                     success: function(data) {
                         if (data.deal_status > 2 || data.balance == 0) clearInterval(timerId);
                         $('#deal_balance').text('剩余'+data.balance+'元可投');
