@@ -41,7 +41,7 @@ class TenderForm extends Model
         if ($dealBrief['deal_status'] == 6) $this->addError($attribute, '该标的已经完成，无法投资。');
         if ($dealBrief['balance'] < $this->$attribute) $this->addError($attribute, '该标的可投金额已不足以满足您的投资，请修改投资金额。');
         if ($userInfo['avl_balance'] < $this->$attribute) $this->addError($attribute, '您的账户可用余额不足以进行本次投资，请修改投资金额。');
-        if ($this->$attribute % 100 > 0) $this->addError($attribute, '请输入100或100的整数进行投资。');
+        if ($this->$attribute % 10000 > 0) $this->addError($attribute, '请输入10000或10000的整数进行投资。');
     }
 
     /**
