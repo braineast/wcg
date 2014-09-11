@@ -36,7 +36,7 @@ class TenderForm extends Model
         $dealOrders = $this->getDealOrders();
         if (isset($dealBrief['xinshou_status']) && $dealBrief['xinshou_status'] == 2)
         {
-            if ($this->$attribute > 100) $this->addError($attribute, '新手标，不允许投资超过100元。');
+            if ($this->$attribute != 100.00) $this->addError($attribute, '新手标，请投资100元。');
         }
         elseif ($this->$attribute % 1000 > 0) $this->addError($attribute, '请输入1000或1000的整数进行投资。');
         $newbieBidCount = 0;
