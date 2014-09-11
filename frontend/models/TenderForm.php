@@ -33,6 +33,7 @@ class TenderForm extends Model
     {
         $dealBrief = $this->getDealBrief();
         $userInfo = $this->getUserInfo();
+        $dealOrders = $this->getDealOrders();
         if (!$userInfo['cnpnr_account']) $this->addError($attribute, '您尚未开通汇付天下资金托管账户，无法进行投资，请先行开户。');
         if ($dealBrief['deal_status'] == 1) $this->addError($attribute, '该标的目前处于准备期，无法投资。');
         if ($dealBrief['deal_status'] == 3) $this->addError($attribute, '该标的已经满标，无法继续投资。');
@@ -41,7 +42,21 @@ class TenderForm extends Model
         if ($dealBrief['deal_status'] == 6) $this->addError($attribute, '该标的已经完成，无法投资。');
         if ($dealBrief['balance'] < $this->$attribute) $this->addError($attribute, '该标的可投金额已不足以满足您的投资，请修改投资金额。');
         if ($userInfo['avl_balance'] < $this->$attribute) $this->addError($attribute, '您的账户可用余额不足以进行本次投资，请修改投资金额。');
-        if ($this->$attribute % 1000 > 0) $this->addError($attribute, '请输入1000或1000的整数进行投资。');
+        if (isset($dealBrief['xinshou_status']) && $dealBrief['xinshou_status'] == 2)
+        {
+            if ($this->$attribute > 100) $this->addError($attribute, '新手标，不允许投资超过100元。');
+        }
+        elseif ($this->$attribute % 1000 > 0) $this->addError($attribute, '请输入1000或1000的整数进行投资。');
+        $newbieBidCount = 0;
+        if ($dealOrders)
+        {
+            foreach($dealOrders as $ord)
+            {
+                $dealInfo = $this->getDealBrief($ord['deal_id']);
+                if (isset($dealInfo['xinshou_status']) && $dealInfo['xinshou_status'] == 2) $newbieBidCount++;
+            }
+        }
+        if ($newbieBidCount >= 3) $this->addError($attribute, '抱歉，新手标每个用户只允许至多投资三次。');
     }
 
     /**
@@ -117,9 +132,9 @@ class TenderForm extends Model
         return false;
     }
 
-    public function getDealBrief()
+    public function getDealBrief($dealId = null)
     {
-        $url = sprintf("%s/deal_jiben/attribute-data-value-%s", Yii::$app->params['api']['wcg']['baseUrl'], $this->dealId);
+        $url = sprintf("%s/deal_jiben/attribute-data-value-%s", Yii::$app->params['api']['wcg']['baseUrl'], $dealId ? $dealId : $this->dealId);
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $result = curl_exec($ch);
@@ -158,5 +173,22 @@ class TenderForm extends Model
         curl_close($ch);
         if ($result['result'] == 0 && $result['errors']['code'] == 0) return true;
         return false;
+    }
+
+    private function getDealOrders()
+    {
+        $url = sprintf("%s/cheack_jiaoyi/attribute-data-value-%s", Yii::$app->params['api']['wcg']['baseUrl'], $wcgUser->getAttribute('wcg_uid'));
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $logs = curl_exec($ch);
+        $logs = Json::decode($logs, true);
+        $logs = isset($logs['data']['toubiao']) && $logs['data']['toubiao'] ? $logs['data']['toubiao'] : null;
+        curl_close($ch);
+        $orders = [];
+        foreach($logs as $dealOrder)
+        {
+            if ($dealOrder['status'] == 2) $orders[] = $dealOrder;
+        }
+        return $orders;
     }
 }
