@@ -24,7 +24,7 @@ class TenderForm extends Model
     {
         return [
             [['dealId','amount'], 'required', 'message'=>Yii::t('tender', 'The tender amount is required.')],
-            ['amount', 'number', 'min'=>1000.00],
+//            ['amount', 'number', 'min'=>1000.00],
             ['amount', 'checkAmount'],
         ];
     }
