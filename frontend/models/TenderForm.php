@@ -142,13 +142,13 @@ class TenderForm extends Model
 
     public function getDealBrief($dealId = null)
     {
-        $url = sprintf("%s/deal_show/attribute-data-value-%s", Yii::$app->params['api']['wcg']['baseUrl'], $dealId ? $dealId : $this->dealId);
+        $url = sprintf("%s/deal_jiben/attribute-data-value-%s", Yii::$app->params['api']['wcg']['baseUrl'], $dealId ? $dealId : $this->dealId);
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $result = curl_exec($ch);
         $result = Json::decode($result, true);
         curl_close($ch);
-        if ($result['result'] == 0 && $result['errors']['code'] == 0) $result = $result['data']['deal'];
+        if ($result['result'] == 0 && $result['errors']['code'] == 0) $result = $result['data'];
         return $result;
     }
 
