@@ -22,6 +22,17 @@ class TenderForm extends Model
 
     private $minAmt = 1000.00;
 
+    public function init()
+    {
+        parent::init();
+        $dealBrief = $this->getDealBrief();
+        if (isset($dealBrief['xinshou_status']) && $dealBrief['xinshou_status'] == 2)
+        {
+            $this->minAmt = 100.00;
+        }
+        else $this->minAmt = 1000.00;
+    }
+
     public function rules()
     {
         return [
