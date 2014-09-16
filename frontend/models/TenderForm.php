@@ -53,7 +53,11 @@ class TenderForm extends Model
             foreach($dealOrders as $ord)
             {
                 $dealInfo = $this->getDealBrief($ord['deal_id']);
-                if (isset($dealInfo['xinshou_status']) && $dealInfo['xinshou_status'] == 2) $newbieBidCount++;
+                if (isset($dealInfo['xinshou_status']) && $dealInfo['xinshou_status'] == 2)
+                {
+                    $newbieBidCount++;
+                    if ($ord['deal_id'] == $this->dealId) $this->addError($attribute, '同一个新手标仅允许用户投标一次！');
+                }
             }
         }
         if ($newbieBidCount >= 3) $this->addError($attribute, '抱歉，新手标每个用户只允许至多投资三次。');
