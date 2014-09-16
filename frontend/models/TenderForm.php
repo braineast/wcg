@@ -61,7 +61,7 @@ class TenderForm extends Model
 //                }
             }
         }
-        if ($bidCount >= 3) $this->addError($attribute, '抱歉，新手标每个用户只允许至多投资三次。');
+        if ($bidCount >= 3) $this->addError($attribute, '抱歉，您不能参与新手标投资。');
         if (!$userInfo['cnpnr_account']) $this->addError($attribute, '您尚未开通汇付天下资金托管账户，无法进行投资，请先行开户。');
         if ($dealBrief['deal_status'] == 1) $this->addError($attribute, '该标的目前处于准备期，无法投资。');
         if ($dealBrief['deal_status'] == 3) $this->addError($attribute, '该标的已经满标，无法继续投资。');
