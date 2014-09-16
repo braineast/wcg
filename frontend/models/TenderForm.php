@@ -36,9 +36,17 @@ class TenderForm extends Model
         $dealOrders = $this->getDealOrders();
         if (isset($dealBrief['xinshou_status']) && $dealBrief['xinshou_status'] == 2)
         {
-            if ($this->$attribute != 100.00) $this->addError($attribute, '新手标，请投资100元。');
+            if ($this->$attribute != 100.00) $this->addError($attribute, '新手标只允许投资100元。');
         }
-        elseif ($this->$attribute % 1000 > 0) $this->addError($attribute, '请输入1000或1000的整数进行投资。');
+        else
+        {
+            if ($this->$attribute < $dealBrief['start_money']) $this->addError($attribute, '请输入不少于'.$dealBrief['start_money'].'的投资金额。');
+            else
+            {
+                if (($this->$attribute - $dealBrief['start_money']) % $dealBrief['dizeng_money'] > 0)
+                    $this->addError($attribute, '投资金额，需要以'.$dealBrief['dizeng_money'].'递增。');
+            }
+        }
         $newbieBidCount = 0;
         if ($dealOrders)
         {
@@ -134,7 +142,7 @@ class TenderForm extends Model
 
     public function getDealBrief($dealId = null)
     {
-        $url = sprintf("%s/deal_jiben/attribute-data-value-%s", Yii::$app->params['api']['wcg']['baseUrl'], $dealId ? $dealId : $this->dealId);
+        $url = sprintf("%s/deal_show/attribute-data-value-%s", Yii::$app->params['api']['wcg']['baseUrl'], $dealId ? $dealId : $this->dealId);
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $result = curl_exec($ch);
