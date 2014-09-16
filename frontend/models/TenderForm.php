@@ -47,20 +47,21 @@ class TenderForm extends Model
                     $this->addError($attribute, '投资金额，需要以'.$dealBrief['dizeng_money'].'递增。');
             }
         }
-        $newbieBidCount = 0;
+        $bidCount = 0;
         if ($dealOrders)
         {
             foreach($dealOrders as $ord)
             {
-                $dealInfo = $this->getDealBrief($ord['deal_id']);
-                if (isset($dealInfo['xinshou_status']) && $dealInfo['xinshou_status'] == 2)
-                {
-                    $newbieBidCount++;
-                    if ($ord['deal_id'] == $this->dealId) $this->addError($attribute, '同一个新手标仅允许用户投标一次！');
-                }
+                $bidCount++;
+//                $dealInfo = $this->getDealBrief($ord['deal_id']);
+//                if (isset($dealInfo['xinshou_status']) && $dealInfo['xinshou_status'] == 2)
+//                {
+//                    $bidCount++;
+//                    if ($ord['deal_id'] == $this->dealId) $this->addError($attribute, '同一个新手标仅允许用户投标一次！');
+//                }
             }
         }
-        if ($newbieBidCount >= 3) $this->addError($attribute, '抱歉，新手标每个用户只允许至多投资三次。');
+        if ($bidCount >= 3) $this->addError($attribute, '抱歉，新手标每个用户只允许至多投资三次。');
         if (!$userInfo['cnpnr_account']) $this->addError($attribute, '您尚未开通汇付天下资金托管账户，无法进行投资，请先行开户。');
         if ($dealBrief['deal_status'] == 1) $this->addError($attribute, '该标的目前处于准备期，无法投资。');
         if ($dealBrief['deal_status'] == 3) $this->addError($attribute, '该标的已经满标，无法继续投资。');
