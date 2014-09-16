@@ -177,6 +177,7 @@ class TenderForm extends Model
 
     private function getDealOrders()
     {
+        $wcgUser = $this->getUserInfo();
         $url = sprintf("%s/cheack_jiaoyi/attribute-data-value-%s", Yii::$app->params['api']['wcg']['baseUrl'], $wcgUser->getAttribute('wcg_uid'));
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
