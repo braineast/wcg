@@ -20,24 +20,11 @@ class TenderForm extends Model
     public $dealId;
     public $amount;
 
-    private $minAmt = 1000.00;
-
-    public function init()
-    {
-        parent::init();
-        $dealBrief = $this->getDealBrief();
-        if (isset($dealBrief['xinshou_status']) && $dealBrief['xinshou_status'] == 2)
-        {
-            $this->minAmt = 100.00;
-        }
-        else $this->minAmt = 1000.00;
-    }
-
     public function rules()
     {
         return [
             [['dealId','amount'], 'required', 'message'=>Yii::t('tender', 'The tender amount is required.')],
-            ['amount', 'number', 'min'=>$this->minAmt],
+            ['amount', 'number', 'min'=>0.01],
             ['amount', 'checkAmount'],
         ];
     }
@@ -49,7 +36,6 @@ class TenderForm extends Model
         $dealOrders = $this->getDealOrders();
         if (isset($dealBrief['xinshou_status']) && $dealBrief['xinshou_status'] == 2)
         {
-            $this->minAmt = 100.00;
             if ($this->$attribute != 100.00) $this->addError($attribute, '新手标，请投资100元。');
         }
         elseif ($this->$attribute % 1000 > 0) $this->addError($attribute, '请输入1000或1000的整数进行投资。');
