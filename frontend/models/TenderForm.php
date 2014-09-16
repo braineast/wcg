@@ -148,7 +148,7 @@ class TenderForm extends Model
         $result = curl_exec($ch);
         $result = Json::decode($result, true);
         curl_close($ch);
-        if ($result['result'] == 0 && $result['errors']['code'] == 0) $result = $result['data'];
+        if ($result['result'] == 0 && $result['errors']['code'] == 0) $result = $result['data']['deal'];
         return $result;
     }
 
