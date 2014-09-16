@@ -74,7 +74,7 @@ $dealOrders = isset($dealOrders) && $dealOrders ? $dealOrders : [];
         <?php endif; ?>
         </tbody></table>
     <?php if ($deal['deal_status'] < 3): ?>
-        <?php $form = ActiveForm::begin(['id'=>'tender_form','enableClientValidation'=>false, 'enableAjaxValidation'=>false]); ?>
+        <?php $form = ActiveForm::begin(['id'=>'tender_form','enableClientValidation'=>true, 'enableAjaxValidation'=>true]); ?>
         <?= $form->field($model, 'dealId', ['template'=>'{input}'])->hiddenInput(['value'=>$deal['deal_id']]) ?>
     <table class="list_table" cellpadding="0" cellspacing="0" width="100%" style="padding-bottom:0; padding-top:0;border-bottom:0<?php if ($deal['deal_status'] == 1) echo(';display: block;'); ?>">
         <tbody>
