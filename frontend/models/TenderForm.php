@@ -48,7 +48,6 @@ class TenderForm extends Model
             }
         }
         $bidCount = 0;
-        var_dump($dealOrders);exit;
         if ($dealOrders)
         {
             foreach($dealOrders as $ord)
