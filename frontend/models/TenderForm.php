@@ -52,7 +52,7 @@ class TenderForm extends Model
         {
             foreach($dealOrders as $ord)
             {
-                $bidCount++;
+                if ($ord->status == 2) $bidCount++;
 //                $dealInfo = $this->getDealBrief($ord['deal_id']);
 //                if (isset($dealInfo['xinshou_status']) && $dealInfo['xinshou_status'] == 2)
 //                {
