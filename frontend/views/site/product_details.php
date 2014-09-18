@@ -249,7 +249,7 @@ $dealOrders = isset($dealOrders) && $dealOrders ? $dealOrders : [];
     jQuery(document).ready(
         function()
         {
-            getDealBrief();
+//            getDealBrief();
             var timerElement = $('#left_time_text');
             if (timerElement)
             {
