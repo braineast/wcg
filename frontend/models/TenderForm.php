@@ -31,11 +31,14 @@ class TenderForm extends Model
 
     public function checkAmount($attribute, $params)
     {
-        $dealBrief = $this->getDealBrief();
         $userInfo = $this->getUserInfo();
-        $dealOrders = $this->getDealOrders();
+        $dealBrief = $this->getDealBrief();
         if (isset($dealBrief['xinshou_status']) && $dealBrief['xinshou_status'] == 2)
         {
+            $bidCount = 0; //用户的成功投标次数
+            $dealOrders = $this->getDealOrders();
+            if ($dealOrders) foreach($dealOrders as $ord) if ($ord->status == 2) $bidCount++;
+            if ($bidCount >= 3) $this->addError($attribute, '抱歉，您不能参与新手标投资。');
             if ($this->$attribute != 100.00) $this->addError($attribute, '新手标只允许投资100元。');
         }
         else
@@ -47,21 +50,6 @@ class TenderForm extends Model
                     $this->addError($attribute, '投资金额，需要以'.$dealBrief['dizeng_money'].'递增。');
             }
         }
-        $bidCount = 0;
-        if ($dealOrders)
-        {
-            foreach($dealOrders as $ord)
-            {
-                if ($ord->status == 2) $bidCount++;
-//                $dealInfo = $this->getDealBrief($ord['deal_id']);
-//                if (isset($dealInfo['xinshou_status']) && $dealInfo['xinshou_status'] == 2)
-//                {
-//                    $bidCount++;
-//                    if ($ord['deal_id'] == $this->dealId) $this->addError($attribute, '同一个新手标仅允许用户投标一次！');
-//                }
-            }
-        }
-        if ($bidCount >= 3) $this->addError($attribute, '抱歉，您不能参与新手标投资。');
         if (!$userInfo['cnpnr_account']) $this->addError($attribute, '您尚未开通汇付天下资金托管账户，无法进行投资，请先行开户。');
         if ($dealBrief['deal_status'] == 1) $this->addError($attribute, '该标的目前处于准备期，无法投资。');
         if ($dealBrief['deal_status'] == 3) $this->addError($attribute, '该标的已经满标，无法继续投资。');
