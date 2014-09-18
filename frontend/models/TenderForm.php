@@ -200,9 +200,12 @@ class TenderForm extends Model
         $logs = isset($logs['data']['toubiao']) && $logs['data']['toubiao'] ? $logs['data']['toubiao'] : null;
         curl_close($ch);
         $orders = [];
-        foreach($logs as $dealOrder)
+        if ($logs)
         {
-            if ($dealOrder['status'] == 2) $orders[] = $dealOrder;
+            foreach($logs as $dealOrder)
+            {
+                if ($dealOrder['status'] == 2) $orders[] = $dealOrder;
+            }
         }
         return $orders;
     }
