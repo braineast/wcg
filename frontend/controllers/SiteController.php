@@ -397,6 +397,7 @@ class SiteController extends Controller
         if ($result['result'] == 0 && $result['errors']['code'] == 0)
         {
             $list = $result['data'];
+            $topDeals = [];
             if ($list && !is_array($list)) $list = (array)$list;
             foreach($list as $k => $deal)
             {
@@ -404,6 +405,20 @@ class SiteController extends Controller
                 if ($deal['deal_status'] == 1) $interval = $this->_getDateTimeDiff($deal['start_date']);
                 $deal['interval'] = $interval;
                 $list[$k] = $deal;
+                if ($interval) $topDeals[$k] = $interval;
+            }
+            if ($topDeals && asort($topDeals))
+            {
+                $dealList = [];
+                foreach($topDeals as $k => $v) $dealList[] = $list[$k];
+                foreach($list as $k => $deal)
+                {
+                    if (!array_key_exists($k, $topDeals))
+                    {
+                        $dealList[] = $deal;
+                    }
+                }
+                $list = $dealList;
             }
         }
         return $this->render('products', ['list'=>$list]);
