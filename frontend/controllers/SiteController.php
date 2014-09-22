@@ -407,19 +407,21 @@ class SiteController extends Controller
                 $list[$k] = $deal;
                 if ($interval) $topDeals[$k] = $interval;
             }
-            if ($topDeals && asort($topDeals))
+            $dealList = [];
+            foreach($list as $k => $deal)
             {
-                $dealList = [];
-                foreach($topDeals as $k => $v) $dealList[] = $list[$k];
-                foreach($list as $k => $deal)
-                {
-                    if (!array_key_exists($k, $topDeals))
-                    {
-                        $dealList[] = $deal;
-                    }
-                }
-                $list = $dealList;
+                if ($deal['deal_status'] == 2) $dealList[] = $deal;
             }
+            if ($topDeals && asort($topDeals))
+                foreach($topDeals as $k => $v) $dealList[] = $list[$k];
+            foreach($list as $k => $deal)
+            {
+                if (!array_key_exists($k, $topDeals) && $deal['deal_status'] != 2)
+                {
+                    $dealList[] = $deal;
+                }
+            }
+            $list = $dealList;
         }
         return $this->render('products', ['list'=>$list]);
     }
