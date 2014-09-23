@@ -515,6 +515,8 @@ class SiteController extends Controller
                     $deal = [];
                     foreach($data as $repaymentOrder)
                     {
+if ($repaymentOrder['status'] != 3) 
+{
                         if (!isset($deal[$repaymentOrder['deal_id']]))
                         {
                             $url = sprintf("%s/deal_show/attribute-data-value-%s", Yii::$app->params['api']['wcg']['baseUrl'], $repaymentOrder['deal_id']);
@@ -549,6 +551,7 @@ class SiteController extends Controller
                         $list[$repaymentOrder['deal_id']]['invest_amt'] = isset($list[$repaymentOrder['deal_id']]['invest_amt']) ? $list[$repaymentOrder['deal_id']]['invest_amt'] + $repaymentOrder['benjin'] : $repaymentOrder['benjin'];
                         $list[$repaymentOrder['deal_id']]['interest_amt'] = isset($list[$repaymentOrder['deal_id']]['interest_amt']) ? $list[$repaymentOrder['deal_id']]['interest_amt'] + $repaymentOrder['lixi'] + $repaymentOrder['weiyuejin'] + $repaymentOrder['overdue'] : $repaymentOrder['lixi'] + $repaymentOrder['weiyuejin'] + $repaymentOrder['overdue'];
                         $list[$repaymentOrder['deal_id']]['deal_time'] = isset($list[$repaymentOrder['deal_id']]['deal_time']) ? max($list[$repaymentOrder['deal_id']]['deal_time'], $repaymentOrder['deal_time']) : $repaymentOrder['deal_time'];
+}
                     }
                     $investSummary = [
                         'investAmt'=> isset($investAmt) ? $investAmt : 0.00,
