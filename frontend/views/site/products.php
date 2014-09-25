@@ -14,7 +14,7 @@ use \yii\helpers\Html;
                 <th align="left" width="33%">理财列表</th>
             </tr>
             <tr align="center">
-                <td width="33%"><span>10%-13%</span></td>
+                <td width="33%"><span>9.5%-13%</span></td>
             </tr>
             </tbody></table>
     </div>
@@ -38,7 +38,7 @@ use \yii\helpers\Html;
                 </td>
             </tr>
             <tr>
-                <td width="41%">年利率：<?= intval($deal['syl']) ?>%</td>
+                <td width="41%">年利率：<?= preg_replace('/\.00/', '', $deal['syl']) ?>%</td>
                 <td width="42%"><?= $deal['money'] ?>元</td>
             </tr>
             <tr>

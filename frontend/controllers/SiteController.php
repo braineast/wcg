@@ -408,7 +408,7 @@ class SiteController extends Controller
                 if ($interval) $topDeals[$k] = $interval;
             }
             $dealList = [];
-            foreach($list as $k => $deal)
+            foreach($list as $deal)
             {
                 if ($deal['deal_status'] == 2) $dealList[] = $deal;
             }
