@@ -37,7 +37,7 @@ class TenderForm extends Model
         {
             $bidCount = 0; //用户的成功投标次数
             $dealOrders = $this->getDealOrders();
-            if ($dealOrders) foreach($dealOrders as $ord) if ($ord->status == 2) $bidCount++;
+            if ($dealOrders) foreach($dealOrders as $ord) if ($ord['status'] == 2) $bidCount++;
             if ($bidCount >= 3) $this->addError($attribute, '抱歉，您不能参与新手标投资。');
             if ($this->$attribute != 100.00) $this->addError($attribute, '新手标只允许投资100元。');
         }
