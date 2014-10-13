@@ -10,10 +10,9 @@
     <div class="in_list" style=" width:92%">
         <table cellpadding="0" cellspacing="0" width="100%" style="padding-bottom:120px; padding-top:20px">
             <tbody><tr>
-                <td width="13%" class="p_text"><p style=" font-size:28px; height:30px; line-height:34px;">旺财谷所有资金由第三方支付平台托管，
-                        绝不设置资金池，所有理财人都会有第三方
-                        支付平台的托管账户，保护资金安全。托管
-                        独立旺财谷账户，所以需要独立注册。</p></td>
+                <td width="13%" class="p_text"><p style=" font-size:28px; height:30px; line-height:34px;">
+                        旺财谷所有资金均由第三方支付平台进行托管，绝不设置资金池，所有投资人都会有相应的第三方支付平台的托管账户，以保护资金安全。
+                        资金托管账户独立于旺财谷账户，所以需要独立注册。</p></td>
             </tr>
             </tbody></table>
         <table class="" cellpadding="0" cellspacing="0" width="100%" style="">
