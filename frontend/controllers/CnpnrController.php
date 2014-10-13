@@ -12,6 +12,7 @@ use frontend\models\Controller;
 use frontend\models\api\ChinaPNR;
 use frontend\models\TenderForm;
 use frontend\models\wcg\User as WCGUser;
+use Yii;
 
 class CnpnrController extends Controller
 {
@@ -46,7 +47,7 @@ class CnpnrController extends Controller
         {
             //推送到旺财谷网站 - 开户接口
             $result =  $this->postWCG();
-            if (!\Yii::$app->getUser()->isGuest)
+            if (!Yii::$app->getUser()->isGuest)
             {
                 WCGUser::fetch();
                 if ($result) $this->redirect('/site/notice?type=open');
