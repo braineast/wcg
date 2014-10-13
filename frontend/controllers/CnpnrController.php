@@ -50,8 +50,8 @@ class CnpnrController extends Controller
             if (!Yii::$app->getUser()->isGuest)
             {
                 WCGUser::fetch();
-                if ($result) $this->redirect('/site/notice?type=open');
             }
+            if ($result) $this->redirect('/site/notice?type=open');
         }
         return false;
     }
