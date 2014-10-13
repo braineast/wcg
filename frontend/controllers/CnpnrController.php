@@ -13,6 +13,7 @@ use frontend\models\api\ChinaPNR;
 use frontend\models\TenderForm;
 use frontend\models\wcg\User as WCGUser;
 use Yii;
+use yii\base\Exception;
 
 class CnpnrController extends Controller
 {
@@ -90,6 +91,14 @@ class CnpnrController extends Controller
             $result = curl_exec($ch);
             curl_close($ch);
             $status = $result == 'RECV_ORD_ID_'.$this->response[$this->response[ChinaPNR::PARAM_MERPRIV][ChinaPNR::PARAM_PRIVATE_SHOWID]];
+            if (!$status)
+            {
+                $act = 'v'.$this->response[ChinaPNR::PARAM_CMDID];
+                if (method_exists($this, $act))
+                {
+                    return $this->$act();
+                }
+            }
             if (!$status && $this->response[ChinaPNR::PARAM_CMDID] == ChinaPNR::CMD_TENDER)
             {
                 $tenderModel = new TenderForm();
@@ -98,6 +107,29 @@ class CnpnrController extends Controller
             return $status;
         }
         return null;
+    }
+
+    protected function vUserRegister($params = null)
+    {
+        try
+        {
+            $wcgUser = WCGUser::find()->where('user_id=:userId', [':userId'=>Yii::$app->user->id])->one();
+            if (!$wcgUser) throw new Exception('The user not found.', 1001);
+            $url = sprintf("%s/user_info/attribute-id-value-%s.html", Yii::$app->params['api']['wcg']['baseUrl'], $wcgUser->getAttribute('wcg_uid'));
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $result = curl_exec($ch);
+            curl_close($ch);
+            if (!$result) throw new Exception('The api server not accessed.', 1002);
+            $result = json_decode($result, true);
+            if ($result['result'] == 0) $result = $result['data'];
+
+            return isset($result['UsrCustId']) && $result['UsrCustId'] ? true : false;
+        }
+        catch(Exception $e)
+        {
+            exit($e->getMessage());
+        }
     }
 
     protected function InitiativeTender()
