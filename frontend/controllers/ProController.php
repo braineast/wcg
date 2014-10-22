@@ -9,6 +9,7 @@
 namespace frontend\controllers;
 
 
+use frontend\models\promotion\SignupForm;
 use yii\web\Controller;
 
 class ProController extends Controller
