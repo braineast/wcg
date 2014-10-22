@@ -11,6 +11,7 @@ namespace frontend\controllers;
 
 use frontend\models\promotion\SignupForm;
 use yii\web\Controller;
+use Yii;
 
 class ProController extends Controller
 {
