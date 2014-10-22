@@ -20,7 +20,7 @@ class SignupForm extends CommonSignupForm
     public function rules()
     {
         $rules = parent::rules();
-        $rules[] = ['mobileVerifyCode', 'required'];
+        $rules[] = ['mobileVerifyCode', 'required', 'message'=>'请输入短信验证码。'];
         $rules[] = ['mobileVerifyCode', 'verifyCode'];
         return $rules;
     }
