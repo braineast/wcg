@@ -52,6 +52,7 @@ use yii\helpers\Html;
                 function(evt)
                 {
                     evt.preventDefault();
+                    evt.stopPropagation();
                     if ($('#signupform-mobile').val())
                     {
                         $.ajax({
