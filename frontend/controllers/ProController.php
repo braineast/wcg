@@ -13,6 +13,7 @@ use frontend\models\promotion\SignupForm;
 use yii\base\Exception;
 use yii\web\Controller;
 use yii\web\Response;
+use yii\widgets\ActiveForm;
 use Yii;
 
 class ProController extends Controller
