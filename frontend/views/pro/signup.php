@@ -58,8 +58,9 @@ use yii\helpers\Html;
                         }).done(function(data) {
                             if (data)
                             {
-                                $(this).attr('disabled', 'disabled');
-                                $(this).html('验证码发出');
+                                $('#fetch_mobile_verify_code').attr('disabled', 'disabled');
+                                $('#fetch_mobile_verify_code').html('验证码发出');
+                                $('#fetch_mobile_verify_code').text('验证码发出');
                             }
                             else alert("失败");
                         });
