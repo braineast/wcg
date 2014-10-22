@@ -23,6 +23,7 @@ class ProController extends Controller
         $model = new SignupForm();
         if ($model->load(Yii::$app->request->post())) {
             if (Yii::$app->request->isAjax) {
+                exit;
                 Yii::$app->response->format = Response::FORMAT_JSON;
                 return ActiveForm::validate($model);
             }
