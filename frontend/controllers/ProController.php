@@ -41,6 +41,9 @@ class ProController extends Controller
     public function actionFetchverifycode($mobile)
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
+        $signupForm = new SignupForm();
+        $signupForm->mobile = $mobile;
+        if (ActiveForm::validate($signupForm, 'mobile')) return false;
         try
         {
             $url = sprintf("%s/sendCode/phone-%s", \Yii::$app->params['api']['wcg']['baseUrl'], $mobile);
