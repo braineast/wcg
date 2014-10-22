@@ -43,10 +43,7 @@ class ProController extends Controller
         Yii::$app->response->format = Response::FORMAT_JSON;
         $signupForm = new SignupForm();
         $signupForm->mobile = $mobile;
-        if ($errors = ActiveForm::validate($signupForm, ['mobile']))
-        {
-            return $errors;
-        }
+        if ($errors = ActiveForm::validate($signupForm, ['mobile'])) return false;
         try
         {
             $url = sprintf("%s/sendCode/phone-%s", \Yii::$app->params['api']['wcg']['baseUrl'], $mobile);
