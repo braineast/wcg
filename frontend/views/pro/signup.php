@@ -37,7 +37,7 @@ use yii\helpers\Html;
             <tr>
                 <td colspan="3" height="30"></td></tr> -->
             <tr>
-                <td colspan="3"><?= Html::submitButton('注册并绑定', ['class' => 'btn btn-primary btn_adapt_100', 'name' => 'signup-button']) ?></td>
+                <td colspan="3"><?= Html::submitButton('注册', ['class' => 'btn btn-primary btn_adapt_100', 'name' => 'signup-button']) ?></td>
             </tr>
             </tbody></table>
         <?php ActiveForm::end(); ?>
