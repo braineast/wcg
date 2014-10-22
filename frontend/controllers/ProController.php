@@ -43,9 +43,9 @@ class ProController extends Controller
         Yii::$app->response->format = Response::FORMAT_JSON;
         $signupForm = new SignupForm();
         $signupForm->mobile = $mobile;
-        if (ActiveForm::validate($signupForm, 'mobile'))
+        if ($errors = ActiveForm::validate($signupForm, 'mobile'))
         {
-            var_dump($signupForm->errors);return;
+            return $errors;
         }
         try
         {
