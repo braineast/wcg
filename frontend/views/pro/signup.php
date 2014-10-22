@@ -39,6 +39,7 @@ use yii\helpers\Html;
     </div>
 </div>
 <script>
+    var codeTimeout = null;
     $(document).ready(
         function()
         {
@@ -52,6 +53,10 @@ use yii\helpers\Html;
                         }).done(function(data) {
                             if (data)
                             {
+                                codeTimeout = setTimeout(function() {
+                                    $('#fetch_mobile_verify_code').attr('disabled', 'disabled');
+                                    $('#fetch_mobile_verify_code').text( '验证码已发');
+                                }, 300000);
 //                                $('#fetch_mobile_verify_code').attr('disabled', 'disabled');
 //                                $('#fetch_mobile_verify_code').html('验证码发出');
                             }
