@@ -43,7 +43,7 @@ class SignupForm extends CommonSignupForm
     {
         try
         {
-            $url = sprintf("%s/sendCode/phone-%s", \Yii::$app->params['api']['wcg']['baseUrl'], $this->mobile);
+            $url = sprintf("%s/sendCode/phone-%s", Yii::$app->params['api']['wcg']['baseUrl'], $this->mobile);
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             $data = curl_exec($ch);
