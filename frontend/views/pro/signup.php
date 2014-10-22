@@ -59,6 +59,7 @@ use yii\helpers\Html;
                             url: './fetchverifycode?mobile='+$('#signupform-mobile').val()
                         });
                     }
+                    return false;
                 }
             );
         }
