@@ -56,7 +56,7 @@ use yii\helpers\Html;
                     if ($('#signupform-mobile').val())
                     {
                         $.ajax({
-                            url: './fetchverifycode?mobile='+$('#signupform-mobile').val()
+                            url: 'fetchverifycode?mobile='+$('#signupform-mobile').val()
                         }).done(function(data) {
                             alert(data);
                         });
