@@ -16,13 +16,7 @@ use yii\helpers\Html;
         <?= $form->field($model, 'password', ['template'=>'<table cellpadding="0" cellspacing="0" class="borderBt"><tbody><tr><td width="80" class="user_lock"></td><td>{input}</td><td>{error}</td></tr></tbody></table>'])->passwordInput(['class'=>'field_adapt_90', 'placeholder'=>'密码请输入5-15位数字/字母/符号']) ?>
         <?= $form->field($model, 'repeatpassword', ['template'=>'<table cellpadding="0" cellspacing="0" class="borderBt"><tbody><tr><td width="80" class="user_lock"></td><td>{input}</td><td>{error}</td></tr></tbody></table>'])->passwordInput(['class'=>'field_adapt_90', 'placeholder'=>'请再输入一遍密码']) ?>
         <?= $form->field($model, 'mobile', ['template'=>'<table cellpadding="0" cellspacing="0" class="borderBt"><tbody><tr><td width="80" class="user_num"></td><td>{input}</td><td>{error}</td></tr></tbody></table>'])->textInput(['class'=>'field_adapt_90', 'placeholder'=>'手机号用于登录和密码重置']) ?>
-        <table cellpadding="0" cellspacing="0">
-            <tbody><tr>
-                <td width="80" class="user_pwd bt"></td>
-                <td class="yzm_text"><input type="password" placeholder="请输入短信验证码" class="field_adapt_90"></td>
-                <td align="right" width="230"><button class="btn_fixed_186px_red" id="fetch_mobile_verify_code">免费获取</button></td>
-            </tr>
-            </tbody></table>
+        <?= $form->field($model, 'mobileVerifyCode', ['template'=>'<table cellpadding="0" cellspacing="0"><tbody><tr><td width="80" class="user_pwd bt""></td><td class="yzm_text">{input}</td><td>{error}</td><td align="right" width="230"><button class="btn_fixed_186px_red" id="fetch_mobile_verify_code">免费获取</button></td></tr></tbody></table>'])->textInput(['class'=>'field_adapt_90', 'placeholder'=>'请输入手机验证码']) ?>
         <table class="recept_role">
             <tbody><!--暂关闭协议版块<tr>
                 <td class="checkbox_deep"><span class="check_box checked_deep"></span></td>

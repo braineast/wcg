@@ -15,9 +15,12 @@ use yii\base\Exception;
 
 class SignupForm extends CommonSignupForm
 {
+    public $mobileVerifyCode;
+
     public function rules()
     {
         $rules = parent::rules();
+        $rules[] = ['mobileVerifyCode', 'required'];
         return $rules;
     }
 
