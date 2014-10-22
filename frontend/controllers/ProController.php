@@ -32,6 +32,6 @@ class ProController extends Controller
         }
 
         $this->layout = 'wcg';
-        return $this->render('/user/signup', ['model'=>$model]);
+        return $this->render('/pro/signup', ['model'=>$model]);
     }
 }
