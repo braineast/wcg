@@ -25,18 +25,18 @@ class SignupForm extends CommonSignupForm
         return $rules;
     }
 
-    private function verifyCode()
+    public function verifyCode($attribute)
     {
         $code = Yii::$app->session->get('code');
         if ($code)
         {
             $code = json_decode($code, true);
-            if ($code['phone'] != $this->mobile || $code['code'] != $this->mobileVerifyCode)
+            if ($code['code'] != $this->$attribute || $code['phone'] != $this->mobile)
             {
-                $this->addError('mobileVerifyCode', '验证码错误，请重新输入');
+                $this->addError($attribute, '验证码错误，请重新输入');
             }
         }
-        else $this->addError('mobileVerifyCode', '请点击免费获取按钮获取验证码');
+        else $this->addError($attribute, '请点击免费获取按钮获取验证码');
     }
 
     public function actionSendmobilecode()
