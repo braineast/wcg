@@ -59,8 +59,7 @@ use yii\helpers\Html;
                             if (data)
                             {
                                 $(this).disabled = 'disabled';
-                                $(this).val('验证码已发出');
-                                alert('已经发送');
+                                $(this).text('验证码已发出');
                             }
                             else alert("失败");
                         });
