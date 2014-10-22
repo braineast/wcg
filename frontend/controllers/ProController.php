@@ -10,7 +10,9 @@ namespace frontend\controllers;
 
 
 use frontend\models\promotion\SignupForm;
+use yii\base\Exception;
 use yii\web\Controller;
+use yii\web\Response;
 use Yii;
 
 class ProController extends Controller
@@ -33,5 +35,34 @@ class ProController extends Controller
 
         $this->layout = 'wcg';
         return $this->render('/pro/signup', ['model'=>$model]);
+    }
+
+    public function actionFetchverifycode($mobile)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        try
+        {
+            $url = sprintf("%s/sendCode/phone-%s", \Yii::$app->params['api']['wcg']['baseUrl'], $mobile);
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $data = curl_exec($ch);
+            curl_close($ch);
+            $data = json_decode($data, true);
+            if ($data)
+            {
+                if ($data['result'] == 0 && $data['errors']['code'] == 0)
+                {
+                    $data = $data['data'];
+                    $session = Yii::$app->session;
+                    $session->set('code', json_encode($data));
+                    $session->setTimeout(300);
+                }
+            }
+                return true;
+        }
+        catch(Exception $e)
+        {
+            return false;
+        }
     }
 }
