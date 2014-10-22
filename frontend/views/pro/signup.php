@@ -41,6 +41,6 @@ use yii\helpers\Html;
             </tr>
             </tbody></table>
         <?php ActiveForm::end(); ?>
-        <div style="color: red; font-size: 2em; padding: 10px; float: right"><a href="<?= Yii::$app->urlManager->createAbsoluteUrl('/site/bind?openid='.$openid); ?>">已有旺财谷账户？</a> </div>
+        <div style="color: red; font-size: 2em; padding: 10px; float: right"><a href="<?= Yii::$app->urlManager->createAbsoluteUrl('/site/bind'); ?>">已有旺财谷账户？</a> </div>
     </div>
 </div>
