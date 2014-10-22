@@ -51,8 +51,6 @@ use yii\helpers\Html;
             $('#fetch_mobile_verify_code').click(
                 function(evt)
                 {
-                    evt.preventDefault();
-                    evt.stopPropagation();
                     if ($('#signupform-mobile').val())
                     {
                         $.ajax({
