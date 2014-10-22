@@ -13,9 +13,9 @@ use yii\helpers\Html;
         <?php $form = ActiveForm::begin(['id' => 'form-signup','enableClientValidation'=>true, 'enableAjaxValidation'=>true, 'fieldConfig'=>['template'=>'']]); ?>
         <?= $form->field($model, 'username', ['template'=>'<table cellpadding="0" cellspacing="0" class="borderBt" style=" margin-top:0"><tbody><tr><td width="80" class="icon_user"></td><td>{input}</td><td>{error}</td></tr></tbody></table>'])->textInput(['class'=>'field_adapt_90', 'placeholder'=>'用户名6-16位数字/字母']) ?>
         <?= $form->field($model, 'email', ['template'=>'<table cellpadding="0" cellspacing="0" class="borderBt"><tbody><tr><td width="80" class="user_mail"></td><td>{input}</td><td>{error}</td></tr></tbody></table>'])->textInput(['class'=>'field_adapt_90', 'placeholder'=>'请输入常用邮箱，可用于登录']) ?>
-        <?= $form->field($model, 'mobile', ['template'=>'<table cellpadding="0" cellspacing="0" class="borderBt"><tbody><tr><td width="80" class="user_num"></td><td>{input}</td><td>{error}</td></tr></tbody></table>'])->textInput(['class'=>'field_adapt_90', 'placeholder'=>'手机号用于登录和密码重置']) ?>
         <?= $form->field($model, 'password', ['template'=>'<table cellpadding="0" cellspacing="0" class="borderBt"><tbody><tr><td width="80" class="user_lock"></td><td>{input}</td><td>{error}</td></tr></tbody></table>'])->passwordInput(['class'=>'field_adapt_90', 'placeholder'=>'密码请输入5-15位数字/字母/符号']) ?>
         <?= $form->field($model, 'repeatpassword', ['template'=>'<table cellpadding="0" cellspacing="0" class="borderBt"><tbody><tr><td width="80" class="user_lock"></td><td>{input}</td><td>{error}</td></tr></tbody></table>'])->passwordInput(['class'=>'field_adapt_90', 'placeholder'=>'请再输入一遍密码']) ?>
+        <?= $form->field($model, 'mobile', ['template'=>'<table cellpadding="0" cellspacing="0" class="borderBt"><tbody><tr><td width="80" class="user_num"></td><td>{input}</td><td>{error}</td></tr></tbody></table>'])->textInput(['class'=>'field_adapt_90', 'placeholder'=>'手机号用于登录和密码重置']) ?>
         <table cellpadding="0" cellspacing="0">
             <tbody><tr>
                 <td width="80" class="user_pwd bt"></td>
