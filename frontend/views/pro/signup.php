@@ -20,7 +20,7 @@ use yii\helpers\Html;
             <tbody><tr>
                 <td width="80" class="user_pwd bt"></td>
                 <td class="yzm_text"><input type="password" placeholder="请输入短信验证码" class="field_adapt_90"></td>
-                <td align="right" width="230"><button class="btn_fixed_186px_red">免费获取</button></td>
+                <td align="right" width="230"><button class="btn_fixed_186px_red" id="fetch_mobile_verify_code">免费获取</button></td>
             </tr>
             </tbody></table>
         <table class="recept_role">
@@ -44,3 +44,21 @@ use yii\helpers\Html;
         <div style="color: red; font-size: 2em; padding: 10px; float: right"><a href="<?= Yii::$app->urlManager->createAbsoluteUrl('/site/bind'); ?>">已有旺财谷账户？</a> </div>
     </div>
 </div>
+<script>
+    $(document).ready(
+        function()
+        {
+            $('#fetch_mobile_verify_code').click(
+                function()
+                {
+                    if ($('#signupform-mobile').val())
+                    {
+                        $.ajax({
+                            url: './fetchverifycode?mobile='+$('#signupform-mobile').val()
+                        });
+                    }
+                }
+            );
+        }
+    );
+</script>
