@@ -21,11 +21,22 @@ class SignupForm extends CommonSignupForm
     {
         $rules = parent::rules();
         $rules[] = ['mobileVerifyCode', 'required'];
+        $rules[] = ['mobileVerifyCode', 'verifyCode'];
         return $rules;
     }
 
     private function verifyCode()
     {
+        $code = Yii::$app->session->get('code');
+        if ($code)
+        {
+            $code = json_decode($code, true);
+            if ($code['phone'] != $this->mobile || $code['code'] != $this->mobileVerifyCode)
+            {
+                $this->addError('mobileVerifyCode', '验证码错误，请重新输入');
+            }
+        }
+        else $this->addError('mobileVerifyCode', '请点击免费获取按钮获取验证码');
     }
 
     public function actionSendmobilecode()
