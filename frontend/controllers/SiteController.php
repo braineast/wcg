@@ -155,7 +155,7 @@ class SiteController extends Controller
                     $user = \frontend\models\User::find()->where('id=:id', [':id'=>$wcgUser->getAttribute('user_id')])->one();
                     if ($openid)
                     {
-                        if ($wechatUser = WechatUser::find()->where('open_id=:openId', [':openId'=>$openid]))
+                        if ($wechatUser = WechatUser::find()->where('open_id=:openId', [':openId'=>$openid])->one())
                         {
                             if ($_compareWcgUser = WCGUser::find()->where('user_id=:userId', [':userId'=>$wechatUser->getAttribute('user_id')])->one())
                             {
