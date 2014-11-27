@@ -16,7 +16,7 @@ return [
                 'host'=>'115.28.152.140',
                 'port'=>'8888'
             ],
-            'noticeUrl'=>'http://www.wangcaigu.com',
+            'noticeUrl'=>'https://www.wangcaigu.com',
         ],
         'wcg' => [
             'baseUrl' => 'http://api.wangcaigu.com/weixin',
